@@ -1,0 +1,34 @@
+@media print {
+  :root {
+    background: #fff;
+    color: #000;
+  }
+
+  .app-shell,
+  .result-shell {
+    display: block;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .result-panel {
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    width: 100%;
+  }
+
+  .no-print {
+    display: none;
+  }
+
+  .chart-fill,
+  .progress-fill {
+    background: #555;
+  }
+
+  .interpretation-grid,
+  .qualitative-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

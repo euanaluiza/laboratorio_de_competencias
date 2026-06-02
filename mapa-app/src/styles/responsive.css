@@ -1,0 +1,44 @@
+@media (min-width: 720px) {
+  .app-shell {
+    padding: 40px;
+  }
+
+  h1 {
+    font-size: 3.4rem;
+  }
+
+  .intro-panel,
+  .form-panel,
+  .questionnaire-panel,
+  .result-panel {
+    padding: 42px;
+  }
+
+  .feature-grid,
+  .result-highlight-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .field-grid .field-label:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .result-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .interpretation-grid,
+  .qualitative-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .interpretation-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
