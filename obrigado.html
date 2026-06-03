@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Inscrição confirmada — Lab de Competências</title>
+  <title>Inscrição confirmada — Laboratório de Competências</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --cream:  #F7F3EE;
@@ -16,10 +17,12 @@
       --lilac:  #E8D5E8;
       --muted:  #6B7A8D;
       --border: rgba(28,43,58,0.10);
+      --font-head: 'Sora', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      font-family: var(--font-body); font-weight: 400;
       background: var(--white); color: var(--navy);
       min-height: 100vh; display: flex; flex-direction: column;
     }
@@ -29,8 +32,8 @@
       background: var(--white); border-bottom: 1px solid var(--border);
     }
     .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 15px; font-weight: 600; color: var(--navy); text-decoration: none;
+      font-family: var(--font-head);
+      font-size: 16px; font-weight: 600; color: var(--navy); text-decoration: none;
     }
     .hero {
       flex: 1; display: grid; grid-template-columns: 1fr 1fr;
@@ -63,19 +66,19 @@
       100% { transform: scale(1);   opacity: 0;  }
     }
     .tag {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.3em;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.3em;
       text-transform: uppercase; color: var(--plum); margin-bottom: 14px;
       opacity: 0; animation: fadeUp .6s ease forwards .25s;
     }
     h1 {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-head);
       font-size: clamp(32px, 3.5vw, 52px); font-weight: 700;
       line-height: 1.1; color: var(--navy); margin-bottom: 16px;
       opacity: 0; animation: fadeUp .7s ease forwards .4s;
     }
-    h1 em { font-style: italic; color: var(--plum); }
+    h1 em { font-style: normal; color: var(--plum); }
     .subtitle {
-      font-size: 15px; color: var(--muted); line-height: 1.8;
+      font-size: 16px; color: var(--muted); line-height: 1.8;
       max-width: 420px; margin-bottom: 48px;
       opacity: 0; animation: fadeUp .7s ease forwards .55s;
     }
@@ -89,17 +92,17 @@
     }
     .step:first-child { border-top: 1px solid var(--border); }
     .step-num {
-      font-family: 'Playfair Display', serif; font-size: 13px;
+      font-family: var(--font-head); font-size: 14px;
       color: var(--plum); min-width: 22px; padding-top: 2px; font-weight: 400;
     }
-    .step-title { font-size: 13px; font-weight: 500; color: var(--navy); }
-    .step-desc  { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+    .step-title { font-size: 14px; font-weight: 500; color: var(--navy); }
+    .step-desc  { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
     .step-desc strong { color: var(--navy); font-weight: 500; }
     .cta-wrap { opacity: 0; animation: fadeUp .8s ease forwards .9s; }
     .btn-wpp {
       display: inline-flex; align-items: center; gap: 12px;
       padding: 15px 32px; background: var(--plum); color: #fff;
-      font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
       letter-spacing: 0.14em; text-transform: uppercase;
       text-decoration: none; border-radius: 2px;
       transition: background .25s, transform .2s;
@@ -122,21 +125,21 @@
       border-radius: 3px; padding: 18px 22px;
     }
     .right-card-label {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.28em;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.28em;
       text-transform: uppercase; color: var(--plum); margin-bottom: 5px;
     }
     .right-card-val {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-head);
       font-size: 16px; font-weight: 600; color: var(--navy);
     }
-    .right-card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .right-card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
     footer {
       background: var(--cream); padding: 22px 56px;
       display: flex; align-items: center; justify-content: space-between;
       border-top: 1px solid var(--border);
     }
-    .footer-logo { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--navy); }
-    .footer-note { font-size: 11px; color: var(--muted); }
+    .footer-logo { font-family: var(--font-head); font-size: 14px; color: var(--navy); }
+    .footer-note { font-size: 12px; color: var(--muted); }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -152,7 +155,7 @@
 </head>
 <body>
 <nav>
-  <a href="index.html" class="nav-logo">Lab de Competências · Ana Luiza Carvalho</a>
+  <a href="index.html" class="nav-logo">Laboratório de Competências · Ana Luiza Carvalho</a>
 </nav>
 <div class="hero">
   <div class="left">
@@ -162,7 +165,7 @@
       </div>
     </div>
     <p class="tag">Inscrição confirmada</p>
-    <h1>Bem-vinda ao<br/><em>Lab de<br/>Competências</em></h1>
+    <h1>Bem-vinda ao<br/><em>Laboratório de<br/>Competências</em></h1>
     <p class="subtitle">Sua vaga está garantida. Veja o que acontece a partir de agora:</p>
     <div class="steps">
       <div class="step">
@@ -205,8 +208,8 @@
   </div>
 </div>
 <footer>
-  <span class="footer-logo">Lab de Competências · Ana Luiza Carvalho</span>
-  <span class="footer-note">Inscrições encerradas · Turma Junho 2025</span>
+  <span class="footer-logo">Laboratório de Competências · Ana Luiza Carvalho</span>
+  <span class="footer-note">Inscrições encerradas · Turma Junho</span>
 </footer>
 </body>
 </html>
