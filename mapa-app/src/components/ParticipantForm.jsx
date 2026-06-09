@@ -5,7 +5,6 @@ function createInitialDraft(initialParticipant) {
   return {
     fullName: initialParticipant.fullName,
     email: initialParticipant.email,
-    className: initialParticipant.className,
     consentAccepted: initialParticipant.consentAccepted,
   }
 }
@@ -72,15 +71,6 @@ function ParticipantForm({ initialParticipant, onBack, onSubmit }) {
               value={draft.email}
             />
             {errors.email ? <span className="field-error">{errors.email}</span> : null}
-          </label>
-          <label className="field-label">
-            Turma
-            <input
-              className="field-input"
-              onChange={(event) => updateDraftField('className', event.target.value)}
-              type="text"
-              value={draft.className}
-            />
           </label>
         </div>
         <section className="consent-box" aria-label="Termo de consentimento">

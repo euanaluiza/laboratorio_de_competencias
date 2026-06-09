@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import IntroScreen from './components/IntroScreen.jsx'
 import ParticipantForm from './components/ParticipantForm.jsx'
 import QuestionnaireStep from './components/QuestionnaireStep.jsx'
@@ -10,7 +10,6 @@ import { createAssessmentResult } from './services/assessmentPayload.js'
 const EMPTY_PARTICIPANT = {
   fullName: '',
   email: '',
-  className: '',
   consentAccepted: false,
 }
 
@@ -26,18 +25,20 @@ function App() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [submissionState, setSubmissionState] = useState(INITIAL_SUBMISSION_STATE)
 
-  const assessmentResult = useMemo(() => {
-    return createAssessmentResult(participant, answers)
-  }, [participant, answers])
-
-  const saveAssessmentResult = async (resultToSave) => {
-    setSubmissionState({ status: 'saving', message: 'Salvando resultado...' })
+  const submitAssessment = async () => {
+    const resultToSave = createAssessmentResult(participant, answers)
+    setSubmissionState({ status: 'saving', message: 'Enviando suas respostas...' })
+    setScreen('submitting')
 
     try {
       await submitAssessmentSubmission(resultToSave.payload)
-      setSubmissionState({ status: 'saved', message: 'Resultado salvo com sucesso.' })
+      setSubmissionState({ status: 'saved', message: '' })
+      setScreen('result')
     } catch (error) {
-      setSubmissionState({ status: 'error', message: error.message })
+      const errorMessage =
+        error instanceof Error ? error.message : 'O envio falhou sem informar um motivo.'
+      setSubmissionState({ status: 'error', message: errorMessage })
+      setScreen('submission-error')
     }
   }
 
@@ -53,33 +54,20 @@ function App() {
     }))
   }
 
-  const showResult = () => {
-    const resultToSave = createAssessmentResult(participant, answers)
-    setScreen('result')
-    void saveAssessmentResult(resultToSave)
-  }
-
   const goToNextStep = () => {
     const nextStepIndex = currentStepIndex + 1
 
     if (nextStepIndex >= ASSESSMENT_STEPS.length) {
-      showResult()
+      void submitAssessment()
       return
     }
 
     setCurrentStepIndex(nextStepIndex)
   }
 
-  const restartActivity = () => {
-    setScreen('intro')
-    setParticipant(EMPTY_PARTICIPANT)
-    setAnswers({})
-    setCurrentStepIndex(0)
+  const returnToQuestionnaire = () => {
     setSubmissionState(INITIAL_SUBMISSION_STATE)
-  }
-
-  const retrySubmission = () => {
-    void saveAssessmentResult(assessmentResult)
+    setScreen('questionnaire')
   }
 
   if (screen === 'intro') {
@@ -110,14 +98,47 @@ function App() {
     )
   }
 
-  return (
-    <ResultScreen
-      assessmentResult={assessmentResult}
-      onRestart={restartActivity}
-      onRetry={retrySubmission}
-      submissionState={submissionState}
-    />
-  )
+  if (screen === 'submitting') {
+    return (
+      <main className="app-shell" aria-live="polite">
+        <section className="result-panel">
+          <h1>Enviando suas respostas...</h1>
+          <p className="status-pill status-saving">Aguarde enquanto concluímos o envio.</p>
+        </section>
+      </main>
+    )
+  }
+
+  if (screen === 'submission-error') {
+    return (
+      <main className="app-shell" aria-live="assertive">
+        <section className="result-panel">
+          <h1>Não foi possível enviar suas respostas</h1>
+          <div className="status-error-box">
+            <p>{submissionState.message}</p>
+            <div className="button-row">
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={returnToQuestionnaire}
+              >
+                Voltar ao questionário
+              </button>
+              <button className="primary-button" type="button" onClick={submitAssessment}>
+                Tentar enviar novamente
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    )
+  }
+
+  if (screen === 'result') {
+    return <ResultScreen />
+  }
+
+  return null
 }
 
 export default App

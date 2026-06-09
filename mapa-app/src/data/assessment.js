@@ -1,15 +1,21 @@
+export const ASSESSMENT_VERSION = '2.0'
+
 export const ASSESSMENT_META = {
   slug: 'mapa-competencias-comportamentais',
-  version: '1.0',
+  version: ASSESSMENT_VERSION,
 }
 
-export const CONSENT_VERSION = '1.0'
+export const CONSENT_VERSION = '2.0'
 
-export const CONSENT_TEXT = `Declaro que li e concordo que minhas respostas serão coletadas e utilizadas pela equipe da Ana Luiza Carvalho para fins pedagógicos, acompanhamento individual, análise da turma e melhoria das atividades do Laboratório de Competências.
+export const CONSENT_TEXT = `Autorizo a equipe da Ana Luiza Carvalho a coletar e tratar os dados que informo neste questionário — meu nome e e-mail — e as respostas que registro, com a finalidade de gerar meu mapa de competências, oferecer acompanhamento individual e pedagógico, analisar o desenvolvimento da turma e aprimorar as atividades do Laboratório de Competências.
 
-Entendo que este mapa não é avaliação psicológica, diagnóstico clínico, laudo, processo seletivo ou instrumento de decisão automatizada. É uma atividade de autopercepção e desenvolvimento.
+Este tratamento se baseia no meu consentimento livre, informado e inequívoco (art. 7º, I, da Lei nº 13.709/2018 — Lei Geral de Proteção de Dados). Minha participação é voluntária e posso revogar este consentimento a qualquer momento, sem prejuízo, comunicando a equipe.
 
-Também entendo que posso solicitar acesso, correção ou exclusão dos meus dados pelo canal informado pela equipe.`
+Entendo que meu mapa poderá ser enviado a mim de forma individual por mensagem, incluindo WhatsApp, no contato que forneci, e que meus dados não serão vendidos nem compartilhados com terceiros sem relação com esta atividade.
+
+Compreendo que este mapa é uma atividade de autopercepção e desenvolvimento e não constitui avaliação psicológica, diagnóstico clínico, laudo, processo seletivo ou decisão tomada de forma automatizada.
+
+Estou ciente de que posso, a qualquer momento, confirmar a existência do tratamento, acessar, corrigir, atualizar, solicitar a portabilidade ou a eliminação dos meus dados e revogar este consentimento, pelo canal de atendimento informado pela equipe. Meus dados serão mantidos apenas pelo tempo necessário às finalidades acima e eliminados quando deixarem de ser necessários ou mediante minha solicitação.`
 
 export const COMPETENCIES = [
   {
@@ -50,12 +56,13 @@ export const COMPETENCIES = [
   },
 ]
 
-export const MATURE_OPTION_BY_QUESTION = {
-  1: 'B', 2: 'C', 3: 'A', 4: 'B', 6: 'C', 7: 'A', 8: 'B', 9: 'C',
-  11: 'B', 12: 'A', 13: 'C', 14: 'B', 16: 'A', 17: 'C', 18: 'B', 19: 'A',
-  21: 'C', 22: 'B', 23: 'A', 24: 'C', 26: 'B', 27: 'A', 28: 'C', 29: 'B',
-}
+export const FREQUENCY_OPTIONS = [
+  { value: 'quase_sempre', label: 'Quase sempre' },
+  { value: 'as_vezes', label: 'Às vezes' },
+  { value: 'raramente', label: 'Raramente' },
+]
 
+// Kept temporarily because the current result screen still imports this v1 export.
 export const INTERPRETATION_BANDS = [
   {
     min: 0,
@@ -77,419 +84,852 @@ export const INTERPRETATION_BANDS = [
   },
 ]
 
+function defineQuestion(question) {
+  return {
+    ...question,
+    questionNumber: question.number,
+    questionType: question.type,
+  }
+}
+
 export const ASSESSMENT_STEPS = [
   {
-    id: 'comunicacao-assertiva',
+    id: 'comunicacao_assertiva',
     title: 'Comunicação Assertiva',
+    competencyKey: 'comunicacao_assertiva',
     questions: [
-      {
-        questionNumber: 1,
-        questionType: 'single',
+      defineQuestion({
+        number: 1,
+        type: 'situation',
         competencyKey: 'comunicacao_assertiva',
-        text: 'Quando preciso discordar de alguém, eu normalmente:',
-        matureOption: MATURE_OPTION_BY_QUESTION[1],
+        text: 'Lembre da última vez que você discordou de uma decisão numa reunião ou conversa de trabalho — e quem decidia tinha mais peso que você. O que você fez?',
         options: [
-          { value: 'A', label: 'Evito falar para não gerar desconforto.' },
-          { value: 'B', label: 'Explico meu ponto com respeito e escuto a outra pessoa.' },
-          { value: 'C', label: 'Falo de forma direta, mesmo que a pessoa se sinta atacada.' },
+          {
+            value: 'a',
+            label:
+              'Não falei na hora — achei melhor não abrir discussão na frente de todo mundo, ainda mais com alguém acima de mim.',
+            zone: 'Z1',
+          },
+          {
+            value: 'b',
+            label:
+              'Falei na hora o que pensava, sem rodeio — se ninguém aponta, passa errado; prefiro ser sincera mesmo que soe dura.',
+            zone: 'Z2',
+          },
+          {
+            value: 'c',
+            label:
+              'Falei que enxergava diferente e expliquei o porquê em poucas palavras, sem brigar pra que fosse do meu jeito.',
+            zone: 'Z3',
+          },
         ],
-      },
-      {
-        questionNumber: 2,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 2,
+        type: 'situation',
         competencyKey: 'comunicacao_assertiva',
-        text: 'Ao receber uma orientação pouco clara, minha tendência é:',
-        matureOption: MATURE_OPTION_BY_QUESTION[2],
+        text: 'Lembre da última vez que te pediram pra assumir algo — uma tarefa, um prazo, uma demanda a mais — que você sabia que ia te sobrecarregar. O que você fez?',
         options: [
-          { value: 'A', label: 'Tentar adivinhar o que esperam de mim.' },
-          { value: 'B', label: 'Esperar que alguém perceba minha dúvida.' },
-          { value: 'C', label: 'Fazer perguntas objetivas para alinhar expectativas.' },
+          {
+            value: 'a',
+            label: 'Aceitei mesmo assim — preferi não criar problema; depois eu dava um jeito.',
+            zone: 'Z1',
+          },
+          {
+            value: 'b',
+            label:
+              'Falei o que dava pra assumir e o que não dava, e a gente acertou o que vinha primeiro.',
+            zone: 'Z3',
+          },
+          {
+            value: 'c',
+            label:
+              'Deixei claro, meio sem paciência, que eu já estava cheia e que aquilo não cabia — uma hora a gente tem que se impor.',
+            zone: 'Z2',
+          },
         ],
-      },
-      {
-        questionNumber: 3,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 3,
+        type: 'situation',
         competencyKey: 'comunicacao_assertiva',
-        text: 'Quando preciso dizer não a um pedido, eu costumo:',
-        matureOption: MATURE_OPTION_BY_QUESTION[3],
+        text: 'Lembre da última vez que alguém não cumpriu algo combinado com você, ou que você precisou cobrar ou pedir algo importante pra você. O que você fez?',
         options: [
-          { value: 'A', label: 'Explicar meu limite com clareza e propor alternativa se possível.' },
-          { value: 'B', label: 'Aceitar mesmo sem conseguir cumprir bem.' },
-          { value: 'C', label: 'Responder de forma seca para encerrar o assunto.' },
+          {
+            value: 'a',
+            label:
+              'Retomei o combinado direto com a pessoa — falei o que tinha ficado pra trás e o que eu precisava dali pra frente.',
+            zone: 'Z3',
+          },
+          {
+            value: 'b',
+            label:
+              'Deixei pra lá e dei meu jeito sozinha — cobrar ia parecer que eu estava reclamando ou fazendo drama.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'Cobrei na hora, sem muito filtro — quando deixo passar vira costume, prefiro deixar claro logo.',
+            zone: 'Z2',
+          },
         ],
-      },
-      {
-        questionNumber: 4,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 4,
+        type: 'thought',
         competencyKey: 'comunicacao_assertiva',
-        text: 'Em conversas difíceis, eu geralmente:',
-        matureOption: MATURE_OPTION_BY_QUESTION[4],
-        options: [
-          { value: 'A', label: 'Fico em silêncio e guardo o incômodo.' },
-          { value: 'B', label: 'Organizo meu pensamento antes de falar e busco um tom respeitoso.' },
-          { value: 'C', label: 'Reajo no momento para não perder a oportunidade.' },
+        text: 'Quando você precisa se posicionar, dizer não ou cobrar alguém, com que frequência passa pela sua cabeça cada pensamento?',
+        statements: [
+          {
+            id: 'q4_z1',
+            zone: 'Z1',
+            text: '“Melhor não falar agora, pra não criar climão ou desagradar alguém.”',
+          },
+          {
+            id: 'q4_z2',
+            zone: 'Z2',
+            text: '“Se eu não falar firme, acabam passando por cima de mim.”',
+          },
         ],
-      },
-      {
-        questionNumber: 5,
-        questionType: 'multi',
+        frequencyOptions: FREQUENCY_OPTIONS,
+      }),
+      defineQuestion({
+        number: 5,
+        type: 'value',
         competencyKey: 'comunicacao_assertiva',
-        text: 'Quais situações mais desafiam sua comunicação hoje? Escolha até 2.',
+        text: 'Quando você precisa dizer algo difícil e não dá pra agradar todo mundo, o que pesa mais forte em você na hora? (UMA)',
         options: [
-          { value: 'A', label: 'Dar feedback.' },
-          { value: 'B', label: 'Pedir ajuda.' },
-          { value: 'C', label: 'Defender uma ideia.' },
-          { value: 'D', label: 'Dizer não.' },
+          {
+            value: 'a',
+            label: 'Não estremecer a relação, manter o clima bom.',
+            mappedValue: 'Pertencimento',
+          },
+          {
+            value: 'b',
+            label: 'Dizer o que eu penso de verdade, mesmo que incomode.',
+            mappedValue: 'Verdade',
+          },
+          {
+            value: 'c',
+            label: 'Que a coisa seja justa, que cada um assuma o que é seu.',
+            mappedValue: 'Justiça',
+          },
+          {
+            value: 'd',
+            label: 'Não passar uma imagem ruim, não parecer difícil.',
+            mappedValue: 'Reconhecimento',
+          },
+          {
+            value: 'e',
+            label: 'Resolver logo e seguir em frente.',
+            mappedValue: 'Resultado',
+          },
         ],
-      },
+      }),
     ],
   },
   {
-    id: 'maturidade-emocional',
+    id: 'maturidade_emocional',
     title: 'Maturidade Emocional',
+    competencyKey: 'maturidade_emocional',
     questions: [
-      {
-        questionNumber: 6,
-        questionType: 'single',
+      defineQuestion({
+        number: 6,
+        type: 'situation',
         competencyKey: 'maturidade_emocional',
-        text: 'Quando recebo uma crítica, minha primeira atitude costuma ser:',
-        matureOption: MATURE_OPTION_BY_QUESTION[6],
+        text: 'Lembre da última vez que você recebeu uma crítica dura, ou um feedback que te pegou de surpresa. O que você fez?',
         options: [
-          { value: 'A', label: 'Me defender rapidamente.' },
-          { value: 'B', label: 'Me fechar e evitar novas conversas.' },
-          { value: 'C', label: 'Escutar, filtrar o que faz sentido e decidir o próximo passo.' },
+          {
+            value: 'a',
+            label:
+              'Expliquei o meu lado na hora — parte daquilo vinha de quem não tinha visto tudo, e eu não ia deixar ficar uma impressão errada de mim.',
+            zone: 'Z2',
+          },
+          {
+            value: 'b',
+            label:
+              'Concordei e agradeci ali, de boa — mas depois fiquei dias remoendo, pensando no que tinham achado de mim.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'Segurei a vontade de responder na hora, deixei a poeira baixar, e depois pensei com calma no que tinha ali de verdade pra eu aproveitar.',
+            zone: 'Z3',
+          },
         ],
-      },
-      {
-        questionNumber: 7,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 7,
+        type: 'situation',
         competencyKey: 'maturidade_emocional',
-        text: 'Quando estou sob pressão, eu tendo a:',
-        matureOption: MATURE_OPTION_BY_QUESTION[7],
+        text: 'Lembre da última vez que algo importante desandou de um jeito que você não esperava — um plano que furou, um problema que caiu no seu colo. Nas horas seguintes, o que aconteceu com você?',
         options: [
-          { value: 'A', label: 'Respirar, priorizar e agir por etapas.' },
-          { value: 'B', label: 'Tentar resolver tudo ao mesmo tempo.' },
-          { value: 'C', label: 'Paralisar até a pressão diminuir.' },
+          {
+            value: 'a',
+            label:
+              'Fiquei chateada, mas respirei, separei o que ainda dava pra resolver do que não dava mais, e fui cuidar do que estava na minha mão.',
+            zone: 'Z3',
+          },
+          {
+            value: 'b',
+            label:
+              'Travei — fiquei nervosa, sem saber por onde começar, e demorei um tempão pra conseguir reagir.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'Já fui resolvendo no impulso — puxei tudo pra mim, cobrei quem estava do lado, e só fui sentir o baque depois.',
+            zone: 'Z2',
+          },
         ],
-      },
-      {
-        questionNumber: 8,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 8,
+        type: 'situation',
         competencyKey: 'maturidade_emocional',
-        text: 'Quando erro em uma atividade importante, eu normalmente:',
-        matureOption: MATURE_OPTION_BY_QUESTION[8],
+        text: 'Lembre da última vez que algo te abalou de verdade no trabalho — uma situação injusta, uma conversa pesada, um erro seu exposto na frente dos outros. Pensando em como você ficou nos dias seguintes:',
         options: [
-          { value: 'A', label: 'Evito pensar no assunto.' },
-          { value: 'B', label: 'Reconheço o erro, aprendo e ajusto minha rota.' },
-          { value: 'C', label: 'Procuro uma justificativa externa.' },
+          {
+            value: 'a',
+            label:
+              'Por fora segui normal, como se não tivesse mexido comigo — mas por dentro ficou martelando, ou apareceu depois em forma de cansaço, irritação, sono ruim.',
+            zone: 'Z1',
+          },
+          {
+            value: 'b',
+            label:
+              'Não me deixei ficar mal — engoli, mantive a postura e o foco no trabalho; ficar abalada ali não ia ajudar em nada.',
+            zone: 'Z2',
+          },
+          {
+            value: 'c',
+            label:
+              'Deixei vir o que tinha que vir, tirei um tempo pra digerir, e aí consegui virar a página de verdade — sem ficar remoendo nem fingir que não tinha doído.',
+            zone: 'Z3',
+          },
         ],
-      },
-      {
-        questionNumber: 9,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 9,
+        type: 'thought',
         competencyKey: 'maturidade_emocional',
-        text: 'Diante de uma emoção intensa, minha tendência é:',
-        matureOption: MATURE_OPTION_BY_QUESTION[9],
-        options: [
-          { value: 'A', label: 'Agir antes de entender o que estou sentindo.' },
-          { value: 'B', label: 'Ignorar a emoção para parecer forte.' },
-          { value: 'C', label: 'Nomear o que sinto e escolher uma resposta mais adequada.' },
+        text: 'Quando algo mexe com você emocionalmente no trabalho, com que frequência passa pela sua cabeça cada pensamento?',
+        statements: [
+          {
+            id: 'q9_z2',
+            zone: 'Z2',
+            text: '“Não posso deixar transparecer o que estou sentindo, senão vão me achar frágil.”',
+          },
+          {
+            id: 'q9_z1',
+            zone: 'Z1',
+            text: '“Melhor nem mexer no que me incomodou — é só seguir que passa.”',
+          },
         ],
-      },
-      {
-        questionNumber: 10,
-        questionType: 'multi',
+        frequencyOptions: FREQUENCY_OPTIONS,
+      }),
+      defineQuestion({
+        number: 10,
+        type: 'value',
         competencyKey: 'maturidade_emocional',
-        text: 'Quais situações mais testam sua maturidade emocional? Escolha até 2.',
+        text: 'Quando algo te abala emocionalmente no trabalho, o que pesa mais forte em você na hora? (UMA)',
         options: [
-          { value: 'A', label: 'Pressão por prazo.' },
-          { value: 'B', label: 'Críticas inesperadas.' },
-          { value: 'C', label: 'Conflitos com colegas.' },
-          { value: 'D', label: 'Mudanças de planos.' },
+          {
+            value: 'a',
+            label: 'Não deixar isso virar briga ou desgaste com os outros.',
+            mappedValue: 'Pertencimento',
+          },
+          {
+            value: 'b',
+            label: 'Manter o controle, não me sentir perdida.',
+            mappedValue: 'Segurança',
+          },
+          {
+            value: 'c',
+            label: 'Não passar imagem de frágil ou descontrolada.',
+            mappedValue: 'Reconhecimento',
+          },
+          {
+            value: 'd',
+            label: 'Que tivessem sido justos comigo.',
+            mappedValue: 'Justiça',
+          },
+          {
+            value: 'e',
+            label: 'Não travar — conseguir seguir e resolver.',
+            mappedValue: 'Resultado',
+          },
         ],
-      },
+      }),
     ],
   },
   {
-    id: 'foco-resultado-produtividade',
+    id: 'foco_resultado_produtividade',
     title: 'Foco em Resultado e Produtividade',
+    competencyKey: 'foco_resultado_produtividade',
     questions: [
-      {
-        questionNumber: 11,
-        questionType: 'single',
+      defineQuestion({
+        number: 11,
+        type: 'situation',
         competencyKey: 'foco_resultado_produtividade',
-        text: 'Quando começo uma tarefa, eu geralmente:',
-        matureOption: MATURE_OPTION_BY_QUESTION[11],
+        text: 'Lembre da última semana realmente cheia que você teve — muita demanda e tarefa ao mesmo tempo. Na prática, como você tocou aquilo?',
         options: [
-          { value: 'A', label: 'Inicio pelo que parece mais fácil no momento.' },
-          { value: 'B', label: 'Entendo o objetivo e organizo os próximos passos.' },
-          { value: 'C', label: 'Espero ter vontade para começar.' },
+          {
+            value: 'a',
+            label:
+              'Abracei tudo de uma vez e fui tocando no impulso — parar pra organizar ia ser perda de um tempo que eu não tinha.',
+            zone: 'Z2',
+          },
+          {
+            value: 'b',
+            label:
+              'Parei um instante pra ver o que era mais importante, comecei por aí, e deixei o resto pra depois.',
+            zone: 'Z3',
+          },
+          {
+            value: 'c',
+            label:
+              'Fui fazendo primeiro o que era mais rápido e o que gritava mais alto, pra ir tirando da frente — o importante mesmo ficou pro fim.',
+            zone: 'Z1',
+          },
         ],
-      },
-      {
-        questionNumber: 12,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 12,
+        type: 'situation',
         competencyKey: 'foco_resultado_produtividade',
-        text: 'Ao perceber muitas demandas ao mesmo tempo, eu costumo:',
-        matureOption: MATURE_OPTION_BY_QUESTION[12],
+        text: 'Lembre da última vez que você teve uma entrega importante que dependia só de você, sem ninguém cobrando prazo. Como foi?',
         options: [
-          { value: 'A', label: 'Priorizar pelo impacto e pelo prazo.' },
-          { value: 'B', label: 'Alternar entre tarefas sem concluir.' },
-          { value: 'C', label: 'Focar no que outras pessoas cobram primeiro.' },
+          {
+            value: 'a',
+            label:
+              'Como ninguém estava cobrando, fui empurrando com a barriga — sempre tinha algo mais urgente na frente.',
+            zone: 'Z1',
+          },
+          {
+            value: 'b',
+            label:
+              'Fui aceitando outras coisas que apareciam, e ela acabou disputando espaço com todo o resto.',
+            zone: 'Z2',
+          },
+          {
+            value: 'c',
+            label:
+              'Marquei uma data pra mim e reservei um tempo no meio da semana, como se alguém fosse cobrar.',
+            zone: 'Z3',
+          },
         ],
-      },
-      {
-        questionNumber: 13,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 13,
+        type: 'situation',
         competencyKey: 'foco_resultado_produtividade',
-        text: 'Quando uma tarefa fica cansativa, minha tendência é:',
-        matureOption: MATURE_OPTION_BY_QUESTION[13],
+        text: 'Lembre da última vez que você terminou o dia exausta, tendo feito mil coisas pequenas, mas deixando de lado as atividades que eram de fato mais relevantes. Depois disso, o que você fez?',
         options: [
-          { value: 'A', label: 'Procurar distrações para aliviar.' },
-          { value: 'B', label: 'Abandonar e voltar depois sem planejamento.' },
-          { value: 'C', label: 'Dividir em partes menores e manter avanço possível.' },
+          {
+            value: 'a',
+            label:
+              'No dia seguinte inverti a ordem: comecei pelo que era mais importante e deixei o resto pra depois.',
+            zone: 'Z3',
+          },
+          {
+            value: 'b',
+            label:
+              'Fiquei até mais tarde e puxei ainda mais coisa pra mim, pra conseguir dar conta de tudo.',
+            zone: 'Z2',
+          },
+          {
+            value: 'c',
+            label:
+              'Fiquei frustrada, mas não tomei nenhuma decisão pra mudar — no dia seguinte continuei do mesmo jeito.',
+            zone: 'Z1',
+          },
         ],
-      },
-      {
-        questionNumber: 14,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 14,
+        type: 'thought',
         competencyKey: 'foco_resultado_produtividade',
-        text: 'Para acompanhar meu progresso, eu normalmente:',
-        matureOption: MATURE_OPTION_BY_QUESTION[14],
-        options: [
-          { value: 'A', label: 'Confio na memória.' },
-          { value: 'B', label: 'Uso alguma forma de registro, lista ou revisão.' },
-          { value: 'C', label: 'Só verifico quando alguém pergunta.' },
+        text: 'Quando o trabalho aperta, com que frequência passa pela sua cabeça cada pensamento?',
+        statements: [
+          {
+            id: 'q14_z2',
+            zone: 'Z2',
+            text: '“Eu preciso dar conta de tudo — se sobra coisa, é falha minha.”',
+          },
+          {
+            id: 'q14_z1',
+            zone: 'Z1',
+            text: '“Isso eu resolvo depois, ainda dá tempo.”',
+          },
         ],
-      },
-      {
-        questionNumber: 15,
-        questionType: 'multi',
+        frequencyOptions: FREQUENCY_OPTIONS,
+      }),
+      defineQuestion({
+        number: 15,
+        type: 'value',
         competencyKey: 'foco_resultado_produtividade',
-        text: 'O que mais atrapalha sua produtividade hoje? Escolha até 2.',
+        text: 'Quando o trabalho acumula e você não vai dar conta de tudo bem, o que pesa mais forte? (UMA)',
         options: [
-          { value: 'A', label: 'Distrações digitais.' },
-          { value: 'B', label: 'Dificuldade de priorizar.' },
-          { value: 'C', label: 'Falta de planejamento.' },
-          { value: 'D', label: 'Excesso de demandas.' },
+          {
+            value: 'a',
+            label: 'Entregar e fazer andar, custe o que custar.',
+            mappedValue: 'Resultado',
+          },
+          {
+            value: 'b',
+            label: 'Fazer bem feito, mesmo que demore mais.',
+            mappedValue: 'Excelência',
+          },
+          {
+            value: 'c',
+            label: 'Não passar a imagem de quem não dá conta.',
+            mappedValue: 'Reconhecimento',
+          },
+          {
+            value: 'd',
+            label: 'Manter tudo organizado e sob controle.',
+            mappedValue: 'Segurança',
+          },
+          {
+            value: 'e',
+            label: 'Não deixar ninguém na mão.',
+            mappedValue: 'Pertencimento',
+          },
         ],
-      },
+      }),
     ],
   },
   {
-    id: 'visao-sistemica',
+    id: 'visao_sistemica',
     title: 'Visão Sistêmica',
+    competencyKey: 'visao_sistemica',
     questions: [
-      {
-        questionNumber: 16,
-        questionType: 'single',
+      defineQuestion({
+        number: 16,
+        type: 'situation',
         competencyKey: 'visao_sistemica',
-        text: 'Antes de tomar uma decisão que afeta outras pessoas, eu costumo:',
-        matureOption: MATURE_OPTION_BY_QUESTION[16],
+        text: 'Lembre da última vez que te passaram uma tarefa sem muito contexto — só “faz isso”. O que você fez?',
         options: [
-          { value: 'A', label: 'Considerar impactos, envolvidos e consequências.' },
-          { value: 'B', label: 'Focar apenas no meu resultado imediato.' },
-          { value: 'C', label: 'Decidir rápido para evitar demora.' },
+          {
+            value: 'a',
+            label:
+              'Fiz do jeito que pediram e pronto, sem ficar perguntando muito — não queria atrasar nem parecer enrolada.',
+            zone: 'Z1',
+          },
+          {
+            value: 'b',
+            label:
+              'Antes de começar, perguntei rapidinho pra que era aquilo e quem ia usar, pra não fazer no escuro — e aí toquei.',
+            zone: 'Z3',
+          },
+          {
+            value: 'c',
+            label:
+              'Quis entender tudo nos mínimos detalhes e levantei um monte de perguntas — só ia tocar com a certeza de que nada sairia errado.',
+            zone: 'Z2',
+          },
         ],
-      },
-      {
-        questionNumber: 17,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 17,
+        type: 'situation',
         competencyKey: 'visao_sistemica',
-        text: 'Quando um problema se repete, minha tendência é:',
-        matureOption: MATURE_OPTION_BY_QUESTION[17],
+        text: 'Lembre da última vez que você percebeu um problema que se repetia, mas que não era exatamente da sua responsabilidade. O que você fez?',
         options: [
-          { value: 'A', label: 'Resolver só o sintoma mais urgente.' },
-          { value: 'B', label: 'Esperar que outra pessoa investigue.' },
-          { value: 'C', label: 'Buscar causas, padrões e pontos de melhoria.' },
+          {
+            value: 'a',
+            label:
+              'Entrei e fui resolver eu mesma — alguém tinha que resolver e ninguém estava fazendo nada.',
+            zone: 'Z2',
+          },
+          {
+            value: 'b',
+            label:
+              'Reparei, mas não me meti — não era minha função, e não queria pisar no que era dos outros.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'Avisei quem podia resolver, mostrei onde aquilo estava atrapalhando, e ajudei no que dava do meu lado.',
+            zone: 'Z3',
+          },
         ],
-      },
-      {
-        questionNumber: 18,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 18,
+        type: 'situation',
         competencyKey: 'visao_sistemica',
-        text: 'Ao trabalhar em grupo, eu geralmente:',
-        matureOption: MATURE_OPTION_BY_QUESTION[18],
+        text: 'Lembre da última vez que você terminou a sua parte de algo, mas dava pra ver que quem ia pegar dali podia ter dificuldade. O que você fez?',
         options: [
-          { value: 'A', label: 'Faço minha parte sem olhar o todo.' },
-          { value: 'B', label: 'Entendo como minha entrega se conecta às demais.' },
-          { value: 'C', label: 'Aguardo alguém coordenar tudo.' },
+          {
+            value: 'a',
+            label:
+              'Antes de passar adiante, expliquei o que era importante e o que podia complicar, pra facilitar pra quem ia pegar.',
+            zone: 'Z3',
+          },
+          {
+            value: 'b',
+            label:
+              'Considerei a minha parte feita — cada um cuida do que é seu, e a minha eu já tinha entregado.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'Acabei entrando também na parte do outro pra garantir que saísse do jeito certo.',
+            zone: 'Z2',
+          },
         ],
-      },
-      {
-        questionNumber: 19,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 19,
+        type: 'thought',
         competencyKey: 'visao_sistemica',
-        text: 'Quando uma solução parece boa para mim, eu:',
-        matureOption: MATURE_OPTION_BY_QUESTION[19],
-        options: [
-          { value: 'A', label: 'Verifico se ela também funciona para o contexto maior.' },
-          { value: 'B', label: 'Sigo em frente sem consultar outras perspectivas.' },
-          { value: 'C', label: 'Deixo a decisão para quem tem mais autoridade.' },
+        text: 'Em coisas que envolvem várias pessoas, com que frequência passa pela sua cabeça cada pensamento?',
+        statements: [
+          {
+            id: 'q19_z1',
+            zone: 'Z1',
+            text: '“Fiz a minha parte; o que vem depois não é problema meu.”',
+          },
+          {
+            id: 'q19_z2',
+            zone: 'Z2',
+            text: '“Se eu não ficar de olho em tudo, alguma coisa vai sair errada.”',
+          },
         ],
-      },
-      {
-        questionNumber: 20,
-        questionType: 'multi',
+        frequencyOptions: FREQUENCY_OPTIONS,
+      }),
+      defineQuestion({
+        number: 20,
+        type: 'value',
         competencyKey: 'visao_sistemica',
-        text: 'O que mais dificulta sua visão do todo? Escolha até 2.',
+        text: 'Quando uma entrega envolve várias pessoas e etapas, o que pesa mais forte em você? (UMA)',
         options: [
-          { value: 'A', label: 'Urgência do dia a dia.' },
-          { value: 'B', label: 'Pouca troca com outras áreas ou pessoas.' },
-          { value: 'C', label: 'Falta de clareza sobre objetivos.' },
-          { value: 'D', label: 'Medo de perguntar demais.' },
+          {
+            value: 'a',
+            label: 'Que o resultado final saia.',
+            mappedValue: 'Resultado',
+          },
+          {
+            value: 'b',
+            label: 'Que nada dê errado no caminho.',
+            mappedValue: 'Segurança',
+          },
+          {
+            value: 'c',
+            label: 'Que as pessoas trabalhem bem juntas.',
+            mappedValue: 'Pertencimento',
+          },
+          {
+            value: 'd',
+            label: 'Cuidar bem do que é meu, sem invadir o dos outros.',
+            mappedValue: 'Autonomia',
+          },
+          {
+            value: 'e',
+            label: 'Que a entrega inteira fique bem feita.',
+            mappedValue: 'Excelência',
+          },
         ],
-      },
+      }),
     ],
   },
   {
-    id: 'direcao-futuro',
+    id: 'direcao_futuro',
     title: 'Direção de Futuro',
+    competencyKey: 'direcao_futuro',
     questions: [
-      {
-        questionNumber: 21,
-        questionType: 'single',
+      defineQuestion({
+        number: 21,
+        type: 'situation',
         competencyKey: 'direcao_futuro',
-        text: 'Quando penso no meu desenvolvimento, eu normalmente:',
-        matureOption: MATURE_OPTION_BY_QUESTION[21],
+        text: 'Pense nos últimos meses. Quando apareceu uma chance de crescer que exigia se expor, se esforçar mais ou sair da zona de conforto, o que você costumou fazer?',
         options: [
-          { value: 'A', label: 'Espero oportunidades aparecerem.' },
-          { value: 'B', label: 'Tenho vontade de crescer, mas pouca clareza.' },
-          { value: 'C', label: 'Defino objetivos e observo próximos passos possíveis.' },
+          {
+            value: 'a',
+            label:
+              'Acabei adiando ou deixando passar — senti que ainda não estava preparada, que faltava alguma coisa.',
+            zone: 'Z1',
+          },
+          {
+            value: 'b',
+            label:
+              'Pensei se aquilo me levava pra onde eu quero chegar, e quando levava, encarei mesmo com o frio na barriga.',
+            zone: 'Z3',
+          },
+          {
+            value: 'c',
+            label:
+              'Agarrei na hora, antes de pensar direito — morro de medo de perder oportunidade e ficar pra trás.',
+            zone: 'Z2',
+          },
         ],
-      },
-      {
-        questionNumber: 22,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 22,
+        type: 'situation',
         competencyKey: 'direcao_futuro',
-        text: 'Ao escolher uma atividade, eu costumo considerar:',
-        matureOption: MATURE_OPTION_BY_QUESTION[22],
+        text: 'Pense em algo que você diz que quer pra sua vida ou carreira, mas que a sua rotina de hoje não sustenta. Nos últimos tempos, diante dessa diferença, o que você fez?',
         options: [
-          { value: 'A', label: 'Somente o que é mais confortável agora.' },
-          { value: 'B', label: 'Como ela pode contribuir para meu caminho futuro.' },
-          { value: 'C', label: 'A opinião das pessoas antes da minha intenção.' },
+          {
+            value: 'a',
+            label:
+              'Escolhi uma mudança pequena e comecei a mexer numa parte da rotina — pouca coisa, mas de verdade.',
+            zone: 'Z3',
+          },
+          {
+            value: 'b',
+            label:
+              'Fiquei incomodada e pensando muito naquilo, mas na prática não saí muito do lugar.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'Me cobrei demais e tentei mudar tudo de uma vez — o que não durou nem um pouco.',
+            zone: 'Z2',
+          },
         ],
-      },
-      {
-        questionNumber: 23,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 23,
+        type: 'situation',
         competencyKey: 'direcao_futuro',
-        text: 'Quando não sei o próximo passo, eu tendo a:',
-        matureOption: MATURE_OPTION_BY_QUESTION[23],
+        text: 'Pense nas decisões mais importantes que você tomou nos últimos tempos. Na hora de escolher, o que mais pesou?',
         options: [
-          { value: 'A', label: 'Buscar informações, referências e conversas orientadoras.' },
-          { value: 'B', label: 'Adiar a decisão indefinidamente.' },
-          { value: 'C', label: 'Escolher qualquer caminho para sair da dúvida.' },
+          {
+            value: 'a',
+            label:
+              'O que parecia mais ousado ou que me fazia avançar mais rápido, mesmo sem eu ter clareza do que ia custar.',
+            zone: 'Z2',
+          },
+          {
+            value: 'b',
+            label:
+              'O que me dava menos dor de cabeça na hora ou evitava um atrito imediato.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'O que combinava mais com aquilo que eu acredito e com a direção que eu quero seguir, mesmo custando mais agora.',
+            zone: 'Z3',
+          },
         ],
-      },
-      {
-        questionNumber: 24,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 24,
+        type: 'thought',
         competencyKey: 'direcao_futuro',
-        text: 'Sobre metas pessoais e profissionais, eu:',
-        matureOption: MATURE_OPTION_BY_QUESTION[24],
-        options: [
-          { value: 'A', label: 'Penso nelas apenas quando alguém pergunta.' },
-          { value: 'B', label: 'Tenho muitas ideias, mas não transformo em plano.' },
-          { value: 'C', label: 'Reviso prioridades e ajusto ações quando necessário.' },
+        text: 'Quando você pensa no seu futuro, com que frequência passa pela sua cabeça cada pensamento?',
+        statements: [
+          {
+            id: 'q24_z1',
+            zone: 'Z1',
+            text: '“Eu queria crescer, mas não sei nem por onde começar.”',
+          },
+          {
+            id: 'q24_z2',
+            zone: 'Z2',
+            text: '“Preciso correr — sinto que estou ficando pra trás em relação aos outros.”',
+          },
         ],
-      },
-      {
-        questionNumber: 25,
-        questionType: 'multi',
+        frequencyOptions: FREQUENCY_OPTIONS,
+      }),
+      defineQuestion({
+        number: 25,
+        type: 'value',
         competencyKey: 'direcao_futuro',
-        text: 'O que mais dificulta sua direção de futuro hoje? Escolha até 2.',
+        text: 'Quando você decide algo sobre seu futuro ou sua carreira, o que pesa mais forte? (UMA)',
         options: [
-          { value: 'A', label: 'Falta de clareza sobre interesses.' },
-          { value: 'B', label: 'Medo de escolher errado.' },
-          { value: 'C', label: 'Pouca informação sobre possibilidades.' },
-          { value: 'D', label: 'Dificuldade de manter planos.' },
+          {
+            value: 'a',
+            label: 'Crescer, aprender, evoluir.',
+            mappedValue: 'Crescimento',
+          },
+          {
+            value: 'b',
+            label: 'Não arriscar o que eu já tenho, manter o chão firme.',
+            mappedValue: 'Segurança',
+          },
+          {
+            value: 'c',
+            label: 'Construir uma reputação, ser reconhecida pelo caminho.',
+            mappedValue: 'Reconhecimento',
+          },
+          {
+            value: 'd',
+            label: 'Ter liberdade pra decidir do meu jeito.',
+            mappedValue: 'Autonomia',
+          },
+          {
+            value: 'e',
+            label: 'Avançar de verdade, ver resultado concreto.',
+            mappedValue: 'Resultado',
+          },
         ],
-      },
+      }),
     ],
   },
   {
-    id: 'protagonismo-profissional',
+    id: 'protagonismo_profissional',
     title: 'Protagonismo Profissional',
+    competencyKey: 'protagonismo_profissional',
     questions: [
-      {
-        questionNumber: 26,
-        questionType: 'single',
+      defineQuestion({
+        number: 26,
+        type: 'situation',
         competencyKey: 'protagonismo_profissional',
-        text: 'Quando encontro uma dificuldade, eu geralmente:',
-        matureOption: MATURE_OPTION_BY_QUESTION[26],
+        text: 'Lembre da última vez que você fez uma boa entrega que passou batida — ninguém viu nem deu o crédito. O que você fez?',
         options: [
-          { value: 'A', label: 'Espero alguém resolver ou orientar tudo.' },
-          { value: 'B', label: 'Busco alternativas e peço apoio quando necessário.' },
-          { value: 'C', label: 'Desisto se não vejo solução rápida.' },
+          {
+            value: 'a',
+            label:
+              'Fiquei chateada, mas não falei nada — ia parecer que eu estava querendo aparecer.',
+            zone: 'Z1',
+          },
+          {
+            value: 'b',
+            label:
+              'Fiz questão de deixar bem claro que tinha sido eu — não ia deixar meu trabalho passar como se fosse de outra pessoa.',
+            zone: 'Z2',
+          },
+          {
+            value: 'c',
+            label:
+              'Num momento tranquilo, dei um jeito de mostrar o que eu tinha feito e de acertar isso melhor dali pra frente.',
+            zone: 'Z3',
+          },
         ],
-      },
-      {
-        questionNumber: 27,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 27,
+        type: 'situation',
         competencyKey: 'protagonismo_profissional',
-        text: 'Sobre meu aprendizado, eu costumo:',
-        matureOption: MATURE_OPTION_BY_QUESTION[27],
+        text: 'Lembre da última vez que você enxergou uma melhoria que dava pra fazer no trabalho, mas ninguém tinha pedido sua opinião. O que você fez?',
         options: [
-          { value: 'A', label: 'Assumir responsabilidade e procurar formas de evoluir.' },
-          { value: 'B', label: 'Depender apenas do que é oferecido em aula.' },
-          { value: 'C', label: 'Me comparar com outras pessoas e perder ritmo.' },
+          {
+            value: 'a',
+            label: 'Organizei a ideia, escolhi uma boa hora e apresentei como uma sugestão.',
+            zone: 'Z3',
+          },
+          {
+            value: 'b',
+            label:
+              'Guardei pra mim — achei que não era o meu lugar falar, e não quis me meter.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'Apontei o problema sem rodeio — me incomoda ver algo errado e ninguém fazer nada, então alguém tinha que falar.',
+            zone: 'Z2',
+          },
         ],
-      },
-      {
-        questionNumber: 28,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 28,
+        type: 'situation',
         competencyKey: 'protagonismo_profissional',
-        text: 'Quando percebo uma oportunidade de melhoria, eu:',
-        matureOption: MATURE_OPTION_BY_QUESTION[28],
+        text: 'Lembre da última vez que você sentiu que estava estagnada ou pouco desenvolvida no trabalho. O que você fez?',
         options: [
-          { value: 'A', label: 'Guardo a ideia para evitar exposição.' },
-          { value: 'B', label: 'Espero alguém pedir minha opinião.' },
-          { value: 'C', label: 'Apresento a ideia com responsabilidade e abertura.' },
+          {
+            value: 'a',
+            label:
+              'Tentei mostrar meu valor pegando mais tarefa, assumindo mais do que devia pra aparecer mais.',
+            zone: 'Z2',
+          },
+          {
+            value: 'b',
+            label:
+              'Fiquei esperando que alguém percebesse, me desse uma chance ou me orientasse melhor.',
+            zone: 'Z1',
+          },
+          {
+            value: 'c',
+            label:
+              'Fui atrás de saber onde eu precisava melhorar e comecei a fazer alguma coisa concreta sobre isso.',
+            zone: 'Z3',
+          },
         ],
-      },
-      {
-        questionNumber: 29,
-        questionType: 'single',
+      }),
+      defineQuestion({
+        number: 29,
+        type: 'thought',
         competencyKey: 'protagonismo_profissional',
-        text: 'Quando recebo uma tarefa nova, eu tendo a:',
-        matureOption: MATURE_OPTION_BY_QUESTION[29],
-        options: [
-          { value: 'A', label: 'Focar no risco de não conseguir.' },
-          { value: 'B', label: 'Entender o desafio e agir com iniciativa responsável.' },
-          { value: 'C', label: 'Esperar instruções detalhadas para cada etapa.' },
+        text: 'Quando o assunto é o seu crescimento, com que frequência passa pela sua cabeça cada pensamento?',
+        statements: [
+          {
+            id: 'q29_z1',
+            zone: 'Z1',
+            text: '“Pra eu crescer, alguém precisa me notar ou me dar a oportunidade.”',
+          },
+          {
+            id: 'q29_z2',
+            zone: 'Z2',
+            text: '“Preciso provar o tempo todo que sou indispensável.”',
+          },
         ],
-      },
-      {
-        questionNumber: 30,
-        questionType: 'multi',
+        frequencyOptions: FREQUENCY_OPTIONS,
+      }),
+      defineQuestion({
+        number: 30,
+        type: 'value',
         competencyKey: 'protagonismo_profissional',
-        text: 'O que mais limita seu protagonismo hoje? Escolha até 2.',
+        text: 'Quando o assunto é o seu crescimento e espaço no trabalho, o que pesa mais forte? (UMA)',
         options: [
-          { value: 'A', label: 'Medo de errar.' },
-          { value: 'B', label: 'Dificuldade de pedir apoio.' },
-          { value: 'C', label: 'Baixa clareza sobre responsabilidades.' },
-          { value: 'D', label: 'Receio de se posicionar.' },
+          {
+            value: 'a',
+            label: 'Ser vista e reconhecida pelo que faço.',
+            mappedValue: 'Reconhecimento',
+          },
+          {
+            value: 'b',
+            label: 'Ter liberdade e autonomia pra agir.',
+            mappedValue: 'Autonomia',
+          },
+          {
+            value: 'c',
+            label: 'Crescer e aprender.',
+            mappedValue: 'Crescimento',
+          },
+          {
+            value: 'd',
+            label: 'Não parecer que estou me promovendo, manter boas relações.',
+            mappedValue: 'Pertencimento',
+          },
+          {
+            value: 'e',
+            label: 'Contribuir e entregar de verdade.',
+            mappedValue: 'Resultado',
+          },
         ],
-      },
+      }),
     ],
   },
   {
-    id: 'reflexao-final',
-    title: 'Reflexão final',
+    id: 'open_questions',
+    title: 'Perguntas finais',
+    competencyKey: null,
     questions: [
-      {
-        questionNumber: 31,
-        questionType: 'open',
+      defineQuestion({
+        number: 31,
+        type: 'open',
         competencyKey: null,
-        text: 'Qual comportamento você mais gostaria de mudar hoje?',
-      },
-      {
-        questionNumber: 32,
-        questionType: 'open',
+        text: 'Pensando no seu dia a dia de trabalho hoje, qual é a situação que mais se repete e que você gostaria de conseguir lidar de um jeito diferente? Descreva rapidamente o que costuma acontecer.',
+      }),
+      defineQuestion({
+        number: 32,
+        type: 'open',
         competencyKey: null,
-        text: 'Em quais situações você sente que não consegue agir como gostaria?',
-      },
+        text: 'Se, ao final deste laboratório, você pudesse mudar uma única coisa no seu jeito de agir no trabalho, o que faria a maior diferença pra você?',
+      }),
     ],
   },
 ]
