@@ -95,16 +95,15 @@ function calculateDirection(z1Count, z2Count, z3Count) {
     return 'funcional'
   }
 
-  // Oscilante = erros caíram pros dois lados; dominante = todos num lado só.
-  if (z1Count >= 1 && z2Count >= 1) {
-    return 'oscilante'
-  }
-
-  if (z2Count === 0) {
+  if (z1Count > z2Count) {
     return 'recuo'
   }
 
-  return 'excesso'
+  if (z2Count > z1Count) {
+    return 'excesso'
+  }
+
+  return 'oscilante'
 }
 
 function calculateCompetencyResult(competency, answers) {

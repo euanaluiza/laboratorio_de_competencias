@@ -396,10 +396,9 @@ function validateAnswer(answer, index) {
 
 function calculateDirection(z1Count, z2Count, z3Count) {
   if (z3Count === 3) return 'funcional'
-  // Oscilante = erros caíram pros dois lados; dominante = todos num lado só.
-  if (z1Count >= 1 && z2Count >= 1) return 'oscilante'
-  if (z2Count === 0) return 'recuo'
-  return 'excesso'
+  if (z1Count > z2Count) return 'recuo'
+  if (z2Count > z1Count) return 'excesso'
+  return 'oscilante'
 }
 
 function validateCompetencyResult(result, competencyKey) {
