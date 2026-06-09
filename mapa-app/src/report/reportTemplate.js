@@ -527,8 +527,6 @@ export function renderExampleAssessmentReportHtml() {
 }
 
 // Contagens representativas por perfil, só para o visual da roda/trilhas no preview.
-// Obs.: oscilante_0 não ocorre no motor (a nível 0, z1+z2=3 nunca empata); fica aqui
-// apenas para revisão do texto.
 const PREVIEW_ZCOUNTS = {
   funcional_3: { z1Count: 0, z2Count: 0, z3Count: 3 },
   recuo_2: { z1Count: 1, z2Count: 0, z3Count: 2 },
