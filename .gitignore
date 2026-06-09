@@ -6,3 +6,6 @@
 
 # Previews gerados da ferramenta de relatório (a fonte é *.js; o HTML é artefato)
 mapa-app/src/report/*.html
+
+# Artefatos de build/deploy
+*.tar.gz
