@@ -13,16 +13,24 @@
       --cream:#F7F3EE; --navy:#1C2B3A; --muted:#6B7A8D;
       --plum:#6B2D6B; --plum-light:#8B4A8B; --lilac:#E8D5E8; --lilac-soft:#FBF5FB;
       --line:rgba(28,43,58,.1); --white:#fff;
+      --green:#2E7D6B; --petrol:#356A74; --red:#C0492E; --wheel-empty:#DDD5C6;
       --head:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
     }
     * { box-sizing:border-box; }
     body { margin:0; background:var(--cream); color:var(--navy); font-family:var(--body); }
     .topbar {
       display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding:14px 22px; background:var(--plum); color:#fff;
+      gap:12px; padding:12px 22px; background:var(--plum); color:#fff;
     }
     .topbar h1 { font-family:var(--head); font-weight:600; font-size:1rem; margin:0; letter-spacing:.3px; }
     .topbar .brand-sub { color:var(--lilac); font-size:.72rem; text-transform:uppercase; letter-spacing:1.5px; }
+    .topbar-right { display:flex; align-items:center; gap:14px; }
+    .mode-tabs { display:flex; gap:6px; background:rgba(255,255,255,.12); padding:4px; border-radius:999px; }
+    .mode-btn {
+      font-family:var(--head); font-weight:600; font-size:.82rem; cursor:pointer;
+      border:none; background:transparent; color:#fff; padding:7px 16px; border-radius:999px;
+    }
+    .mode-btn.active { background:#fff; color:var(--plum); }
     .btn {
       font-family:var(--head); font-weight:600; border-radius:999px; cursor:pointer;
       border:1px solid transparent; padding:9px 16px; font-size:.85rem;
@@ -31,7 +39,6 @@
     .btn-plum { background:linear-gradient(135deg,var(--plum),var(--plum-light)); color:#fff; }
     .btn-ghost { background:transparent; border-color:var(--lilac); color:var(--plum); }
     .btn-ghost.active { background:var(--lilac-soft); border-color:var(--plum); }
-    .btn:disabled { opacity:.5; cursor:not-allowed; }
 
     /* Gate */
     #gate { max-width:380px; margin:14vh auto; background:#fff; border:1px solid var(--lilac);
@@ -44,19 +51,19 @@
     }
     .input:focus { outline:3px solid rgba(107,45,107,.16); border-color:var(--plum); }
     #gate .btn-plum { width:100%; margin-top:14px; min-height:46px; }
-    .err { color:#C0492E; font-size:.85rem; font-weight:600; margin-top:12px; min-height:1.1em; }
+    .err { color:var(--red); font-size:.85rem; font-weight:600; margin-top:12px; min-height:1.1em; }
 
-    /* App */
-    #app { display:none; height:calc(100vh - 56px); }
+    #app { display:none; height:calc(100vh - 52px); }
+    .placeholder { color:var(--muted); padding:40px; text-align:center; }
+
+    /* MODE: relatórios */
     .cols { display:grid; grid-template-columns:340px 1fr; height:100%; }
     .col-list { border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0; background:#fff; }
     .list-head { padding:14px; border-bottom:1px solid var(--line); }
     .list-head .count { color:var(--muted); font-size:.78rem; margin-top:8px; }
     .list { overflow:auto; flex:1; }
-    .student {
-      display:block; width:100%; text-align:left; border:none; background:none; cursor:pointer;
-      padding:13px 16px; border-bottom:1px solid var(--line); font:inherit;
-    }
+    .student { display:block; width:100%; text-align:left; border:none; background:none; cursor:pointer;
+      padding:13px 16px; border-bottom:1px solid var(--line); font:inherit; }
     .student:hover { background:var(--lilac-soft); }
     .student.active { background:var(--lilac-soft); box-shadow:inset 3px 0 0 var(--plum); }
     .student .nm { font-weight:600; color:var(--navy); }
@@ -68,13 +75,51 @@
     .view-head .who { font-family:var(--head); font-weight:600; font-size:1.05rem; color:var(--plum); }
     .view-head .who small { display:block; color:var(--muted); font-weight:400; font-size:.78rem; font-family:var(--body); margin-top:2px; }
     .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-    .frame-wrap { flex:1; min-height:0; background:var(--cream); }
+    .frame-wrap { flex:1; min-height:0; background:var(--cream); overflow:auto; position:relative; }
     iframe { width:100%; height:100%; border:none; }
-    .placeholder { color:var(--muted); padding:40px; text-align:center; }
+
+    /* Espelho mudo (resumo por aluno) */
+    .summary-view { padding:22px; max-width:760px; margin:0 auto; }
+    .mm-head h2 { font-family:var(--head); color:var(--plum); margin:0 0 4px; font-size:1.3rem; }
+    .mm-head p { color:var(--muted); margin:0 0 16px; font-size:.88rem; }
+    .mm-list { background:#fff; border:1px solid var(--lilac); border-radius:16px; overflow:hidden; }
+    .mm-row { display:flex; align-items:center; gap:16px; padding:16px 20px; border-top:1px dashed var(--line); }
+    .mm-row:first-child { border-top:none; }
+    .mm-label { flex:1; font-family:var(--head); font-weight:600; color:var(--navy); }
+    .mm-label small { display:block; color:var(--muted); font-weight:400; font-size:.74rem; text-transform:uppercase; letter-spacing:.5px; margin-top:2px; }
+
+    /* MODE: turma */
+    #modeTurma { padding:18px 22px; height:100%; overflow:auto; }
+    .turma-filters { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:18px; }
+    .turma-filters select, .turma-filters input {
+      min-height:42px; padding:8px 12px; border:1px solid var(--lilac); border-radius:10px;
+      font:inherit; color:var(--navy); background:#fff;
+    }
+    .turma-filters .count { color:var(--muted); font-size:.82rem; margin-left:auto; font-weight:600; }
+    .turma-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:14px; }
+    .t-card { background:#fff; border:1px solid var(--lilac); border-radius:14px; padding:16px; text-align:center; }
+    .t-name { font-family:var(--head); font-weight:600; color:var(--navy); margin-bottom:10px; font-size:.95rem; }
+    .t-card .s-wheel { margin:0 auto 10px; }
+    .t-dir { margin-top:10px; font-size:.74rem; font-weight:700; text-transform:uppercase; letter-spacing:.6px; }
+    .dir-recuo { color:var(--petrol); } .dir-excesso { color:var(--red); }
+    .dir-oscilante { color:var(--plum-light); } .dir-funcional { color:var(--green); }
+
+    /* Roda + trilhas (compartilhado) */
+    .s-wheel { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .s-wheel-in { width:48px; height:48px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center;
+      font-family:var(--head); font-weight:700; color:var(--navy); font-size:.95rem; }
+    .s-tracks { font-size:.78rem; }
+    .s-trk { display:flex; align-items:center; gap:5px; margin:3px 0; }
+    .s-pip { width:13px; height:13px; border-radius:3px; display:inline-block; }
+    .s-pip.empty { border:1.4px dashed #CDB9CD; }
+    .s-pip.petrol { background:var(--petrol); }
+    .s-pip.red { background:var(--red); }
+    .s-name { margin-left:4px; color:var(--muted); }
+    .t-card .s-tracks { display:inline-block; text-align:left; }
 
     @media (max-width:760px) {
       .cols { grid-template-columns:1fr; }
-      .col-list { max-height:38vh; }
+      .col-list { max-height:34vh; }
     }
   </style>
 </head>
@@ -84,7 +129,13 @@
       <div class="brand-sub">Laboratório de Competências</div>
       <h1>Painel interno · Relatórios</h1>
     </div>
-    <button id="logout" class="btn btn-light" style="display:none">Sair</button>
+    <div class="topbar-right">
+      <div class="mode-tabs" id="modeTabs" style="display:none">
+        <button class="mode-btn active" data-mode="relatorios">Relatórios</button>
+        <button class="mode-btn" data-mode="turma">Turma</button>
+      </div>
+      <button id="logout" class="btn btn-light" style="display:none">Sair</button>
+    </div>
   </div>
 
   <!-- Gate de token -->
@@ -98,7 +149,8 @@
 
   <!-- App -->
   <div id="app">
-    <div class="cols">
+    <!-- MODO: Relatórios -->
+    <div id="modeRelatorios" class="cols">
       <div class="col-list">
         <div class="list-head">
           <input id="search" class="input" type="text" placeholder="Buscar por nome ou e-mail…" />
@@ -115,10 +167,35 @@
           <div class="tabs" id="tabs"></div>
         </div>
         <div class="frame-wrap">
+          <div id="summaryView" class="summary-view" style="display:none"></div>
           <iframe id="frame" title="Relatório"></iframe>
-          <div class="placeholder" id="placeholder">Escolha um aluno à esquerda para ver o mapa.</div>
+          <div class="placeholder" id="placeholder">Escolha um aluno à esquerda.</div>
         </div>
       </div>
+    </div>
+
+    <!-- MODO: Turma -->
+    <div id="modeTurma" style="display:none">
+      <div class="turma-filters">
+        <select id="fComp" title="Competência"></select>
+        <select id="fDir" title="Direção">
+          <option value="">Todas as direções</option>
+          <option value="recuo">Recuo</option>
+          <option value="excesso">Excesso</option>
+          <option value="oscilante">Oscilação</option>
+          <option value="funcional">Funcional</option>
+        </select>
+        <select id="fLevel" title="Nível">
+          <option value="">Todos os níveis</option>
+          <option value="0">0/3</option>
+          <option value="1">1/3</option>
+          <option value="2">2/3</option>
+          <option value="3">3/3</option>
+        </select>
+        <input id="fSearch" class="input" style="max-width:200px" type="text" placeholder="Buscar nome…" />
+        <span class="count" id="turmaCount"></span>
+      </div>
+      <div class="turma-grid" id="turmaGrid"></div>
     </div>
   </div>
 
@@ -132,40 +209,33 @@
       ['direcao_futuro', 'Direção de Futuro'],
       ['protagonismo_profissional', 'Protagonismo'],
     ]
+    const DIR_LABEL = { recuo: 'Recuo', excesso: 'Excesso', oscilante: 'Oscilação', funcional: 'Funcional' }
     let TOKEN = localStorage.getItem('lc_admin_token') || ''
     let SUBMISSIONS = []
-    let CURRENT = null // { id, name }
+    let CURRENT = null
 
     const $ = (id) => document.getElementById(id)
     const authHeaders = () => ({ Authorization: 'Bearer ' + TOKEN })
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]))
+    const fmtDate = (s) => { try { return new Date(s).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) } catch { return s || '' } }
 
-    function esc(s) {
-      return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => (
-        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]
-      ))
+    // ---- roda + trilhas (client-side) ----
+    function wheel(z3) {
+      const deg = Math.round((Number(z3) / 3) * 360)
+      return '<div class="s-wheel" style="background:conic-gradient(var(--green) 0 ' + deg +
+        'deg, var(--wheel-empty) ' + deg + 'deg 360deg)"><div class="s-wheel-in">' + Number(z3) + '/3</div></div>'
     }
-    function fmtDate(s) {
-      if (!s) return ''
-      try { return new Date(s).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) }
-      catch { return s }
+    function pips(n, cls) { let s = ''; for (let i = 0; i < 3; i++) s += '<span class="s-pip' + (i < n ? ' ' + cls : ' empty') + '"></span>'; return s }
+    function tracks(r) {
+      return '<div class="s-tracks">' +
+        '<div class="s-trk">' + pips(r.z1Count, 'petrol') + '<span class="s-name">recuo</span></div>' +
+        '<div class="s-trk">' + pips(r.z2Count, 'red') + '<span class="s-name">excesso</span></div></div>'
     }
 
-    function showGate(msg) {
-      $('app').style.display = 'none'
-      $('gate').style.display = 'block'
-      $('logout').style.display = 'none'
-      $('gateErr').textContent = msg || ''
-    }
-    function showApp() {
-      $('gate').style.display = 'none'
-      $('app').style.display = 'block'
-      $('logout').style.display = 'inline-flex'
-    }
-    function logout(msg) {
-      TOKEN = ''
-      localStorage.removeItem('lc_admin_token')
-      showGate(msg)
-    }
+    function showGate(msg) { $('app').style.display = 'none'; $('gate').style.display = 'block'; $('logout').style.display = 'none'; $('modeTabs').style.display = 'none'; $('gateErr').textContent = msg || '' }
+    function showApp() { $('gate').style.display = 'none'; $('app').style.display = 'block'; $('logout').style.display = 'inline-flex'; $('modeTabs').style.display = 'flex' }
+    function logout(msg) { TOKEN = ''; localStorage.removeItem('lc_admin_token'); showGate(msg) }
 
     async function loadList() {
       try {
@@ -177,84 +247,119 @@
         SUBMISSIONS = data.submissions || []
         showApp()
         renderList()
-      } catch (e) {
-        showGate('Falha ao carregar: ' + e.message)
-      }
+        buildTurmaFilters()
+      } catch (e) { showGate('Falha ao carregar: ' + e.message) }
     }
 
+    // ---- modo ----
+    function switchMode(mode) {
+      Array.from(document.querySelectorAll('.mode-btn')).forEach((b) => b.classList.toggle('active', b.dataset.mode === mode))
+      $('modeRelatorios').style.display = mode === 'relatorios' ? 'grid' : 'none'
+      $('modeTurma').style.display = mode === 'turma' ? 'block' : 'none'
+      if (mode === 'turma') renderTurma()
+    }
+
+    // ---- Relatórios ----
     function renderList() {
       const q = $('search').value.trim().toLowerCase()
-      const rows = SUBMISSIONS.filter((s) =>
-        !q || (s.full_name || '').toLowerCase().includes(q) || (s.email || '').toLowerCase().includes(q),
-      )
+      const rows = SUBMISSIONS.filter((s) => !q || (s.full_name || '').toLowerCase().includes(q) || (s.email || '').toLowerCase().includes(q))
       $('count').textContent = rows.length + ' de ' + SUBMISSIONS.length + ' aluno(s)'
       $('list').innerHTML = rows.map((s) =>
         '<button class="student' + (CURRENT && CURRENT.id === s.id ? ' active' : '') + '" data-id="' + s.id + '">' +
-          '<div class="nm">' + esc(s.full_name) + '</div>' +
-          '<div class="meta">' + esc(s.email) + ' · ' + fmtDate(s.created_at) + '</div>' +
-        '</button>',
-      ).join('') || '<div class="placeholder">Nenhum aluno encontrado.</div>'
+        '<div class="nm">' + esc(s.full_name) + '</div><div class="meta">' + esc(s.email) + ' · ' + fmtDate(s.created_at) + '</div></button>',
+      ).join('') || '<div class="placeholder">Nenhum aluno.</div>'
       Array.from($('list').querySelectorAll('.student')).forEach((el) => {
-        el.onclick = () => {
-          const s = SUBMISSIONS.find((x) => String(x.id) === el.dataset.id)
-          selectStudent(s)
-        }
+        el.onclick = () => selectStudent(SUBMISSIONS.find((x) => String(x.id) === el.dataset.id))
       })
     }
 
     function selectStudent(s) {
-      CURRENT = { id: s.id, name: s.full_name }
-      $('pdfBtn').style.display = 'inline-flex'
+      CURRENT = s
       renderList()
+      $('placeholder').style.display = 'none'
       $('who').innerHTML = esc(s.full_name) + '<small>' + esc(s.email) + ' · envio #' + s.id + '</small>'
-      const tabs = [['__consolidado__', 'Consolidado']].concat(COMPETENCIES)
-      $('tabs').innerHTML = tabs.map(([key, label]) =>
-        '<button class="btn btn-ghost" data-key="' + key + '">' + esc(label) + '</button>',
-      ).join('')
+      const tabs = [['__resumo__', 'Resumo'], ['__consolidado__', 'Consolidado']].concat(COMPETENCIES)
+      $('tabs').innerHTML = tabs.map(([key, label]) => '<button class="btn btn-ghost" data-key="' + key + '">' + esc(label) + '</button>').join('')
       Array.from($('tabs').querySelectorAll('.btn')).forEach((el) => {
         el.onclick = () => {
           Array.from($('tabs').querySelectorAll('.btn')).forEach((b) => b.classList.remove('active'))
           el.classList.add('active')
-          loadReport(el.dataset.key)
+          openTab(el.dataset.key)
         }
       })
-      // abre o consolidado por padrão
-      const first = $('tabs').querySelector('.btn')
-      if (first) first.click()
+      $('tabs').querySelector('.btn').click()
     }
 
-    async function loadReport(key) {
-      if (!CURRENT) return
-      $('placeholder').style.display = 'none'
-      const isComp = key !== '__consolidado__'
-      const url = API + '/submissions/' + CURRENT.id + '/report?view=' +
-        (isComp ? 'competencia&competency=' + encodeURIComponent(key) : 'consolidado')
-      try {
-        const r = await fetch(url, { headers: authHeaders() })
-        if (r.status === 401) return logout('Sessão expirada.')
-        const html = await r.text()
-        $('frame').srcdoc = html
-      } catch (e) {
-        $('frame').srcdoc = '<p style="font-family:sans-serif;padding:20px;color:#C0492E">Erro: ' + esc(e.message) + '</p>'
+    function openTab(key) {
+      if (key === '__resumo__') {
+        $('frame').style.display = 'none'
+        $('pdfBtn').style.display = 'none'
+        renderStudentSummary(CURRENT)
+        $('summaryView').style.display = 'block'
+        return
       }
+      $('summaryView').style.display = 'none'
+      $('frame').style.display = 'block'
+      $('pdfBtn').style.display = 'inline-flex'
+      const isComp = key !== '__consolidado__'
+      const url = API + '/submissions/' + CURRENT.id + '/report?view=' + (isComp ? 'competencia&competency=' + encodeURIComponent(key) : 'consolidado')
+      fetch(url, { headers: authHeaders() }).then((r) => {
+        if (r.status === 401) return logout('Sessão expirada.')
+        return r.text().then((html) => { $('frame').srcdoc = html })
+      }).catch((e) => { $('frame').srcdoc = '<p style="font-family:sans-serif;padding:20px;color:#C0492E">Erro: ' + esc(e.message) + '</p>' })
     }
 
+    function renderStudentSummary(s) {
+      const rbc = s.results_by_competency || {}
+      const rows = COMPETENCIES.map(([key, label]) => {
+        const r = rbc[key]; if (!r) return ''
+        return '<div class="mm-row"><div class="mm-label">' + esc(label) +
+          '<small>' + (DIR_LABEL[r.direction] || '') + '</small></div>' + wheel(r.z3Count) + tracks(r) + '</div>'
+      }).join('')
+      $('summaryView').innerHTML = '<div class="mm-head"><h2>O seu mapa</h2>' +
+        '<p>Visão geral por competência — roda (funcional) e trilhas (recuo/excesso).</p></div>' +
+        '<div class="mm-list">' + rows + '</div>'
+    }
+
+    // ---- Turma ----
+    function buildTurmaFilters() {
+      $('fComp').innerHTML = COMPETENCIES.map(([k, l]) => '<option value="' + k + '">' + esc(l) + '</option>').join('')
+    }
+    function renderTurma() {
+      const comp = $('fComp').value || COMPETENCIES[0][0]
+      const dir = $('fDir').value
+      const lvl = $('fLevel').value
+      const q = $('fSearch').value.trim().toLowerCase()
+      const rows = SUBMISSIONS.filter((s) => {
+        const r = s.results_by_competency && s.results_by_competency[comp]
+        if (!r) return false
+        if (dir && r.direction !== dir) return false
+        if (lvl !== '' && String(r.z3Count) !== lvl) return false
+        if (q && !((s.full_name || '').toLowerCase().includes(q) || (s.email || '').toLowerCase().includes(q))) return false
+        return true
+      })
+      $('turmaCount').textContent = rows.length + ' de ' + SUBMISSIONS.length + ' aluno(s)'
+      $('turmaGrid').innerHTML = rows.map((s) => {
+        const r = s.results_by_competency[comp]
+        return '<div class="t-card"><div class="t-name">' + esc(s.full_name) + '</div>' +
+          wheel(r.z3Count) + tracks(r) + '<div class="t-dir dir-' + r.direction + '">' + (DIR_LABEL[r.direction] || '') + '</div></div>'
+      }).join('') || '<div class="placeholder">Nenhum aluno com esse filtro.</div>'
+    }
+
+    // ---- eventos ----
     $('enter').onclick = () => {
       const t = $('token').value.trim()
       if (!t) { $('gateErr').textContent = 'Informe o token.'; return }
-      TOKEN = t
-      localStorage.setItem('lc_admin_token', t)
-      loadList()
+      TOKEN = t; localStorage.setItem('lc_admin_token', t); loadList()
     }
     $('token').onkeydown = (e) => { if (e.key === 'Enter') $('enter').click() }
     $('logout').onclick = () => logout()
     $('search').oninput = renderList
-    $('pdfBtn').onclick = () => {
-      const f = $('frame')
-      if (f && f.contentWindow) { f.contentWindow.focus(); f.contentWindow.print() }
-    }
+    $('pdfBtn').onclick = () => { const f = $('frame'); if (f && f.contentWindow) { f.contentWindow.focus(); f.contentWindow.print() } }
+    Array.from(document.querySelectorAll('.mode-btn')).forEach((b) => { b.onclick = () => switchMode(b.dataset.mode) })
+    ;['fComp', 'fDir', 'fLevel'].forEach((id) => { $(id).onchange = renderTurma })
+    $('fSearch').oninput = renderTurma
 
-    // início
     if (TOKEN) loadList(); else showGate()
   </script>
 </body>

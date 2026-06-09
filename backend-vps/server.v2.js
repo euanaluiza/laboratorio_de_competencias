@@ -819,7 +819,7 @@ app.get('/api/internal/submissions', requireAdmin, async (_req, res) => {
   try {
     const result = await pool.query(
       `SELECT s.id, p.full_name, p.email, s.assessment_slug, s.assessment_version,
-              s.completed_at, s.created_at
+              s.results_by_competency, s.completed_at, s.created_at
        FROM assessment_submissions s
        JOIN assessment_participants p ON p.id = s.participant_id
        ORDER BY s.created_at DESC`,
