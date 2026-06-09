@@ -798,6 +798,19 @@ function requireAdmin(req, res, next) {
 
 // Página do painel (pública; o token é pedido dentro dela e usado nas chamadas)
 app.get('/api/internal/panel', (_req, res) => {
+  // O painel usa <script> inline; o CSP padrão do helmet (script-src 'self')
+  // bloquearia. Relaxa o CSP somente nesta página interna.
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com data:",
+      "img-src 'self' data:",
+      "connect-src 'self'",
+    ].join('; '),
+  )
   res.set('Content-Type', 'text/html; charset=utf-8').send(ADMIN_PANEL_HTML)
 })
 
