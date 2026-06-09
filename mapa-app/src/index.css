@@ -107,7 +107,7 @@ h3 {
 .form-panel,
 .questionnaire-panel,
 .result-panel {
-  width: min(100%, 680px);
+  width: min(100%, 920px);
   background: var(--paper);
   border: 1px solid var(--lilac);
   border-radius: var(--radius-lg);
@@ -397,6 +397,23 @@ h3 {
 .result-panel {
   display: grid;
   gap: 12px;
+  justify-items: start;
+  width: min(100%, 680px);
+}
+
+.verified-badge {
+  width: 56px;
+  height: 56px;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(107, 45, 107, 0.25));
+}
+
+.app-copyright {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.2px;
+  padding: 20px 16px 28px;
+  text-align: center;
 }
 
 .status-pill,

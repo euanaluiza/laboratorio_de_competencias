@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import IntroScreen from './components/IntroScreen.jsx'
 import ParticipantForm from './components/ParticipantForm.jsx'
 import QuestionnaireStep from './components/QuestionnaireStep.jsx'
@@ -24,6 +24,11 @@ function App() {
   const [answers, setAnswers] = useState({})
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [submissionState, setSubmissionState] = useState(INITIAL_SUBMISSION_STATE)
+
+  // Ao trocar de etapa ou de tela, volta o scroll pro topo — fluxo sempre de cima pra baixo.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }, [screen, currentStepIndex])
 
   const submitAssessment = async () => {
     const resultToSave = createAssessmentResult(participant, answers)
@@ -70,75 +75,86 @@ function App() {
     setScreen('questionnaire')
   }
 
-  if (screen === 'intro') {
-    return <IntroScreen onStart={() => setScreen('participant')} />
-  }
+  const renderScreen = () => {
+    if (screen === 'intro') {
+      return <IntroScreen onStart={() => setScreen('participant')} />
+    }
 
-  if (screen === 'participant') {
-    return (
-      <ParticipantForm
-        initialParticipant={participant}
-        onBack={() => setScreen('intro')}
-        onSubmit={handleParticipantSubmit}
-      />
-    )
-  }
+    if (screen === 'participant') {
+      return (
+        <ParticipantForm
+          initialParticipant={participant}
+          onBack={() => setScreen('intro')}
+          onSubmit={handleParticipantSubmit}
+        />
+      )
+    }
 
-  if (screen === 'questionnaire') {
-    return (
-      <QuestionnaireStep
-        answers={answers}
-        currentStepIndex={currentStepIndex}
-        onAnswerChange={updateAnswer}
-        onBack={() => setCurrentStepIndex((index) => Math.max(index - 1, 0))}
-        onNext={goToNextStep}
-        step={ASSESSMENT_STEPS[currentStepIndex]}
-        totalSteps={ASSESSMENT_STEPS.length}
-      />
-    )
-  }
+    if (screen === 'questionnaire') {
+      return (
+        <QuestionnaireStep
+          answers={answers}
+          currentStepIndex={currentStepIndex}
+          onAnswerChange={updateAnswer}
+          onBack={() => setCurrentStepIndex((index) => Math.max(index - 1, 0))}
+          onNext={goToNextStep}
+          step={ASSESSMENT_STEPS[currentStepIndex]}
+          totalSteps={ASSESSMENT_STEPS.length}
+        />
+      )
+    }
 
-  if (screen === 'submitting') {
-    return (
-      <main className="app-shell" aria-live="polite">
-        <section className="result-panel">
-          <h1>Enviando suas respostas...</h1>
-          <p className="status-pill status-saving">Aguarde enquanto concluímos o envio.</p>
-        </section>
-      </main>
-    )
-  }
+    if (screen === 'submitting') {
+      return (
+        <main className="app-shell" aria-live="polite">
+          <section className="result-panel">
+            <h1>Enviando suas respostas...</h1>
+            <p className="status-pill status-saving">Aguarde enquanto concluímos o envio.</p>
+          </section>
+        </main>
+      )
+    }
 
-  if (screen === 'submission-error') {
-    return (
-      <main className="app-shell" aria-live="assertive">
-        <section className="result-panel">
-          <h1>Não foi possível enviar suas respostas</h1>
-          <div className="status-error-box">
-            <p>{submissionState.message}</p>
-            <div className="button-row">
-              <button
-                className="secondary-button"
-                type="button"
-                onClick={returnToQuestionnaire}
-              >
-                Voltar ao questionário
-              </button>
-              <button className="primary-button" type="button" onClick={submitAssessment}>
-                Tentar enviar novamente
-              </button>
+    if (screen === 'submission-error') {
+      return (
+        <main className="app-shell" aria-live="assertive">
+          <section className="result-panel">
+            <h1>Não foi possível enviar suas respostas</h1>
+            <div className="status-error-box">
+              <p>{submissionState.message}</p>
+              <div className="button-row">
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={returnToQuestionnaire}
+                >
+                  Voltar ao questionário
+                </button>
+                <button className="primary-button" type="button" onClick={submitAssessment}>
+                  Tentar enviar novamente
+                </button>
+              </div>
             </div>
-          </div>
-        </section>
-      </main>
-    )
+          </section>
+        </main>
+      )
+    }
+
+    if (screen === 'result') {
+      return <ResultScreen />
+    }
+
+    return null
   }
 
-  if (screen === 'result') {
-    return <ResultScreen />
-  }
-
-  return null
+  return (
+    <>
+      {renderScreen()}
+      <footer className="app-copyright">
+        © {new Date().getFullYear()} Ana Luiza Carvalho · Laboratório de Competências
+      </footer>
+    </>
+  )
 }
 
 export default App
