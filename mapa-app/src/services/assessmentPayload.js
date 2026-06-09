@@ -7,156 +7,181 @@ import {
   QUESTIONS,
 } from '../data/assessment.js'
 
+const VALID_ZONES = new Set(['Z1', 'Z2', 'Z3'])
+
 function findQuestionAnswer(question, answers) {
-  const answer = answers[question.questionNumber]
-
-  if (question.questionType === 'multi') {
-    return Array.isArray(answer) ? answer : []
-  }
-
-  return typeof answer === 'string' ? answer.trim() : ''
+  return answers[question.questionNumber] || null
 }
 
-function createSingleAnswerPayload(question, answer) {
-  const isMatureAnswer = answer === question.matureOption
+function normalizeSelectedOption(answer, fields) {
+  const selectedOption = answer?.selectedOption
 
-  return {
-    selectedOptions: answer ? [answer] : [],
-    answerText: null,
-    behavioralClassification: isMatureAnswer ? 'maduro' : 'em_desenvolvimento',
-    isMatureAnswer,
-  }
-}
-
-function createMultiAnswerPayload(answer) {
-  return {
-    selectedOptions: answer,
-    answerText: null,
-    behavioralClassification: 'qualitativo',
-    isMatureAnswer: false,
-  }
-}
-
-function createOpenAnswerPayload(answer) {
-  return {
-    selectedOptions: [],
-    answerText: answer,
-    behavioralClassification: 'reflexao',
-    isMatureAnswer: false,
-  }
-}
-
-function createAnswerPayload(question, answers) {
-  const answer = findQuestionAnswer(question, answers)
-  const answerPayloadByType = {
-    single: () => createSingleAnswerPayload(question, answer),
-    multi: () => createMultiAnswerPayload(answer),
-    open: () => createOpenAnswerPayload(answer),
+  if (!selectedOption) {
+    return null
   }
 
-  return {
-    questionNumber: question.questionNumber,
-    questionType: question.questionType,
-    competencyKey: question.competencyKey,
-    ...answerPayloadByType[question.questionType](),
-  }
-}
-
-function calculateCompetencyScore(competency, answers) {
-  const scoredQuestions = QUESTIONS.filter((question) => {
-    return question.competencyKey === competency.key && question.questionType === 'single'
-  })
-
-  const matureAnswers = scoredQuestions.filter((question) => {
-    return findQuestionAnswer(question, answers) === question.matureOption
-  })
-
-  return Math.round((matureAnswers.length / scoredQuestions.length) * 100)
-}
-
-function calculateScores(answers) {
-  return COMPETENCIES.reduce((scores, competency) => {
+  return fields.reduce((normalizedOption, field) => {
     return {
-      ...scores,
-      [competency.key]: calculateCompetencyScore(competency, answers),
+      ...normalizedOption,
+      [field]: selectedOption[field],
     }
   }, {})
 }
 
-function findStrongestCompetency(scores) {
-  return COMPETENCIES.reduce((strongest, competency) => {
-    return scores[competency.key] > scores[strongest.key] ? competency : strongest
-  }, COMPETENCIES[0])
-}
-
-function findDevelopmentCompetency(scores) {
-  return COMPETENCIES.reduce((development, competency) => {
-    return scores[competency.key] < scores[development.key] ? competency : development
-  }, COMPETENCIES[0])
-}
-
-function createOpenAnswers(answers) {
+function normalizeSituationAnswer(question, answer) {
   return {
-    behaviorToChange: findQuestionAnswer({ questionNumber: 31 }, answers),
-    difficultSituations: findQuestionAnswer({ questionNumber: 32 }, answers),
+    questionNumber: question.questionNumber,
+    questionType: question.questionType,
+    competencyKey: question.competencyKey,
+    selectedOption: normalizeSelectedOption(answer, ['value', 'label', 'zone']),
   }
 }
 
-function createSubmissionPayload(participant, scores, strongest, development, answers) {
+function normalizeThoughtAnswer(question, answer) {
   return {
-    participant: {
-      fullName: participant.fullName.trim(),
-      email: participant.email.trim(),
-      className: participant.className.trim(),
+    questionNumber: question.questionNumber,
+    questionType: question.questionType,
+    competencyKey: question.competencyKey,
+    statements: question.statements.map((statement) => {
+      const statementAnswer = answer?.statements?.find((item) => item.id === statement.id)
+      const frequency = statementAnswer?.frequency
+
+      return {
+        id: statementAnswer?.id || statement.id,
+        text: statementAnswer?.text || statement.text,
+        zone: statementAnswer?.zone || statement.zone,
+        frequency: frequency
+          ? {
+              value: frequency.value,
+              label: frequency.label,
+            }
+          : null,
+      }
+    }),
+  }
+}
+
+function normalizeValueAnswer(question, answer) {
+  return {
+    questionNumber: question.questionNumber,
+    questionType: question.questionType,
+    competencyKey: question.competencyKey,
+    selectedOption: normalizeSelectedOption(answer, ['value', 'label', 'mappedValue']),
+  }
+}
+
+function normalizeOpenAnswer(question, answer) {
+  return {
+    questionNumber: question.questionNumber,
+    questionType: question.questionType,
+    answerText: typeof answer?.answerText === 'string' ? answer.answerText.trim() : '',
+  }
+}
+
+function normalizeAnswer(question, answers) {
+  const answer = findQuestionAnswer(question, answers)
+  const normalizers = {
+    situation: normalizeSituationAnswer,
+    thought: normalizeThoughtAnswer,
+    value: normalizeValueAnswer,
+    open: normalizeOpenAnswer,
+  }
+
+  return normalizers[question.questionType](question, answer)
+}
+
+function calculateDirection(z1Count, z2Count, z3Count) {
+  if (z3Count === 3) {
+    return 'funcional'
+  }
+
+  if (z1Count > z2Count) {
+    return 'recuo'
+  }
+
+  if (z2Count > z1Count) {
+    return 'excesso'
+  }
+
+  return 'oscilante'
+}
+
+function calculateCompetencyResult(competency, answers) {
+  const situationQuestions = QUESTIONS.filter((question) => {
+    return question.competencyKey === competency.key && question.questionType === 'situation'
+  })
+
+  const selectedZones = situationQuestions
+    .map((question) => findQuestionAnswer(question, answers)?.selectedOption?.zone)
+    .filter((zone) => VALID_ZONES.has(zone))
+
+  const z1Count = selectedZones.filter((zone) => zone === 'Z1').length
+  const z2Count = selectedZones.filter((zone) => zone === 'Z2').length
+  const z3Count = selectedZones.filter((zone) => zone === 'Z3').length
+
+  return {
+    competencyKey: competency.key,
+    level: z3Count * 2,
+    z1Count,
+    z2Count,
+    z3Count,
+    direction: calculateDirection(z1Count, z2Count, z3Count),
+  }
+}
+
+function calculateCompetencyResults(answers) {
+  return COMPETENCIES.reduce((byCompetency, competency) => {
+    return {
+      ...byCompetency,
+      [competency.key]: calculateCompetencyResult(competency, answers),
+    }
+  }, {})
+}
+
+function normalizeParticipant(participant) {
+  return {
+    fullName: participant.fullName.trim(),
+    email: participant.email.trim(),
+  }
+}
+
+function createSubmissionPayload(participant, answers, byCompetency) {
+  return {
+    participant: normalizeParticipant(participant),
+    assessment: ASSESSMENT_META,
+    results: {
+      byCompetency,
     },
+    answers,
     consent: {
       accepted: participant.consentAccepted,
-      consentVersion: CONSENT_VERSION,
       consentText: CONSENT_TEXT,
+      consentVersion: CONSENT_VERSION,
       privacyNoticeUrl: '',
     },
-    assessment: ASSESSMENT_META,
-    scores,
-    strongestCompetency: strongest.key,
-    developmentCompetency: development.key,
-    openAnswers: createOpenAnswers(answers),
-    answers: QUESTIONS.map((question) => createAnswerPayload(question, answers)),
   }
 }
 
 /**
- * Builds scores, labels, interpretation data, and API payload from current answers.
+ * Builds the v2 competency results, normalized answers, and API payload.
  *
  * Example:
  * createAssessmentResult(participant, answers).payload
  */
 export function createAssessmentResult(participant, answers) {
-  const scores = calculateScores(answers)
-  const strongestCompetency = findStrongestCompetency(scores)
-  const developmentCompetency = findDevelopmentCompetency(scores)
+  const normalizedAnswers = QUESTIONS.map((question) => normalizeAnswer(question, answers))
+  const byCompetency = calculateCompetencyResults(answers)
 
   return {
-    scores,
-    strongestCompetency,
-    developmentCompetency,
-    openAnswers: createOpenAnswers(answers),
-    answers: QUESTIONS.map((question) => createAnswerPayload(question, answers)),
-    payload: createSubmissionPayload(
-      participant,
-      scores,
-      strongestCompetency,
-      developmentCompetency,
-      answers,
-    ),
+    results: {
+      byCompetency,
+    },
+    answers: normalizedAnswers,
+    payload: createSubmissionPayload(participant, normalizedAnswers, byCompetency),
   }
 }
 
-/**
- * Returns the developmental interpretation band for a percentage score.
- *
- * Example:
- * getInterpretationBand(75).label
- */
+// Kept temporarily because the current result screen still imports this v1 helper.
 export function getInterpretationBand(score) {
   return INTERPRETATION_BANDS.find((band) => {
     return score >= band.min && score <= band.max

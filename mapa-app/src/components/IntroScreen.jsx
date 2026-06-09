@@ -1,8 +1,8 @@
 const INTRO_CARDS = [
   '32 perguntas',
   '6 competências',
-  'Resultado visual',
-  'Salvar em PDF',
+  'Autopercepção',
+  'Uso pedagógico',
 ]
 
 function IntroScreen({ onStart }) {

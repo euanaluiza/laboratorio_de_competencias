@@ -1,15 +1,28 @@
 import ProgressBar from './ProgressBar.jsx'
 
-const MAX_MULTI_SELECTIONS = 2
+function getQuestionAnswer(question, answers) {
+  return answers[question.questionNumber]
+}
 
 function isQuestionComplete(question, answers) {
-  const answer = answers[question.questionNumber]
+  const answer = getQuestionAnswer(question, answers)
 
-  if (question.questionType === 'multi') {
-    return Array.isArray(answer) && answer.length > 0
+  if (question.questionType === 'situation' || question.questionType === 'value') {
+    return Boolean(answer?.selectedOption?.value)
   }
 
-  return typeof answer === 'string' && answer.trim().length > 0
+  if (question.questionType === 'thought') {
+    return question.statements.every((statement) => {
+      const statementAnswer = answer?.statements?.find((item) => item.id === statement.id)
+      return Boolean(statementAnswer?.frequency?.value)
+    })
+  }
+
+  if (question.questionType === 'open') {
+    return typeof answer?.answerText === 'string' && answer.answerText.trim().length > 0
+  }
+
+  return false
 }
 
 function getIncompleteQuestionNumbers(step, answers) {
@@ -18,25 +31,16 @@ function getIncompleteQuestionNumbers(step, answers) {
     .map((question) => question.questionNumber)
 }
 
-function getMultiSelection(question, answers) {
-  const answer = answers[question.questionNumber]
-  return Array.isArray(answer) ? answer : []
+function createSelectedOptionAnswer(question, option) {
+  return {
+    questionNumber: question.questionNumber,
+    questionType: question.questionType,
+    selectedOption: { ...option },
+  }
 }
 
-function createMultiSelection(currentSelection, optionValue) {
-  if (currentSelection.includes(optionValue)) {
-    return currentSelection.filter((value) => value !== optionValue)
-  }
-
-  if (currentSelection.length >= MAX_MULTI_SELECTIONS) {
-    return currentSelection
-  }
-
-  return [...currentSelection, optionValue]
-}
-
-function renderSingleQuestion(question, answers, onAnswerChange) {
-  const selectedValue = answers[question.questionNumber] || ''
+function renderSingleChoiceQuestion(question, answers, onAnswerChange) {
+  const selectedValue = getQuestionAnswer(question, answers)?.selectedOption?.value || ''
 
   return (
     <div className="option-stack">
@@ -45,7 +49,12 @@ function renderSingleQuestion(question, answers, onAnswerChange) {
           <input
             checked={selectedValue === option.value}
             name={`question-${question.questionNumber}`}
-            onChange={() => onAnswerChange(question.questionNumber, option.value)}
+            onChange={() => {
+              onAnswerChange(
+                question.questionNumber,
+                createSelectedOptionAnswer(question, option),
+              )
+            }}
             type="radio"
             value={option.value}
           />
@@ -56,38 +65,81 @@ function renderSingleQuestion(question, answers, onAnswerChange) {
   )
 }
 
-function renderMultiQuestion(question, answers, onAnswerChange) {
-  const selectedOptions = getMultiSelection(question, answers)
+function createThoughtAnswer(question, currentAnswer, selectedStatement, frequency) {
+  return {
+    questionNumber: question.questionNumber,
+    questionType: question.questionType,
+    statements: question.statements.map((statement) => {
+      const currentStatementAnswer = currentAnswer?.statements?.find((item) => {
+        return item.id === statement.id
+      })
+
+      return {
+        id: statement.id,
+        text: statement.text,
+        zone: statement.zone,
+        frequency:
+          statement.id === selectedStatement.id
+            ? { ...frequency }
+            : currentStatementAnswer?.frequency || null,
+      }
+    }),
+  }
+}
+
+function renderThoughtQuestion(question, answers, onAnswerChange) {
+  const currentAnswer = getQuestionAnswer(question, answers)
 
   return (
-    <div className="option-stack">
-      {question.options.map((option) => (
-        <label className="option-row" key={option.value}>
-          <input
-            checked={selectedOptions.includes(option.value)}
-            onChange={() => {
-              onAnswerChange(
-                question.questionNumber,
-                createMultiSelection(selectedOptions, option.value),
-              )
-            }}
-            type="checkbox"
-          />
-          <span>{option.label}</span>
-        </label>
-      ))}
-      <p className="helper-text">Escolha no máximo 2 alternativas.</p>
+    <div className="thought-stack">
+      {question.statements.map((statement) => {
+        const statementAnswer = currentAnswer?.statements?.find((item) => {
+          return item.id === statement.id
+        })
+        const selectedFrequency = statementAnswer?.frequency?.value || ''
+
+        return (
+          <fieldset className="thought-group" key={statement.id}>
+            <legend className="thought-statement">{statement.text}</legend>
+            <div className="frequency-options">
+              {question.frequencyOptions.map((frequency) => (
+                <label className="option-row" key={frequency.value}>
+                  <input
+                    checked={selectedFrequency === frequency.value}
+                    name={`question-${question.questionNumber}-${statement.id}`}
+                    onChange={() => {
+                      onAnswerChange(
+                        question.questionNumber,
+                        createThoughtAnswer(question, currentAnswer, statement, frequency),
+                      )
+                    }}
+                    type="radio"
+                    value={frequency.value}
+                  />
+                  <span>{frequency.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )
+      })}
     </div>
   )
 }
 
 function renderOpenQuestion(question, answers, onAnswerChange) {
-  const answerText = answers[question.questionNumber] || ''
+  const answerText = getQuestionAnswer(question, answers)?.answerText || ''
 
   return (
     <textarea
       className="field-input textarea-input"
-      onChange={(event) => onAnswerChange(question.questionNumber, event.target.value)}
+      onChange={(event) => {
+        onAnswerChange(question.questionNumber, {
+          questionNumber: question.questionNumber,
+          questionType: question.questionType,
+          answerText: event.target.value,
+        })
+      }}
       rows="5"
       value={answerText}
     />
@@ -95,15 +147,19 @@ function renderOpenQuestion(question, answers, onAnswerChange) {
 }
 
 function renderQuestionInput(question, answers, onAnswerChange) {
-  if (question.questionType === 'single') {
-    return renderSingleQuestion(question, answers, onAnswerChange)
+  if (question.questionType === 'situation' || question.questionType === 'value') {
+    return renderSingleChoiceQuestion(question, answers, onAnswerChange)
   }
 
-  if (question.questionType === 'multi') {
-    return renderMultiQuestion(question, answers, onAnswerChange)
+  if (question.questionType === 'thought') {
+    return renderThoughtQuestion(question, answers, onAnswerChange)
   }
 
-  return renderOpenQuestion(question, answers, onAnswerChange)
+  if (question.questionType === 'open') {
+    return renderOpenQuestion(question, answers, onAnswerChange)
+  }
+
+  return null
 }
 
 function QuestionnaireStep({
@@ -150,7 +206,7 @@ function QuestionnaireStep({
             Voltar
           </button>
           <button className="primary-button" type="button" onClick={handleNext}>
-            {isLastStep ? 'Ver resultado' : 'Próxima etapa'}
+            {isLastStep ? 'Enviar respostas' : 'Próxima etapa'}
           </button>
         </div>
       </section>

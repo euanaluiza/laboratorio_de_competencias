@@ -4,7 +4,7 @@
   }
 
   h1 {
-    font-size: 3.4rem;
+    font-size: 2.6rem;
   }
 
   .intro-panel,
@@ -21,10 +21,6 @@
 
   .field-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .field-grid .field-label:last-child {
-    grid-column: 1 / -1;
   }
 
   .result-header {
