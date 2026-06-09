@@ -498,6 +498,34 @@ function renderShell(cards) {
     @media (max-width: 480px) {
       .head { flex-direction: column; align-items: flex-start; }
     }
+
+    /* Impressão / PDF em A4 */
+    @page {
+      size: A4;
+      margin: 14mm;
+    }
+
+    @media print {
+      html, body {
+        background: #fff;
+        padding: 0;
+        margin: 0;
+      }
+      /* Garante que as cores da marca (plum, lilás, verde, vermelho) saiam no PDF */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .card {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto 8mm;
+        box-shadow: none;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .card:last-child { margin-bottom: 0; }
+    }
   </style>
 </head>
 <body>

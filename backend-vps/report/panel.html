@@ -64,6 +64,7 @@
 
     .col-view { display:flex; flex-direction:column; min-height:0; }
     .view-head { padding:14px 18px; border-bottom:1px solid var(--line); background:#fff; }
+    .view-head-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
     .view-head .who { font-family:var(--head); font-weight:600; font-size:1.05rem; color:var(--plum); }
     .view-head .who small { display:block; color:var(--muted); font-weight:400; font-size:.78rem; font-family:var(--body); margin-top:2px; }
     .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
@@ -107,7 +108,10 @@
       </div>
       <div class="col-view">
         <div class="view-head">
-          <div class="who" id="who">Selecione um aluno</div>
+          <div class="view-head-top">
+            <div class="who" id="who">Selecione um aluno</div>
+            <button id="pdfBtn" class="btn btn-plum" style="display:none">↓ Salvar PDF</button>
+          </div>
           <div class="tabs" id="tabs"></div>
         </div>
         <div class="frame-wrap">
@@ -200,6 +204,7 @@
 
     function selectStudent(s) {
       CURRENT = { id: s.id, name: s.full_name }
+      $('pdfBtn').style.display = 'inline-flex'
       renderList()
       $('who').innerHTML = esc(s.full_name) + '<small>' + esc(s.email) + ' · envio #' + s.id + '</small>'
       const tabs = [['__consolidado__', 'Consolidado']].concat(COMPETENCIES)
@@ -244,6 +249,10 @@
     $('token').onkeydown = (e) => { if (e.key === 'Enter') $('enter').click() }
     $('logout').onclick = () => logout()
     $('search').oninput = renderList
+    $('pdfBtn').onclick = () => {
+      const f = $('frame')
+      if (f && f.contentWindow) { f.contentWindow.focus(); f.contentWindow.print() }
+    }
 
     // início
     if (TOKEN) loadList(); else showGate()
