@@ -107,17 +107,12 @@ h3 {
 .form-panel,
 .questionnaire-panel,
 .result-panel {
-  width: min(100%, 680px);
+  width: min(100%, 920px);
   background: var(--paper);
   border: 1px solid var(--lilac);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
   padding: 30px;
-}
-
-/* O questionário ocupa mais espaço na tela */
-.questionnaire-panel {
-  width: min(100%, 920px);
 }
 
 /* Intro com cabeçalho em gradiente lilás */
@@ -403,6 +398,7 @@ h3 {
   display: grid;
   gap: 12px;
   justify-items: start;
+  width: min(100%, 680px);
 }
 
 .verified-badge {
@@ -410,6 +406,14 @@ h3 {
   height: 56px;
   display: block;
   filter: drop-shadow(0 6px 14px rgba(107, 45, 107, 0.25));
+}
+
+.app-copyright {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.2px;
+  padding: 20px 16px 28px;
+  text-align: center;
 }
 
 .status-pill,

@@ -192,7 +192,10 @@ function renderCompetencyCard(competencyKey, result, profile) {
         ${renderResult(z1Count, z2Count, z3Count)}
       </div>
       ${renderBody(meta, profile)}
-      <div class="foot">${escapeHtml(REPORT_DISCLAIMER)}</div>
+      <div class="foot">
+        <p class="foot-disclaimer">${escapeHtml(REPORT_DISCLAIMER)}</p>
+        <p class="foot-copyright">© ${new Date().getFullYear()} Ana Luiza Carvalho · Laboratório de Competências</p>
+      </div>
     </article>`
 }
 
@@ -478,8 +481,18 @@ function renderShell(cards) {
       border-radius: 10px;
       font-size: 10px;
       color: var(--muted);
-      font-style: italic;
       text-align: center;
+    }
+
+    .foot p { margin: 0; }
+    .foot-disclaimer { font-style: italic; }
+    .foot-copyright {
+      margin-top: 7px;
+      padding-top: 7px;
+      border-top: 1px solid var(--lilac);
+      font-weight: 600;
+      color: var(--plum);
+      letter-spacing: 0.3px;
     }
 
     @media (max-width: 480px) {
