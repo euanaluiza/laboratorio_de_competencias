@@ -290,7 +290,7 @@ function renderShell(cards) {
 
     .card {
       display: block;
-      width: 460px;
+      width: 600px;
       max-width: 100%;
       margin: 0 auto 28px;
       background: var(--white);

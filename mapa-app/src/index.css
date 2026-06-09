@@ -115,6 +115,11 @@ h3 {
   padding: 30px;
 }
 
+/* O questionário ocupa mais espaço na tela */
+.questionnaire-panel {
+  width: min(100%, 920px);
+}
+
 /* Intro com cabeçalho em gradiente lilás */
 .intro-panel {
   background: linear-gradient(160deg, var(--lilac) 0%, var(--lilac-soft) 32%, var(--paper) 100%);
@@ -397,6 +402,14 @@ h3 {
 .result-panel {
   display: grid;
   gap: 12px;
+  justify-items: start;
+}
+
+.verified-badge {
+  width: 56px;
+  height: 56px;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(107, 45, 107, 0.25));
 }
 
 .status-pill,

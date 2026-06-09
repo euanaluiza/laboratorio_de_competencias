@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import IntroScreen from './components/IntroScreen.jsx'
 import ParticipantForm from './components/ParticipantForm.jsx'
 import QuestionnaireStep from './components/QuestionnaireStep.jsx'
@@ -24,6 +24,11 @@ function App() {
   const [answers, setAnswers] = useState({})
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [submissionState, setSubmissionState] = useState(INITIAL_SUBMISSION_STATE)
+
+  // Ao trocar de etapa ou de tela, volta o scroll pro topo — fluxo sempre de cima pra baixo.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }, [screen, currentStepIndex])
 
   const submitAssessment = async () => {
     const resultToSave = createAssessmentResult(participant, answers)
