@@ -3,6 +3,11 @@ import cors from 'cors'
 import helmet from 'helmet'
 import pg from 'pg'
 import fs from 'fs'
+import crypto from 'crypto'
+import {
+  renderAssessmentReportHtml,
+  renderSingleCompetencyReportHtml,
+} from './report/reportTemplate.js'
 
 const envPath = new URL('./.env', import.meta.url).pathname
 
@@ -29,6 +34,7 @@ const {
   PGUSER,
   PGPASSWORD,
   CORS_ORIGIN = 'https://analuizacarvalho.com.br',
+  ADMIN_TOKEN,
 } = process.env
 
 if (!PGDATABASE || !PGUSER || !PGPASSWORD) {
@@ -396,9 +402,10 @@ function validateAnswer(answer, index) {
 
 function calculateDirection(z1Count, z2Count, z3Count) {
   if (z3Count === 3) return 'funcional'
-  if (z1Count > z2Count) return 'recuo'
-  if (z2Count > z1Count) return 'excesso'
-  return 'oscilante'
+  // Oscilante = erros caíram pros dois lados; dominante = todos num lado só.
+  if (z1Count >= 1 && z2Count >= 1) return 'oscilante'
+  if (z2Count === 0) return 'recuo'
+  return 'excesso'
 }
 
 function validateCompetencyResult(result, competencyKey) {
@@ -754,6 +761,126 @@ app.post('/api/assessment-submissions', async (req, res) => {
     })
   } finally {
     client.release()
+  }
+})
+
+// ---------------------------------------------------------------------------
+// Painel interno (ADM) — protegido por token simples (Bearer ADMIN_TOKEN).
+// Tudo sob /api/internal/* (já encaminhado pelo nginx para o backend).
+// ---------------------------------------------------------------------------
+
+let ADMIN_PANEL_HTML = '<!doctype html><meta charset="utf-8"><p>Painel interno indisponível.</p>'
+try {
+  ADMIN_PANEL_HTML = fs.readFileSync(new URL('./report/panel.html', import.meta.url), 'utf8')
+} catch (error) {
+  console.error('Painel interno (panel.html) não carregado:', error.message)
+}
+
+function safeEqual(a, b) {
+  const ab = Buffer.from(String(a))
+  const bb = Buffer.from(String(b))
+  return ab.length === bb.length && crypto.timingSafeEqual(ab, bb)
+}
+
+function requireAdmin(req, res, next) {
+  if (!ADMIN_TOKEN) {
+    return res
+      .status(503)
+      .json({ ok: false, error: 'Painel interno não configurado (defina ADMIN_TOKEN no .env).' })
+  }
+  const header = req.get('authorization') || ''
+  const token = header.startsWith('Bearer ') ? header.slice(7) : ''
+  if (!token || !safeEqual(token, ADMIN_TOKEN)) {
+    return res.status(401).json({ ok: false, error: 'Não autorizado.' })
+  }
+  return next()
+}
+
+// Página do painel (pública; o token é pedido dentro dela e usado nas chamadas)
+app.get('/api/internal/panel', (_req, res) => {
+  res.set('Content-Type', 'text/html; charset=utf-8').send(ADMIN_PANEL_HTML)
+})
+
+// Lista de submissões (para escolher o aluno)
+app.get('/api/internal/submissions', requireAdmin, async (_req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT s.id, p.full_name, p.email, s.assessment_slug, s.assessment_version,
+              s.completed_at, s.created_at
+       FROM assessment_submissions s
+       JOIN assessment_participants p ON p.id = s.participant_id
+       ORDER BY s.created_at DESC`,
+    )
+    res.json({ ok: true, submissions: result.rows })
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message })
+  }
+})
+
+// Detalhe de uma submissão (participante + resultados + respostas)
+app.get('/api/internal/submissions/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ ok: false, error: 'id inválido.' })
+  }
+  try {
+    const subResult = await pool.query(
+      `SELECT s.id, s.assessment_slug, s.assessment_version, s.results_by_competency,
+              s.completed_at, s.created_at, p.full_name, p.email, p.class_name
+       FROM assessment_submissions s
+       JOIN assessment_participants p ON p.id = s.participant_id
+       WHERE s.id = $1`,
+      [id],
+    )
+    if (subResult.rowCount === 0) {
+      return res.status(404).json({ ok: false, error: 'Submissão não encontrada.' })
+    }
+    const answersResult = await pool.query(
+      `SELECT question_number, question_type, competency_key,
+              selected_option, statements, answer_text
+       FROM assessment_answers
+       WHERE submission_id = $1
+       ORDER BY question_number`,
+      [id],
+    )
+    res.json({ ok: true, submission: subResult.rows[0], answers: answersResult.rows })
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message })
+  }
+})
+
+// Relatório renderizado (HTML) — view=consolidado (padrão) ou competencia
+app.get('/api/internal/submissions/:id/report', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).send('id inválido.')
+  }
+  const view = req.query.view === 'competencia' ? 'competencia' : 'consolidado'
+  const competency = typeof req.query.competency === 'string' ? req.query.competency : ''
+  try {
+    const result = await pool.query(
+      'SELECT results_by_competency FROM assessment_submissions WHERE id = $1',
+      [id],
+    )
+    if (result.rowCount === 0) {
+      return res.status(404).send('Submissão não encontrada.')
+    }
+    const resultsByCompetency = result.rows[0].results_by_competency
+    let html
+    if (view === 'competencia') {
+      if (!COMPETENCY_KEY_SET.has(competency)) {
+        return res.status(400).send('Competência inválida.')
+      }
+      html = renderSingleCompetencyReportHtml({
+        competencyKey: competency,
+        result: resultsByCompetency[competency],
+      })
+    } else {
+      html = renderAssessmentReportHtml({ resultsByCompetency })
+    }
+    return res.set('Content-Type', 'text/html; charset=utf-8').send(html)
+  } catch (error) {
+    return res.status(500).send('Erro ao gerar relatório: ' + error.message)
   }
 })
 

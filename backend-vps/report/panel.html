@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Painel interno · Laboratório de Competências</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream:#F7F3EE; --navy:#1C2B3A; --muted:#6B7A8D;
+      --plum:#6B2D6B; --plum-light:#8B4A8B; --lilac:#E8D5E8; --lilac-soft:#FBF5FB;
+      --line:rgba(28,43,58,.1); --white:#fff;
+      --head:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--cream); color:var(--navy); font-family:var(--body); }
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:14px 22px; background:var(--plum); color:#fff;
+    }
+    .topbar h1 { font-family:var(--head); font-weight:600; font-size:1rem; margin:0; letter-spacing:.3px; }
+    .topbar .brand-sub { color:var(--lilac); font-size:.72rem; text-transform:uppercase; letter-spacing:1.5px; }
+    .btn {
+      font-family:var(--head); font-weight:600; border-radius:999px; cursor:pointer;
+      border:1px solid transparent; padding:9px 16px; font-size:.85rem;
+    }
+    .btn-light { background:#fff; color:var(--plum); }
+    .btn-plum { background:linear-gradient(135deg,var(--plum),var(--plum-light)); color:#fff; }
+    .btn-ghost { background:transparent; border-color:var(--lilac); color:var(--plum); }
+    .btn-ghost.active { background:var(--lilac-soft); border-color:var(--plum); }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+
+    /* Gate */
+    #gate { max-width:380px; margin:14vh auto; background:#fff; border:1px solid var(--lilac);
+      border-radius:20px; padding:30px; box-shadow:0 20px 48px rgba(107,45,107,.1); }
+    #gate h2 { font-family:var(--head); color:var(--plum); margin:0 0 6px; }
+    #gate p { color:var(--muted); font-size:.9rem; margin:0 0 18px; }
+    .input {
+      width:100%; min-height:46px; padding:10px 14px; border:1px solid var(--lilac);
+      border-radius:12px; font:inherit; color:var(--navy); background:#fff;
+    }
+    .input:focus { outline:3px solid rgba(107,45,107,.16); border-color:var(--plum); }
+    #gate .btn-plum { width:100%; margin-top:14px; min-height:46px; }
+    .err { color:#C0492E; font-size:.85rem; font-weight:600; margin-top:12px; min-height:1.1em; }
+
+    /* App */
+    #app { display:none; height:calc(100vh - 56px); }
+    .cols { display:grid; grid-template-columns:340px 1fr; height:100%; }
+    .col-list { border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0; background:#fff; }
+    .list-head { padding:14px; border-bottom:1px solid var(--line); }
+    .list-head .count { color:var(--muted); font-size:.78rem; margin-top:8px; }
+    .list { overflow:auto; flex:1; }
+    .student {
+      display:block; width:100%; text-align:left; border:none; background:none; cursor:pointer;
+      padding:13px 16px; border-bottom:1px solid var(--line); font:inherit;
+    }
+    .student:hover { background:var(--lilac-soft); }
+    .student.active { background:var(--lilac-soft); box-shadow:inset 3px 0 0 var(--plum); }
+    .student .nm { font-weight:600; color:var(--navy); }
+    .student .meta { color:var(--muted); font-size:.78rem; margin-top:3px; }
+
+    .col-view { display:flex; flex-direction:column; min-height:0; }
+    .view-head { padding:14px 18px; border-bottom:1px solid var(--line); background:#fff; }
+    .view-head .who { font-family:var(--head); font-weight:600; font-size:1.05rem; color:var(--plum); }
+    .view-head .who small { display:block; color:var(--muted); font-weight:400; font-size:.78rem; font-family:var(--body); margin-top:2px; }
+    .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .frame-wrap { flex:1; min-height:0; background:var(--cream); }
+    iframe { width:100%; height:100%; border:none; }
+    .placeholder { color:var(--muted); padding:40px; text-align:center; }
+
+    @media (max-width:760px) {
+      .cols { grid-template-columns:1fr; }
+      .col-list { max-height:38vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div>
+      <div class="brand-sub">Laboratório de Competências</div>
+      <h1>Painel interno · Relatórios</h1>
+    </div>
+    <button id="logout" class="btn btn-light" style="display:none">Sair</button>
+  </div>
+
+  <!-- Gate de token -->
+  <div id="gate">
+    <h2>Acesso restrito</h2>
+    <p>Informe o token de acesso para ver os relatórios dos alunos.</p>
+    <input id="token" class="input" type="password" placeholder="Token de acesso" autocomplete="off" />
+    <button id="enter" class="btn btn-plum">Entrar</button>
+    <div id="gateErr" class="err"></div>
+  </div>
+
+  <!-- App -->
+  <div id="app">
+    <div class="cols">
+      <div class="col-list">
+        <div class="list-head">
+          <input id="search" class="input" type="text" placeholder="Buscar por nome ou e-mail…" />
+          <div class="count" id="count"></div>
+        </div>
+        <div class="list" id="list"></div>
+      </div>
+      <div class="col-view">
+        <div class="view-head">
+          <div class="who" id="who">Selecione um aluno</div>
+          <div class="tabs" id="tabs"></div>
+        </div>
+        <div class="frame-wrap">
+          <iframe id="frame" title="Relatório"></iframe>
+          <div class="placeholder" id="placeholder">Escolha um aluno à esquerda para ver o mapa.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = '/api/internal'
+    const COMPETENCIES = [
+      ['comunicacao_assertiva', 'Comunicação Assertiva'],
+      ['maturidade_emocional', 'Maturidade Emocional'],
+      ['foco_resultado_produtividade', 'Foco em Resultado'],
+      ['visao_sistemica', 'Visão Sistêmica'],
+      ['direcao_futuro', 'Direção de Futuro'],
+      ['protagonismo_profissional', 'Protagonismo'],
+    ]
+    let TOKEN = localStorage.getItem('lc_admin_token') || ''
+    let SUBMISSIONS = []
+    let CURRENT = null // { id, name }
+
+    const $ = (id) => document.getElementById(id)
+    const authHeaders = () => ({ Authorization: 'Bearer ' + TOKEN })
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]
+      ))
+    }
+    function fmtDate(s) {
+      if (!s) return ''
+      try { return new Date(s).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) }
+      catch { return s }
+    }
+
+    function showGate(msg) {
+      $('app').style.display = 'none'
+      $('gate').style.display = 'block'
+      $('logout').style.display = 'none'
+      $('gateErr').textContent = msg || ''
+    }
+    function showApp() {
+      $('gate').style.display = 'none'
+      $('app').style.display = 'block'
+      $('logout').style.display = 'inline-flex'
+    }
+    function logout(msg) {
+      TOKEN = ''
+      localStorage.removeItem('lc_admin_token')
+      showGate(msg)
+    }
+
+    async function loadList() {
+      try {
+        const r = await fetch(API + '/submissions', { headers: authHeaders() })
+        if (r.status === 401) return logout('Token inválido.')
+        if (r.status === 503) return logout('Painel não configurado no servidor (ADMIN_TOKEN).')
+        if (!r.ok) throw new Error('Erro ' + r.status)
+        const data = await r.json()
+        SUBMISSIONS = data.submissions || []
+        showApp()
+        renderList()
+      } catch (e) {
+        showGate('Falha ao carregar: ' + e.message)
+      }
+    }
+
+    function renderList() {
+      const q = $('search').value.trim().toLowerCase()
+      const rows = SUBMISSIONS.filter((s) =>
+        !q || (s.full_name || '').toLowerCase().includes(q) || (s.email || '').toLowerCase().includes(q),
+      )
+      $('count').textContent = rows.length + ' de ' + SUBMISSIONS.length + ' aluno(s)'
+      $('list').innerHTML = rows.map((s) =>
+        '<button class="student' + (CURRENT && CURRENT.id === s.id ? ' active' : '') + '" data-id="' + s.id + '">' +
+          '<div class="nm">' + esc(s.full_name) + '</div>' +
+          '<div class="meta">' + esc(s.email) + ' · ' + fmtDate(s.created_at) + '</div>' +
+        '</button>',
+      ).join('') || '<div class="placeholder">Nenhum aluno encontrado.</div>'
+      Array.from($('list').querySelectorAll('.student')).forEach((el) => {
+        el.onclick = () => {
+          const s = SUBMISSIONS.find((x) => String(x.id) === el.dataset.id)
+          selectStudent(s)
+        }
+      })
+    }
+
+    function selectStudent(s) {
+      CURRENT = { id: s.id, name: s.full_name }
+      renderList()
+      $('who').innerHTML = esc(s.full_name) + '<small>' + esc(s.email) + ' · envio #' + s.id + '</small>'
+      const tabs = [['__consolidado__', 'Consolidado']].concat(COMPETENCIES)
+      $('tabs').innerHTML = tabs.map(([key, label]) =>
+        '<button class="btn btn-ghost" data-key="' + key + '">' + esc(label) + '</button>',
+      ).join('')
+      Array.from($('tabs').querySelectorAll('.btn')).forEach((el) => {
+        el.onclick = () => {
+          Array.from($('tabs').querySelectorAll('.btn')).forEach((b) => b.classList.remove('active'))
+          el.classList.add('active')
+          loadReport(el.dataset.key)
+        }
+      })
+      // abre o consolidado por padrão
+      const first = $('tabs').querySelector('.btn')
+      if (first) first.click()
+    }
+
+    async function loadReport(key) {
+      if (!CURRENT) return
+      $('placeholder').style.display = 'none'
+      const isComp = key !== '__consolidado__'
+      const url = API + '/submissions/' + CURRENT.id + '/report?view=' +
+        (isComp ? 'competencia&competency=' + encodeURIComponent(key) : 'consolidado')
+      try {
+        const r = await fetch(url, { headers: authHeaders() })
+        if (r.status === 401) return logout('Sessão expirada.')
+        const html = await r.text()
+        $('frame').srcdoc = html
+      } catch (e) {
+        $('frame').srcdoc = '<p style="font-family:sans-serif;padding:20px;color:#C0492E">Erro: ' + esc(e.message) + '</p>'
+      }
+    }
+
+    $('enter').onclick = () => {
+      const t = $('token').value.trim()
+      if (!t) { $('gateErr').textContent = 'Informe o token.'; return }
+      TOKEN = t
+      localStorage.setItem('lc_admin_token', t)
+      loadList()
+    }
+    $('token').onkeydown = (e) => { if (e.key === 'Enter') $('enter').click() }
+    $('logout').onclick = () => logout()
+    $('search').oninput = renderList
+
+    // início
+    if (TOKEN) loadList(); else showGate()
+  </script>
+</body>
+</html>
