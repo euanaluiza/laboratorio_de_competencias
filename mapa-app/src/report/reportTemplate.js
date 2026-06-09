@@ -293,7 +293,7 @@ function renderShell(cards) {
 
     .card {
       display: block;
-      width: 600px;
+      width: 720px;
       max-width: 100%;
       margin: 0 auto 28px;
       background: var(--white);

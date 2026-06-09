@@ -397,8 +397,26 @@ h3 {
 .result-panel {
   display: grid;
   gap: 12px;
-  justify-items: start;
+  justify-items: center;
+  text-align: center;
   width: min(100%, 680px);
+}
+
+/* Telas de apresentação centralizadas */
+.intro-panel {
+  text-align: center;
+}
+
+.intro-panel .lead,
+.intro-panel .intro-copy {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-panel .button-row,
+.result-panel .button-row,
+.result-panel .status-error-box {
+  justify-content: center;
 }
 
 .verified-badge {
