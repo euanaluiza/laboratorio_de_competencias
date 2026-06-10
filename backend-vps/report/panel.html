@@ -117,9 +117,28 @@
     .s-name { margin-left:4px; color:var(--muted); }
     .t-card .s-tracks { display:inline-block; text-align:left; }
 
+    .turma-title { font-family:var(--head); color:var(--plum); font-size:1.05rem; margin:0 0 14px; }
+    .mm-who { color:var(--plum-light); font-weight:600; margin:0 0 4px; font-size:.9rem; }
+
     @media (max-width:760px) {
       .cols { grid-template-columns:1fr; }
       .col-list { max-height:34vh; }
+    }
+
+    /* Impressão / PDF (A4) das views client-side: Resumo e Turma */
+    @media print {
+      @page { size: A4; margin: 14mm; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .topbar, .col-list, .view-head, .turma-filters, #gate, #frame, .placeholder { display: none !important; }
+      body { background: #fff !important; }
+      #app { height: auto !important; }
+      .cols { display: block !important; }
+      .col-view, .frame-wrap { display: block !important; height: auto !important; overflow: visible !important; }
+      #modeTurma { padding: 0 !important; height: auto !important; overflow: visible !important; }
+      .summary-view { padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
+      .mm-list { border-radius: 0; }
+      .mm-row, .t-card { break-inside: avoid; }
+      .turma-grid { grid-template-columns: repeat(3, 1fr) !important; }
     }
   </style>
 </head>
@@ -194,7 +213,9 @@
         </select>
         <input id="fSearch" class="input" style="max-width:200px" type="text" placeholder="Buscar nome…" />
         <span class="count" id="turmaCount"></span>
+        <button id="turmaPdf" class="btn btn-plum">↓ Salvar PDF</button>
       </div>
+      <h2 class="turma-title" id="turmaTitle"></h2>
       <div class="turma-grid" id="turmaGrid"></div>
     </div>
   </div>
@@ -213,6 +234,7 @@
     let TOKEN = localStorage.getItem('lc_admin_token') || ''
     let SUBMISSIONS = []
     let CURRENT = null
+    let activeViewIsIframe = true
 
     const $ = (id) => document.getElementById(id)
     const authHeaders = () => ({ Authorization: 'Bearer ' + TOKEN })
@@ -291,16 +313,17 @@
     }
 
     function openTab(key) {
+      $('pdfBtn').style.display = 'inline-flex'
       if (key === '__resumo__') {
+        activeViewIsIframe = false
         $('frame').style.display = 'none'
-        $('pdfBtn').style.display = 'none'
         renderStudentSummary(CURRENT)
         $('summaryView').style.display = 'block'
         return
       }
+      activeViewIsIframe = true
       $('summaryView').style.display = 'none'
       $('frame').style.display = 'block'
-      $('pdfBtn').style.display = 'inline-flex'
       const isComp = key !== '__consolidado__'
       const url = API + '/submissions/' + CURRENT.id + '/report?view=' + (isComp ? 'competencia&competency=' + encodeURIComponent(key) : 'consolidado')
       fetch(url, { headers: authHeaders() }).then((r) => {
@@ -317,6 +340,7 @@
           '<small>' + (DIR_LABEL[r.direction] || '') + '</small></div>' + wheel(r.z3Count) + tracks(r) + '</div>'
       }).join('')
       $('summaryView').innerHTML = '<div class="mm-head"><h2>O seu mapa</h2>' +
+        '<p class="mm-who">' + esc(s.full_name) + ' · ' + esc(s.email) + '</p>' +
         '<p>Visão geral por competência — roda (funcional) e trilhas (recuo/excesso).</p></div>' +
         '<div class="mm-list">' + rows + '</div>'
     }
@@ -327,6 +351,7 @@
     }
     function renderTurma() {
       const comp = $('fComp').value || COMPETENCIES[0][0]
+      $('turmaTitle').textContent = (COMPETENCIES.find(([k]) => k === comp) || [, ''])[1]
       const dir = $('fDir').value
       const lvl = $('fLevel').value
       const q = $('fSearch').value.trim().toLowerCase()
@@ -355,7 +380,11 @@
     $('token').onkeydown = (e) => { if (e.key === 'Enter') $('enter').click() }
     $('logout').onclick = () => logout()
     $('search').oninput = renderList
-    $('pdfBtn').onclick = () => { const f = $('frame'); if (f && f.contentWindow) { f.contentWindow.focus(); f.contentWindow.print() } }
+    $('pdfBtn').onclick = () => {
+      if (activeViewIsIframe) { const f = $('frame'); if (f && f.contentWindow) { f.contentWindow.focus(); f.contentWindow.print() } }
+      else { window.print() }
+    }
+    $('turmaPdf').onclick = () => window.print()
     Array.from(document.querySelectorAll('.mode-btn')).forEach((b) => { b.onclick = () => switchMode(b.dataset.mode) })
     ;['fComp', 'fDir', 'fLevel'].forEach((id) => { $(id).onchange = renderTurma })
     $('fSearch').oninput = renderTurma
