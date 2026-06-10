@@ -57,8 +57,8 @@ function IntroScreen({ onStart }) {
             <p className="lead">Atividade prática do Laboratório de Competências.</p>
             <p className="intro-copy">
               Este mapa vai mostrar como você realmente age no trabalho, não o que gostaria de
-              ser, mas o que de fato faz quando a situação aperta. É a partir dele que a gente vai
-              trabalhar juntos nos três encontros.
+              ser, mas o que de fato faz quando a situação aperta. É a partir dele que vamos
+              trabalhar em conjunto nos três encontros.
             </p>
             <p className="intro-copy">
               Não existe resposta certa ou errada. Responda lembrando de situações que realmente

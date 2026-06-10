@@ -159,7 +159,7 @@ Alternativas:
 
 - a) Não falei na hora — achei melhor não abrir discussão na frente de todo mundo, ainda mais com alguém acima de mim.  
   `zone: Z1`
-- b) Falei na hora o que pensava, sem rodeio — se ninguém aponta, passa errado; prefiro ser sincera mesmo que soe dura.  
+- b) Falei na hora o que pensava, sem rodeio — se ninguém aponta, passa errado; prefiro falar com franqueza, mesmo que o tom soe duro.
   `zone: Z2`
 - c) Falei que enxergava diferente e expliquei o porquê em poucas palavras, sem brigar pra que fosse do meu jeito.  
   `zone: Z3`
@@ -178,7 +178,7 @@ Alternativas:
   `zone: Z1`
 - b) Falei o que dava pra assumir e o que não dava, e a gente acertou o que vinha primeiro.  
   `zone: Z3`
-- c) Deixei claro, meio sem paciência, que eu já estava cheia e que aquilo não cabia — uma hora a gente tem que se impor.  
+- c) Deixei claro, meio sem paciência, que eu já estava no meu limite e que aquilo não cabia — uma hora a gente tem que se impor.
   `zone: Z2`
 
 ### Q3 — situation
@@ -193,7 +193,7 @@ Alternativas:
 
 - a) Retomei o combinado direto com a pessoa — falei o que tinha ficado pra trás e o que eu precisava dali pra frente.  
   `zone: Z3`
-- b) Deixei pra lá e dei meu jeito sozinha — cobrar ia parecer que eu estava reclamando ou fazendo drama.  
+- b) Deixei pra lá e dei meu jeito por conta própria — cobrar ia parecer que eu estava reclamando ou fazendo drama.
   `zone: Z1`
 - c) Cobrei na hora, sem muito filtro — quando deixo passar vira costume, prefiro deixar claro logo.  
   `zone: Z2`
@@ -265,9 +265,9 @@ Lembre da última vez que algo importante desandou de um jeito que você não es
 
 Alternativas:
 
-- a) Fiquei chateada, mas respirei, separei o que ainda dava pra resolver do que não dava mais, e fui cuidar do que estava na minha mão.  
+- a) Me chateei, mas respirei, separei o que ainda dava pra resolver do que não dava mais, e fui cuidar do que estava na minha mão.
   `zone: Z3`
-- b) Travei — fiquei nervosa, sem saber por onde começar, e demorei um tempão pra conseguir reagir.  
+- b) Travei — o nervosismo tomou conta, não sabia por onde começar e demorei um tempão pra conseguir reagir.
   `zone: Z1`
 - c) Já fui resolvendo no impulso — puxei tudo pra mim, cobrei quem estava do lado, e só fui sentir o baque depois.  
   `zone: Z2`
@@ -284,7 +284,7 @@ Alternativas:
 
 - a) Por fora segui normal, como se não tivesse mexido comigo — mas por dentro ficou martelando, ou apareceu depois em forma de cansaço, irritação, sono ruim.  
   `zone: Z1`
-- b) Não me deixei ficar mal — engoli, mantive a postura e o foco no trabalho; ficar abalada ali não ia ajudar em nada.  
+- b) Não me deixei ficar mal — engoli, mantive a postura e o foco no trabalho; me abalar ali não ia ajudar em nada.
   `zone: Z2`
 - c) Deixei vir o que tinha que vir, tirei um tempo pra digerir, e aí consegui virar a página de verdade — sem ficar remoendo nem fingir que não tinha doído.  
   `zone: Z3`
@@ -316,9 +316,9 @@ Alternativas:
 
 - a) Não deixar isso virar briga ou desgaste com os outros.  
   `mappedValue: Pertencimento`
-- b) Manter o controle, não me sentir perdida.  
+- b) Manter o controle, não me sentir sem chão.
   `mappedValue: Segurança`
-- c) Não passar imagem de frágil ou descontrolada.  
+- c) Não passar imagem de frágil ou sem controle.
   `mappedValue: Reconhecimento`
 - d) Que tivessem sido justos comigo.  
   `mappedValue: Justiça`
@@ -369,7 +369,7 @@ Competência: `foco_resultado_produtividade`
 
 Enunciado:
 
-Lembre da última vez que você terminou o dia exausta, tendo feito mil coisas pequenas, mas deixando de lado as atividades que eram de fato mais relevantes. Depois disso, o que você fez?
+Lembre da última vez que você terminou o dia no limite, tendo feito mil coisas pequenas, mas deixando de lado as atividades que eram de fato mais relevantes. Depois disso, o que você fez?
 
 Alternativas:
 
@@ -377,7 +377,7 @@ Alternativas:
   `zone: Z3`
 - b) Fiquei até mais tarde e puxei ainda mais coisa pra mim, pra conseguir dar conta de tudo.  
   `zone: Z2`
-- c) Fiquei frustrada, mas não tomei nenhuma decisão pra mudar — no dia seguinte continuei do mesmo jeito.  
+- c) Me frustrei, mas não tomei nenhuma decisão pra mudar — no dia seguinte continuei do mesmo jeito.
   `zone: Z1`
 
 ### Q14 — thought
@@ -430,7 +430,7 @@ Lembre da última vez que te passaram uma tarefa sem muito contexto — só “f
 
 Alternativas:
 
-- a) Fiz do jeito que pediram e pronto, sem ficar perguntando muito — não queria atrasar nem parecer enrolada.  
+- a) Fiz do jeito que pediram e pronto, sem ficar perguntando muito — não queria atrasar nem parecer que estava enrolando.
   `zone: Z1`
 - b) Antes de começar, perguntei rapidinho pra que era aquilo e quem ia usar, pra não fazer no escuro — e aí toquei.  
   `zone: Z3`
@@ -447,7 +447,7 @@ Lembre da última vez que você percebeu um problema que se repetia, mas que nã
 
 Alternativas:
 
-- a) Entrei e fui resolver eu mesma — alguém tinha que resolver e ninguém estava fazendo nada.  
+- a) Entrei e resolvi por conta própria — alguém tinha que resolver e ninguém estava fazendo nada.
   `zone: Z2`
 - b) Reparei, mas não me meti — não era minha função, e não queria pisar no que era dos outros.  
   `zone: Z1`
@@ -525,7 +525,7 @@ Pense nos últimos meses. Quando apareceu uma chance de crescer que exigia se ex
 
 Alternativas:
 
-- a) Acabei adiando ou deixando passar — senti que ainda não estava preparada, que faltava alguma coisa.  
+- a) Acabei adiando ou deixando passar — senti que ainda não tinha preparo suficiente, que faltava alguma coisa.
   `zone: Z1`
 - b) Pensei se aquilo me levava pra onde eu quero chegar, e quando levava, encarei mesmo com o frio na barriga.  
   `zone: Z3`
@@ -544,7 +544,7 @@ Alternativas:
 
 - a) Escolhi uma mudança pequena e comecei a mexer numa parte da rotina — pouca coisa, mas de verdade.  
   `zone: Z3`
-- b) Fiquei incomodada e pensando muito naquilo, mas na prática não saí muito do lugar.  
+- b) Aquilo me incomodou e fiquei pensando muito, mas na prática não saí muito do lugar.
   `zone: Z1`
 - c) Me cobrei demais e tentei mudar tudo de uma vez — o que não durou nem um pouco.  
   `zone: Z2`
@@ -595,7 +595,7 @@ Alternativas:
   `mappedValue: Crescimento`
 - b) Não arriscar o que eu já tenho, manter o chão firme.  
   `mappedValue: Segurança`
-- c) Construir uma reputação, ser reconhecida pelo caminho.  
+- c) Construir uma reputação, ter reconhecimento pelo caminho.
   `mappedValue: Reconhecimento`
 - d) Ter liberdade pra decidir do meu jeito.  
   `mappedValue: Autonomia`
@@ -616,7 +616,7 @@ Lembre da última vez que você fez uma boa entrega que passou batida — ningu�
 
 Alternativas:
 
-- a) Fiquei chateada, mas não falei nada — ia parecer que eu estava querendo aparecer.  
+- a) Me chateei, mas não falei nada — ia parecer que eu estava querendo aparecer.
   `zone: Z1`
 - b) Fiz questão de deixar bem claro que tinha sido eu — não ia deixar meu trabalho passar como se fosse de outra pessoa.  
   `zone: Z2`
@@ -646,7 +646,7 @@ Competência: `protagonismo_profissional`
 
 Enunciado:
 
-Lembre da última vez que você sentiu que estava estagnada ou pouco desenvolvida no trabalho. O que você fez?
+Lembre da última vez que você sentiu que seu desenvolvimento no trabalho tinha estagnado. O que você fez?
 
 Alternativas:
 
@@ -682,7 +682,7 @@ Quando o assunto é o seu crescimento e espaço no trabalho, o que pesa mais for
 
 Alternativas:
 
-- a) Ser vista e reconhecida pelo que faço.  
+- a) Ter reconhecimento pelo que eu faço.
   `mappedValue: Reconhecimento`
 - b) Ter liberdade e autonomia pra agir.  
   `mappedValue: Autonomia`

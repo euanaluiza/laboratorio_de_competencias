@@ -92,9 +92,9 @@ export const profileTexts = {
     // P2 — Nível 2, Deslize de recuo
     recuo_2: {
       ondeVoceEsta:
-        'Na maioria das situações você se posiciona com clareza — mas em uma delas tendeu a recuar: engoliu, deixou pra depois ou deu seu jeito sozinha pra não criar atrito. O padrão funcional é o seu chão; o recuo aparece num ponto específico, em geral onde a relação pesa mais.',
+        'Na maioria das situações você se posiciona com clareza — mas em uma delas tendeu a recuar: engoliu, deixou pra depois ou resolveu por conta própria pra não criar atrito. O padrão funcional é o seu chão; o recuo aparece num ponto específico, em geral onde a relação pesa mais.',
       possiveisMotivos:
-        'É provável que ali tenha pesado o medo de estremecer a relação ou de parecer difícil — com algo como “melhor não falar agora pra não criar climão” passando pela cabeça. Não é fraqueza: é um valor bom (cuidar do vínculo) assumindo o volante numa hora em que a verdade também precisava aparecer. No fundo, mora ali um “se eu falar, posso ser mal vista” — que quase nunca é tão verdade quanto parece na hora.',
+        'É provável que ali tenha pesado o medo de estremecer a relação ou de parecer difícil — com algo como “melhor não falar agora pra não criar climão” passando pela cabeça. Não é fraqueza: é um valor bom (cuidar do vínculo) assumindo o volante numa hora em que a verdade também precisava aparecer. No fundo, mora ali um “se eu falar, isso pode pegar mal” — que quase nunca é tão verdade quanto parece na hora.',
       note: 'Seu ponto de virada está no Diz: você já vê o ponto, só segura na hora de falar. Diz curto, antes do momento passar.',
       deXparaY: [
         {
@@ -102,7 +102,7 @@ export const profileTexts = {
           to: '“deixa eu colocar uma coisa rapidinho aqui…” e fala.',
         },
         {
-          from: 'dar seu jeito sozinha',
+          from: 'resolver por conta própria',
           to: '“ó, ficou pendente aquilo que a gente combinou — consegue fechar?”',
         },
       ],
@@ -112,7 +112,7 @@ export const profileTexts = {
       ondeVoceEsta:
         'Na maioria das situações você se posiciona com equilíbrio — mas em uma delas tendeu ao excesso: falou sem filtro, cobrou quente ou se impôs mais do que o momento pedia. O padrão funcional é o seu chão; o excesso aparece num ponto específico, em geral quando você sente a verdade ou o resultado em jogo.',
       possiveisMotivos:
-        'É provável que ali tenha pesado querer ser sincera de verdade ou resolver logo — com algo como “se eu não falar firme, passam por cima de mim” passando pela cabeça. A intenção é boa (honestidade, agilidade); o custo é que o jeito ofusca o ponto e a relação leva um arranhão à toa. No fundo, mora um “preciso de força pra ser levada a sério” — quando, ali, a calma já bastaria.',
+        'É provável que ali tenha pesado a vontade de falar com total sinceridade ou resolver logo — com algo como “se eu não falar firme, passam por cima de mim” passando pela cabeça. A intenção é boa (honestidade, agilidade); o custo é que o jeito ofusca o ponto e a relação leva um arranhão à toa. No fundo, mora um “preciso usar força para que me levem a sério” — quando, ali, a calma já bastaria.',
       note: 'Seu ponto de virada está na Pausa (o segundo antes de disparar) e no Sustenta — posicionar uma vez já basta, não precisa vencer.',
       deXparaY: [
         {
@@ -130,15 +130,15 @@ export const profileTexts = {
       ondeVoceEsta:
         'Na maior parte das situações você tendeu a recuar: não falou na hora, aceitou o que não cabia, deixou pra lá pra não criar problema. Houve um momento em que você se posicionou — então a capacidade existe. O padrão hoje, porém, é o de engolir mais do que dizer.',
       possiveisMotivos:
-        'É provável que o que mais pese em você seja não estremecer a relação ou não passar uma imagem difícil — e que, na hora, venha forte o “melhor não falar pra não desagradar”. Repara com honestidade: o que parece cuidado com o outro é, muitas vezes, proteção contra o desconforto de se expor. No fundo, um “minha voz vai incomodar” — e você some pra não arriscar. O custo chega depois: sobrecarga, ressentimento, a sensação de ser passada pra trás. O que você economiza em atrito agora, paga com juros.',
+        'É provável que o que mais pese em você seja não estremecer a relação ou não passar uma imagem difícil — e que, na hora, venha forte o “melhor não falar pra não desagradar”. Repara com honestidade: o que parece cuidado com o outro é, muitas vezes, proteção contra o desconforto de se expor. No fundo, um “minha voz vai incomodar” — e você some pra não arriscar. O custo chega depois: sobrecarga, ressentimento, a sensação de que passaram por cima de você. O que você economiza em atrito agora, paga com juros.',
       note: 'Comece pequeno no Diz: uma frase, uma vez, numa situação. O músculo de falar se constrói assim — e o Alvo te lembra que você está mirando um resultado, não arriscando a relação.',
       deXparaY: [
         {
-          from: 'aceitar calada o que não cabe',
+          from: 'aceitar sem se posicionar o que não cabe',
           to: '“consigo fazer isso aqui, mas o resto não vou dar conta no prazo — o que você prefere que saia primeiro?”',
         },
         {
-          from: 'remoer calada',
+          from: 'remoer sem falar',
           to: '“deixa eu colocar uma coisa rapidinho…” e fala.',
         },
       ],
@@ -148,11 +148,11 @@ export const profileTexts = {
       ondeVoceEsta:
         'Na maior parte das situações você tendeu ao excesso: falou na hora sem rodeio, cobrou quente, se impôs pra não passarem por cima. Houve um momento em que você dosou — então o equilíbrio é possível. O padrão hoje, porém, é o de atropelar mais do que conduzir.',
       possiveisMotivos:
-        'É provável que o que mais pese em você seja a verdade ou o resultado — dizer o que pensa custe o que custar, resolver logo — e que venha forte o “se eu não falar firme, passam por cima de mim”. A intenção é legítima: não ser apagada. Mas no fundo mora um “minha voz, sozinha, não basta — preciso de volume”. O custo: você ganha discussões e perde relações; te acham difícil; e o seu ponto, que muitas vezes é certo, se perde no jeito.',
+        'É provável que o que mais pese em você seja a verdade ou o resultado — dizer o que pensa custe o que custar, resolver logo — e que venha forte o “se eu não falar firme, passam por cima de mim”. A intenção é legítima: não ter a própria voz apagada. Mas no fundo mora um “minha voz não basta — preciso de volume”. O custo: você ganha discussões e perde relações; te acham difícil; e o seu ponto, que muitas vezes é certo, se perde no jeito.',
       note: 'Sua virada está na Pausa (o automático em você é disparar — um segundo antes muda tudo) e no Sustenta (uma vez basta).',
       deXparaY: [
         {
-          from: '“ser sincera mesmo que soe dura”',
+          from: '“falar com franqueza mesmo que o tom soe duro”',
           to: 'fala claro e curto; clareza não precisa de peso.',
         },
         {
@@ -167,7 +167,7 @@ export const profileTexts = {
         'Suas respostas se dividiram entre os dois lados: em algumas situações você recuou, em outras foi ao excesso. Não é meio-termo — é instabilidade: o lado pra onde você vai depende do dia e do contexto, e isso costuma ser mais difícil de prever do que um padrão consistente.',
       possiveisMotivos:
         'É provável que dois motores convivam: às vezes pesa mais não estremecer a relação (e você recua), às vezes pesa mais a verdade ou o resultado (e você atropela). Os dois pensamentos passam — o “melhor não falar” e o “se eu não for firme, passam por cima” — e qual vence parece quase sorteio. No fundo, os dois defendem a mesma coisa: a dúvida se a sua voz basta. A virada aqui é menos escolher um lado e mais ganhar previsibilidade.',
-      note: 'A Pausa é o seu ponto-chave: é nela que você escolhe, em vez de ser levada ora pra um lado, ora pro outro.',
+      note: 'A Pausa é o seu ponto-chave: é nela que você escolhe, em vez de ir ora pra um lado, ora pro outro.',
       deXparaY: [
         {
           from: 'alternar entre engolir e explodir',
@@ -188,11 +188,11 @@ export const profileTexts = {
       note: 'Não tente mudar tudo. Foque no Diz, no menor tamanho: uma frase, uma vez, numa situação. O músculo de falar se constrói assim.',
       deXparaY: [
         {
-          from: 'dar seu jeito sozinha porque cobrar parece drama',
+          from: 'resolver por conta própria porque cobrar parece drama',
           to: '“ó, ficou pendente aquilo que a gente combinou — consegue fechar?”',
         },
         {
-          from: 'aceitar calada',
+          from: 'aceitar sem se posicionar',
           to: '“consigo isso aqui, mas o resto não vou dar conta no prazo — o que prefere que saia primeiro?”',
         },
       ],
@@ -202,7 +202,7 @@ export const profileTexts = {
       ondeVoceEsta:
         'Nas três situações você tendeu ao excesso: falou sem filtro, cobrou na hora sem muito freio, se impôs pra deixar claro logo. Hoje o seu padrão de comunicação é, de forma consistente, o de avançar com força. Isso não diz quem você é — diz o que tem se repetido, e o que se repete pode mudar.',
       possiveisMotivos:
-        'É bem provável que pesem forte a verdade e o resultado — dizer o que pensa custe o que custar, resolver e seguir — com o “se eu não for firme, passam por cima de mim” quase automático. A intenção raramente é ferir; é não ser apagada. Mas vale a honestidade: a firmeza que te protege também afasta os outros. No fundo mora um “minha voz, sozinha, não basta — preciso de volume pra existir” — e é justamente isso que faz o seu ponto, mesmo certo, deixar de ser ouvido.',
+        'É bem provável que pesem forte a verdade e o resultado — dizer o que pensa custe o que custar, resolver e seguir — com o “se eu não for firme, passam por cima de mim” quase automático. A intenção raramente é ferir; é não ter a própria voz apagada. Mas vale a honestidade: a firmeza que te protege também afasta os outros. No fundo mora um “minha voz não basta — preciso de volume pra existir” — e é justamente isso que faz o seu ponto, mesmo certo, deixar de ser ouvido.',
       note: 'Sua virada inteira mora na Pausa: o segundo que você não dá hoje. Comece por ela — um respiro antes de responder, numa situação por dia.',
       deXparaY: [
         {
@@ -221,10 +221,10 @@ export const profileTexts = {
         'Nas três situações você foi pros dois extremos: ora recuou e engoliu, ora foi ao excesso e atropelou — sem encontrar o eixo. Não é meio-termo; é instabilidade, e ela costuma cansar mais do que um padrão de um lado só, porque nem você sabe de antemão como vai reagir.',
       possiveisMotivos:
         'É provável que dois valores fortes disputem o volante: o de manter a relação (que te faz recuar) e o de dizer a verdade ou resolver (que te faz atropelar). Os dois pensamentos convivem, e qual vence depende do dia, da pessoa, do humor. Mas embaixo dos dois está a mesma ferida: a dúvida se a sua voz basta — às vezes você resolve sumindo, às vezes gritando. A virada não é escolher um lado bom; é construir o terceiro jeito, que não depende de qual gatilho disparou primeiro.',
-      note: 'A Pausa é tudo pra você: o único ponto onde dá pra interromper o sorteio e escolher de propósito. Treine ela primeiro, sozinha, antes do resto.',
+      note: 'A Pausa é tudo pra você: o único ponto onde dá pra interromper o sorteio e escolher de propósito. Treine primeiro só a Pausa, antes do resto.',
       deXparaY: [
         {
-          from: 'ser levada ora pra um lado ora pro outro',
+          from: 'ir ora pra um lado ora pro outro',
           to: 'na Pausa, “qual é o meu único ponto aqui?” — e diz só ele, curto.',
         },
         {

@@ -113,7 +113,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'b',
             label:
-              'Falei na hora o que pensava, sem rodeio — se ninguém aponta, passa errado; prefiro ser sincera mesmo que soe dura.',
+              'Falei na hora o que pensava, sem rodeio — se ninguém aponta, passa errado; prefiro falar com franqueza, mesmo que o tom soe duro.',
             zone: 'Z2',
           },
           {
@@ -144,7 +144,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'c',
             label:
-              'Deixei claro, meio sem paciência, que eu já estava cheia e que aquilo não cabia — uma hora a gente tem que se impor.',
+              'Deixei claro, meio sem paciência, que eu já estava no meu limite e que aquilo não cabia — uma hora a gente tem que se impor.',
             zone: 'Z2',
           },
         ],
@@ -164,7 +164,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'b',
             label:
-              'Deixei pra lá e dei meu jeito sozinha — cobrar ia parecer que eu estava reclamando ou fazendo drama.',
+              'Deixei pra lá e dei meu jeito por conta própria — cobrar ia parecer que eu estava reclamando ou fazendo drama.',
             zone: 'Z1',
           },
           {
@@ -269,13 +269,13 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'a',
             label:
-              'Fiquei chateada, mas respirei, separei o que ainda dava pra resolver do que não dava mais, e fui cuidar do que estava na minha mão.',
+              'Me chateei, mas respirei, separei o que ainda dava pra resolver do que não dava mais, e fui cuidar do que estava na minha mão.',
             zone: 'Z3',
           },
           {
             value: 'b',
             label:
-              'Travei — fiquei nervosa, sem saber por onde começar, e demorei um tempão pra conseguir reagir.',
+              'Travei — o nervosismo tomou conta, não sabia por onde começar e demorei um tempão pra conseguir reagir.',
             zone: 'Z1',
           },
           {
@@ -301,7 +301,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'b',
             label:
-              'Não me deixei ficar mal — engoli, mantive a postura e o foco no trabalho; ficar abalada ali não ia ajudar em nada.',
+              'Não me deixei ficar mal — engoli, mantive a postura e o foco no trabalho; me abalar ali não ia ajudar em nada.',
             zone: 'Z2',
           },
           {
@@ -344,12 +344,12 @@ export const ASSESSMENT_STEPS = [
           },
           {
             value: 'b',
-            label: 'Manter o controle, não me sentir perdida.',
+            label: 'Manter o controle, não me sentir sem chão.',
             mappedValue: 'Segurança',
           },
           {
             value: 'c',
-            label: 'Não passar imagem de frágil ou descontrolada.',
+            label: 'Não passar imagem de frágil ou sem controle.',
             mappedValue: 'Reconhecimento',
           },
           {
@@ -427,7 +427,7 @@ export const ASSESSMENT_STEPS = [
         number: 13,
         type: 'situation',
         competencyKey: 'foco_resultado_produtividade',
-        text: 'Lembre da última vez que você terminou o dia exausta, tendo feito mil coisas pequenas, mas deixando de lado as atividades que eram de fato mais relevantes. Depois disso, o que você fez?',
+        text: 'Lembre da última vez que você terminou o dia no limite, tendo feito mil coisas pequenas, mas deixando de lado as atividades que eram de fato mais relevantes. Depois disso, o que você fez?',
         options: [
           {
             value: 'a',
@@ -444,7 +444,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'c',
             label:
-              'Fiquei frustrada, mas não tomei nenhuma decisão pra mudar — no dia seguinte continuei do mesmo jeito.',
+              'Me frustrei, mas não tomei nenhuma decisão pra mudar — no dia seguinte continuei do mesmo jeito.',
             zone: 'Z1',
           },
         ],
@@ -517,7 +517,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'a',
             label:
-              'Fiz do jeito que pediram e pronto, sem ficar perguntando muito — não queria atrasar nem parecer enrolada.',
+              'Fiz do jeito que pediram e pronto, sem ficar perguntando muito — não queria atrasar nem parecer que estava enrolando.',
             zone: 'Z1',
           },
           {
@@ -543,7 +543,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'a',
             label:
-              'Entrei e fui resolver eu mesma — alguém tinha que resolver e ninguém estava fazendo nada.',
+              'Entrei e resolvi por conta própria — alguém tinha que resolver e ninguém estava fazendo nada.',
             zone: 'Z2',
           },
           {
@@ -654,7 +654,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'a',
             label:
-              'Acabei adiando ou deixando passar — senti que ainda não estava preparada, que faltava alguma coisa.',
+              'Acabei adiando ou deixando passar — senti que ainda não tinha preparo suficiente, que faltava alguma coisa.',
             zone: 'Z1',
           },
           {
@@ -686,7 +686,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'b',
             label:
-              'Fiquei incomodada e pensando muito naquilo, mas na prática não saí muito do lugar.',
+              'Aquilo me incomodou e fiquei pensando muito, mas na prática não saí muito do lugar.',
             zone: 'Z1',
           },
           {
@@ -760,7 +760,7 @@ export const ASSESSMENT_STEPS = [
           },
           {
             value: 'c',
-            label: 'Construir uma reputação, ser reconhecida pelo caminho.',
+            label: 'Construir uma reputação, ter reconhecimento pelo caminho.',
             mappedValue: 'Reconhecimento',
           },
           {
@@ -791,7 +791,7 @@ export const ASSESSMENT_STEPS = [
           {
             value: 'a',
             label:
-              'Fiquei chateada, mas não falei nada — ia parecer que eu estava querendo aparecer.',
+              'Me chateei, mas não falei nada — ia parecer que eu estava querendo aparecer.',
             zone: 'Z1',
           },
           {
@@ -837,7 +837,7 @@ export const ASSESSMENT_STEPS = [
         number: 28,
         type: 'situation',
         competencyKey: 'protagonismo_profissional',
-        text: 'Lembre da última vez que você sentiu que estava estagnada ou pouco desenvolvida no trabalho. O que você fez?',
+        text: 'Lembre da última vez que você sentiu que seu desenvolvimento no trabalho tinha estagnado. O que você fez?',
         options: [
           {
             value: 'a',
@@ -886,7 +886,7 @@ export const ASSESSMENT_STEPS = [
         options: [
           {
             value: 'a',
-            label: 'Ser vista e reconhecida pelo que faço.',
+            label: 'Ter reconhecimento pelo que eu faço.',
             mappedValue: 'Reconhecimento',
           },
           {
