@@ -131,7 +131,7 @@ function renderSwaps(deXparaY) {
     .join('')
   return `
     <div class="sec">
-      <h2>De X para Y</h2>
+      <h2>Na Prática</h2>
       ${swaps}
     </div>`
 }
