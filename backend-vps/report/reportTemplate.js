@@ -122,10 +122,12 @@ function renderSwaps(deXparaY) {
     return ''
   }
   const swaps = deXparaY
-    .map(
-      (swap) =>
-        `<div class="swap"><span class="x">Em vez de</span> ${escapeHtml(swap.from)} → <span class="y">${escapeHtml(swap.to)}</span></div>`,
-    )
+    .map((swap) => {
+      if (swap.from) {
+        return `<div class="swap"><span class="x">Em vez de</span> ${escapeHtml(swap.from)} → <span class="y">${escapeHtml(swap.to)}</span></div>`
+      }
+      return `<div class="swap swap-tip">${escapeHtml(swap.to)}</div>`
+    })
     .join('')
   return `
     <div class="sec">
