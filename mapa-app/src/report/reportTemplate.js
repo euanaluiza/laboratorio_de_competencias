@@ -117,22 +117,22 @@ function renderPath(meta, profile) {
     </div>`
 }
 
-function renderSwaps(deXparaY) {
-  if (!Array.isArray(deXparaY) || deXparaY.length === 0) {
+function renderSwaps(naPratica) {
+  if (!Array.isArray(naPratica) || naPratica.length === 0) {
     return ''
   }
-  const swaps = deXparaY
-    .map((swap) => {
-      if (swap.from) {
-        return `<div class="swap"><span class="x">Em vez de</span> ${escapeHtml(swap.from)} → <span class="y">${escapeHtml(swap.to)}</span></div>`
-      }
-      return `<div class="swap swap-tip">${escapeHtml(swap.to)}</div>`
+  const items = naPratica
+    .map((item) => {
+      const when = item.when
+        ? `<span class="when">${escapeHtml(item.when)}</span>`
+        : ''
+      return `<div class="swap">${when}${escapeHtml(item.text)}</div>`
     })
     .join('')
   return `
     <div class="sec">
       <h2>Na Prática</h2>
-      ${swaps}
+      ${items}
     </div>`
 }
 
@@ -157,7 +157,7 @@ function renderBody(meta, profile) {
         <p>${escapeHtml(profile.possiveisMotivos)}</p>
       </div>
       ${renderPath(meta, profile)}
-      ${renderSwaps(profile.deXparaY)}
+      ${renderSwaps(profile.naPratica)}
     </div>`
 }
 
@@ -473,8 +473,12 @@ function renderShell(cards) {
       line-height: 1.5;
     }
 
-    .swap .x { color: var(--petrol); font-weight: 600; }
-    .swap .y { color: var(--plum); font-weight: 600; }
+    .swap .when {
+      display: block;
+      color: var(--petrol);
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
 
     .foot {
       margin: 14px 22px 18px;
