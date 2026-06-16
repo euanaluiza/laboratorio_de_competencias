@@ -127,15 +127,15 @@
 
     /* Impressão / PDF (A4) das views client-side: Resumo e Turma */
     @media print {
-      @page { size: A4; margin: 14mm; }
+      @page { size: A4; margin: 0; }
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       .topbar, .col-list, .view-head, .turma-filters, #gate, #frame, .placeholder { display: none !important; }
       body { background: #fff !important; }
       #app { height: auto !important; }
       .cols { display: block !important; }
       .col-view, .frame-wrap { display: block !important; height: auto !important; overflow: visible !important; }
-      #modeTurma { padding: 0 !important; height: auto !important; overflow: visible !important; }
-      .summary-view { padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
+      #modeTurma { padding: 12mm !important; height: auto !important; overflow: visible !important; }
+      .summary-view { padding: 12mm !important; max-width: 100% !important; margin: 0 !important; }
       .mm-list { border-radius: 0; }
       .mm-row, .t-card { break-inside: avoid; }
       .turma-grid { grid-template-columns: repeat(3, 1fr) !important; }

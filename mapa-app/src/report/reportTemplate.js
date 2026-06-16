@@ -508,14 +508,15 @@ function renderShell(cards) {
     /* Impressão / PDF em A4 */
     @page {
       size: A4;
-      margin: 14mm;
+      margin: 0;
     }
 
     @media print {
-      html, body {
+      html { margin: 0; }
+      body {
         background: #fff;
-        padding: 0;
         margin: 0;
+        padding: 12mm;
       }
       /* Garante que as cores da marca (plum, lilás, verde, vermelho) saiam no PDF */
       * {
