@@ -49,19 +49,19 @@ export const competencyMeta = {
   visao_sistemica: {
     title: 'Visão Sistêmica',
     subtitle: 'Leia antes do nosso bloco de hoje.',
-    protocol: null,
+    protocol: 'AMPLIA · CONECTA · MEDE · AGE',
     steps: [],
   },
   direcao_futuro: {
     title: 'Direção de Futuro',
     subtitle: 'Leia antes do nosso bloco de hoje.',
-    protocol: null,
+    protocol: 'OLHA · DECIDE · PLANEJA · MOVE',
     steps: [],
   },
   protagonismo_profissional: {
     title: 'Protagonismo Profissional',
     subtitle: 'Leia antes do nosso bloco de hoje.',
-    protocol: null,
+    protocol: 'ASSUME · PEDE · CRIA · SUSTENTA',
     steps: [],
   },
 }
@@ -538,7 +538,469 @@ export const profileTexts = {
     },
   },
 
-  visao_sistemica: {},
-  direcao_futuro: {},
-  protagonismo_profissional: {},
+  visao_sistemica: {
+    funcional_3: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você demonstra um padrão de olhar além da sua própria parte: pergunta antes de executar, conecta as peças e age considerando o impacto no todo — sem precisar controlar tudo nem entrar no espaço dos outros. Esse é o seu ponto forte, e aparece na maior parte do tempo.',
+      possiveisMotivos:
+        'O que tende a te sustentar é agir a partir da crença de que você pode olhar pro todo sem perder o foco no que é seu — curiosidade sem ansiedade de controle. O ponto de atenção: sob muita pressão, o automático pode ser se fechar na sua parte (e perder o contexto) ou querer abraçar o que não é seu (e gerar ruído com outras áreas).',
+      note: 'Mantenha o protocolo afiado. Use de propósito nas situações onde áreas ou pessoas diferentes precisam se conectar.',
+      naPratica: [
+        {
+          when: 'Quando perceber alguém ao seu lado fechado(a) na própria tarefa ou tentando controlar demais:',
+          text: 'em vez de só cuidar da sua própria visão, ajude essa pessoa a ampliar com uma pergunta: “você já pensou em quem mais essa decisão impacta?”',
+        },
+        {
+          when: 'Quando uma situação complexa aparecer (várias áreas envolvidas, vários impactos cruzados):',
+          text: 'em vez de assumir que sempre vai conseguir conectar, escolha a situação mais complexa do mês pra praticar o protocolo de propósito.',
+        },
+      ],
+    },
+    recuo_2: {
+      ondeVoceEsta:
+        'Na maioria das situações do mapa, você conecta bem — mas em uma delas você se fechou na sua própria parte: fez o que precisava ser feito sem olhar pro contexto ao redor ou sem cruzar com o que acontecia em outras áreas. O padrão funcional é o seu chão; o fechamento aparece num ponto específico, geralmente onde a tarefa parece isolada ou o tempo aperta.',
+      possiveisMotivos:
+        'É provável que, naquela situação, o que pesou mais para você foi o pensamento “fiz o meu, entreguei” — com a urgência fechando a visão pra fora. Por trás desse sentimento, pode morar uma crença de que “se eu ficar no que é meu, pelo menos não erro fora da raia.” O risco é sutil: às vezes a sua parte funciona perfeitamente isolada, e mesmo assim atrapalha o todo — porque ninguém cruzou os processos.',
+      note: 'Seu ponto de virada está no AMPLIA: antes de executar, “quem mais é afetado por isso?”',
+      naPratica: [
+        {
+          when: 'Quando você recebe uma tarefa e vai direto executar:',
+          text: 'em vez de executar no automático, pare e pergunte antes: “pra que isso vai ser usado? quem depende do que eu vou entregar?”',
+        },
+        {
+          when: 'Quando você termina uma entrega e passa pra próxima sem checar o que vem depois:',
+          text: 'em vez de “entreguei o meu”, pergunte: “como o que eu fiz impacta o próximo passo da cadeia?”',
+        },
+      ],
+    },
+    excesso_2: {
+      ondeVoceEsta:
+        'Na maioria das situações do mapa, você conecta bem — mas em uma delas você quis controlar demais ou entrou na parte do outro: não delegou, supervisionou em excesso, ou opinou em algo que não estava sob sua responsabilidade. O padrão funcional é o seu chão; isso aparece num ponto específico, geralmente quando a qualidade ou o resultado parecem em risco.',
+      possiveisMotivos:
+        'É provável que, naquela situação, o que pesou mais para você foi o medo de algo sair mal feito — com algo como “se eu não ficar de olho, não sai direito” na cabeça. A intenção é boa (cuidar da entrega). O custo é virar gargalo, deixar a equipe dependente, ou romper fronteiras que existem por boas razões. Por trás desse sentimento, pode morar uma crença de que “se eu soltar, vai dar errado.”',
+      note: 'Seu ponto de virada está no MEDE: “o meu controle aqui está ajudando ou travando? Isso é meu pra resolver, ou meu pra trazer pra quem é dono(a)?”',
+      naPratica: [
+        {
+          when: 'Quando você se pega entrando em várias frentes ao mesmo tempo:',
+          text: 'em vez de entrar em tudo, escolha o que realmente precisa de você e delegue o resto com instrução clara e resultado esperado definido.',
+        },
+        {
+          when: 'Quando você se pega supervisionando cada passo do trabalho de alguém:',
+          text: 'em vez de supervisionar cada detalhe, combine o resultado esperado e dê espaço pra pessoa chegar lá pelo caminho dela.',
+        },
+      ],
+    },
+    recuo_1: {
+      ondeVoceEsta:
+        'Na maior parte das situações do mapa, você se fechou na sua própria parte: fez o que precisava ser feito, não perguntou o contexto, não olhou pro impacto ao redor. Houve um momento em que você conectou — então a capacidade existe. O padrão hoje, porém, é o de executar sem ampliar — e às vezes construir um processo, uma rotina ou uma meta que funciona perfeitamente isolada, mas não conversa com o que outras áreas estão fazendo.',
+      possiveisMotivos:
+        'É provável que, neste momento, pese muito forte o pensamento “minha parte é minha parte” — quase automático. O que parece foco é, muitas vezes, uma forma de proteção: ficar onde você domina, pra não arriscar fora. Por trás desse sentimento, pode morar uma crença de que “se eu sair da minha parte, vou me perder.” O custo: você entrega, mas perde relevância — porque ninguém percebe que você enxerga além da tarefa. E o que você constrói pode estar atrapalhando o sistema sem que você saiba.',
+      note: 'Comece pelo AMPLIA: “quem mais é afetado por isso?” Uma pergunta, uma vez, antes de começar uma tarefa.',
+      naPratica: [
+        {
+          when: 'Quando você recebe uma tarefa e vai direto executar:',
+          text: 'em vez de fazer no automático, pergunte antes: “pra que isso vai ser usado? quem depende do que eu vou entregar?”',
+        },
+        {
+          when: 'Quando você precisa criar um novo processo, rotina ou regra:',
+          text: 'em vez de fechar sem cruzar com as outras áreas, pergunte: “isso aqui pode esbarrar em algum processo ou prazo de outra área?”',
+        },
+      ],
+    },
+    excesso_1: {
+      ondeVoceEsta:
+        'Na maior parte das situações do mapa, você centralizou ou entrou na parte dos outros: assumiu tarefas além do que era seu, não delegou, concentrou decisões, ou opinou em áreas que não eram da sua responsabilidade direta. Houve um momento em que você soltou — então o equilíbrio é possível. O padrão hoje, porém, é o de controlar demais ou expandir além do seu território.',
+      possiveisMotivos:
+        'É provável que, neste momento, pese muito forte o pensamento “se eu não ficar de olho, não sai direito” — quase automático. Por trás desse sentimento, pode morar uma crença de que se você soltar, vai dar errado. Em alguns casos, pode morar também o desejo de ser visto(a) como alguém que enxerga mais que os outros — uma forma de se posicionar. O custo: você vira gargalo, a equipe não cresce, a informação não circula. Ou os colegas se retraem porque sentem a invasão.',
+      note: 'Sua virada mora no MEDE: “o meu controle está ajudando ou travando? Isso é meu pra resolver, ou meu pra trazer pra quem é dono(a)?”',
+      naPratica: [
+        {
+          when: 'Quando você se pega assumindo o trabalho dos outros porque “ninguém faz como eu”:',
+          text: 'em vez de assumir, delegue com instrução clara e resultado esperado definido. Confiar é parte do processo.',
+        },
+        {
+          when: 'Quando você vê um problema na área de outra pessoa e tem o impulso de levar pra cima da liderança dela:',
+          text: 'em vez de pular quem é dono(a) do problema, primeiro vá pra pessoa que pode resolver. A ordem com que você leva a informação revela a sua intenção real.',
+        },
+      ],
+    },
+    oscilante_1: {
+      ondeVoceEsta:
+        'Suas respostas no mapa se dividiram: em algumas situações você se fechou na própria parte, em outras quis controlar ou entrou na parte dos outros. Ora não olha pro todo, ora tenta abranger demais. Isso não é equilíbrio — é instabilidade.',
+      possiveisMotivos:
+        'É provável que, neste momento, a mesma crença alimente os dois lados: a de que “se eu sair da minha parte, vou me perder.” Às vezes você resolve ficando dentro do seu, às vezes tentando controlar tudo. A virada é ganhar constância — olhar pro todo sem precisar dominar tudo.',
+      note: 'O AMPLIA é o seu ponto: antes de qualquer coisa, “quem mais é afetado?”',
+      naPratica: [
+        {
+          when: 'Quando você se pega oscilando entre se fechar e querer controlar:',
+          text: 'em vez de oscilar, faça o AMPLIA todo dia antes de começar uma tarefa: “quem mais é afetado por isso?”',
+        },
+        {
+          when: 'Quando você só percebe pra qual lado foi depois da situação:',
+          text: 'em vez de só perceber depois, anote no fim do dia: “hoje eu me fechei ou tentei controlar/invadir demais?” Em duas semanas o padrão fica visível.',
+        },
+      ],
+    },
+    recuo_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você se fechou na sua própria parte: executou sem perguntar o contexto, sem olhar pro impacto, sem conectar com o que acontecia ao redor. Hoje o seu padrão é, na maior parte do tempo, o de se manter dentro da própria caixa. Isso não diz quem você é — diz o que tem se repetido, e o que se repete pode mudar.',
+      possiveisMotivos:
+        'É bem provável que, neste momento, pese muito forte o pensamento “fiz o meu, entreguei o que pediram” — quase automático. Por trás desse sentimento, pode morar um desconforto com sair da zona onde você domina — porque dentro dela, o risco de errar é menor. O custo é alto: você pode ser excelente tecnicamente e não ser percebido(a) como alguém que enxerga o jogo maior. E o que você constrói pode estar gerando conflito em outras áreas sem que você saiba — porque ninguém cruzou os processos.',
+      note: 'Comece pelo AMPLIA: uma pergunta antes de executar. “Pra que isso serve? Quem depende?”',
+      naPratica: [
+        {
+          when: 'Quando você recebe uma tarefa e vai direto executar:',
+          text: 'em vez de executar no automático, pergunte antes: “pra que isso vai ser usado? quem depende disso?”',
+        },
+        {
+          when: 'Quando algo aparece numa conversa e você pensa “não é da minha área”:',
+          text: 'em vez de se retirar mentalmente da conversa, contribua com uma pergunta sobre o todo — não precisa ser uma opinião, basta uma curiosidade legítima.',
+        },
+      ],
+    },
+    excesso_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você centralizou ou entrou na parte dos outros: assumiu tarefas além do que era seu, controlou de perto, ou opinou em áreas que não eram suas. Hoje o seu padrão é, na maior parte do tempo, o de controlar ou expandir além do território. Isso não diz quem você é — diz o que tem se repetido, e o que se repete pode mudar.',
+      possiveisMotivos:
+        'É bem provável que, neste momento, pese muito forte o pensamento “se eu não controlar, ninguém controla” — quase automático. Por trás desse sentimento, pode morar uma crença de que sem a sua supervisão direta, as coisas não saem direito. Em alguns casos, pode morar também um desejo de ser visto(a) como alguém que enxerga mais que os outros. O custo: você vira gargalo, ninguém cresce ao seu redor, a própria saúde cobra. Ou os colegas se afastam porque sentem a invasão — e a confiança entre áreas se corrói.',
+      note: 'Sua virada mora no MEDE: “o meu controle está ajudando ou travando? Isso é meu pra resolver, ou meu pra trazer pra quem é dono(a)?”',
+      naPratica: [
+        {
+          when: 'Quando você se pega assumindo o trabalho dos outros:',
+          text: 'em vez de assumir, escolha uma coisa pra delegar essa semana com resultado esperado claro — e respeite o espaço da pessoa pra chegar lá.',
+        },
+        {
+          when: 'Quando você vê um problema em outra área e tem o impulso de levar pra liderança acima:',
+          text: 'em vez de pular quem é dono(a) do problema, primeiro vai pra pessoa que pode resolver. A ordem com que você leva a informação mostra a sua intenção.',
+        },
+      ],
+    },
+    oscilante_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você foi pros dois extremos: ora se fechou na própria parte, ora centralizou ou entrou no espaço dos outros. Não é equilíbrio — é instabilidade.',
+      possiveisMotivos:
+        'É provável que, neste momento, a mesma crença alimente os dois lados: a de que “se eu sair da minha parte, vou me perder.” Às vezes você resolve ficando dentro do seu, às vezes tentando abranger tudo. A virada não é escolher um lado — é o AMPLIA como hábito constante: olhar pro todo sem precisar dominar tudo.',
+      note: 'O AMPLIA é tudo.',
+      naPratica: [
+        {
+          when: 'Quando você se pega oscilando entre se fechar e querer abraçar tudo:',
+          text: 'em vez de oscilar, faça uma pergunta antes de cada tarefa: “quem mais é afetado por isso?”',
+        },
+        {
+          when: 'Quando você só percebe pra qual lado foi depois:',
+          text: 'em vez de só perceber depois, anote no fim do dia: “hoje me fechei ou centralizei demais?”',
+        },
+      ],
+    },
+  },
+  direcao_futuro: {
+    funcional_3: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você demonstra um padrão de saber pra onde está indo, planejar e mover na direção escolhida. Decide sem precisar de certeza total e sustenta a direção ao longo do tempo. Esse é o seu ponto forte, e aparece na maior parte do tempo.',
+      possiveisMotivos:
+        'O que tende a te sustentar é agir a partir da crença de que você pode decidir sem ter certeza absoluta — e ajustar a rota conforme o caminho vai mostrando. O ponto de atenção: sob muita pressão, o automático pode ser travar (e estagnar) ou mudar de rumo rápido demais (e perder a constância).',
+      note: 'Mantenha o protocolo afiado.',
+      naPratica: [
+        {
+          when: 'Quando perceber alguém ao seu lado travado(a) sem decidir ou pulando de uma coisa pra outra:',
+          text: 'em vez de só cuidar da sua própria direção, ajude essa pessoa a olhar pra frente com uma pergunta: “se você soubesse que não ia falhar, o que você escolheria?”',
+        },
+        {
+          when: 'Quando você sentir que está confortável demais na direção atual:',
+          text: 'em vez de assumir que tudo continua bem, teste: “qual é a próxima decisão de carreira que eu estou adiando?”',
+        },
+      ],
+    },
+    recuo_2: {
+      ondeVoceEsta:
+        'Na maioria das situações do mapa, você tem direção clara — mas em uma delas você estagnou: não decidiu, não planejou, ficou esperando. O padrão funcional é o seu chão; a estagnação aparece num ponto específico, geralmente onde a incerteza é maior.',
+      possiveisMotivos:
+        'É provável que, naquela situação, o que pesou mais para você foi o pensamento “e se eu escolher errado?” Em alguns casos, pode morar também uma dificuldade de se enxergar num lugar diferente do atual — como se crescer significasse deixar de ser quem você é hoje. Quase nunca a decisão é tão arriscada quanto parece no momento.',
+      note: 'Seu ponto de virada está no DECIDE: use os 4 filtros — o que te dá energia, onde você já tem competência natural, o que não tolera mais, e o que escolheria se não fosse falhar.',
+      naPratica: [
+        {
+          when: 'Quando você fica esperando o cenário ficar mais claro pra decidir:',
+          text: 'em vez de esperar, pergunte: “o que eu já sei é suficiente pra dar o primeiro passo?”',
+        },
+        {
+          when: 'Quando algo importante fica empurrado porque “depois eu vejo”:',
+          text: 'em vez de “depois eu vejo”, marque uma data pra decidir pelo menos a direção — não precisa ser a decisão final, só o rumo.',
+        },
+      ],
+    },
+    excesso_2: {
+      ondeVoceEsta:
+        'Na maioria das situações do mapa, você tem direção clara — mas em uma delas você agiu por impulso: mudou de rumo rápido, começou algo sem sustentar, ou seguiu uma empolgação sem checar se fazia sentido pra você. O padrão funcional é o seu chão; a impulsividade aparece num ponto específico, geralmente quando a ansiedade aperta ou quando algo novo aparece com força.',
+      possiveisMotivos:
+        'É provável que, naquela situação, o que pesou mais para você foi o pensamento “preciso correr antes que seja tarde” — ou o brilho de algo novo que pareceu mais interessante. O custo: você se moveu, mas não necessariamente pra frente. Direção precisa de constância — não só de empolgação.',
+      note: 'Seu ponto de virada está no PLANEJA: antes de mudar de rumo, pergunte: “isso está na direção que eu escolhi, ou é só uma distração bonita?”',
+      naPratica: [
+        {
+          when: 'Quando você se pega querendo trocar de rumo logo depois de ter começado:',
+          text: 'em vez de pular pra próxima novidade, fique tempo suficiente no caminho atual pra ele dar fruto. Resultado precisa de tempo.',
+        },
+        {
+          when: 'Quando aparece algo novo e interessante e o seu impulso é mudar a direção:',
+          text: 'em vez de decidir rápido, passe pelos 4 filtros antes de trocar de rota.',
+        },
+      ],
+    },
+    recuo_1: {
+      ondeVoceEsta:
+        'Na maior parte das situações do mapa, você estagnou: não decidiu, não planejou, não moveu. Houve um momento em que você escolheu — então a capacidade existe. O padrão hoje, porém, é o de esperar — seja por indecisão, por medo de errar, ou por não se enxergar num lugar diferente de onde está hoje.',
+      possiveisMotivos:
+        'É provável que, neste momento, pese muito forte o pensamento “eu não sei o suficiente pra decidir” — quase automático. Pode ser medo de escolher errado. Pode ser conforto no que já é conhecido. Ou pode ser algo mais profundo: uma identidade tão ligada à sua função atual que crescer parece deixar de ser quem você é. O custo: enquanto você espera a hora certa, o tempo passa e a sua carreira é decidida por omissão — quem não escolhe, escolhe por padrão.',
+      note: 'Comece pelo DECIDE com os 4 filtros: você não precisa de certeza, precisa de direção. E pergunte com honestidade: “quem disse que isso lá na frente não é pra mim? Eu testei, ou estou assumindo?”',
+      naPratica: [
+        {
+          when: 'Quando você fica esperando o cenário ficar mais claro:',
+          text: 'em vez de esperar, pergunte: “o que eu já sei é suficiente pro primeiro passo?”',
+        },
+        {
+          when: 'Quando você se pega “indo levando” sem direção definida:',
+          text: 'em vez de ir levando, marque uma data: “até [coloque uma data] eu vou ter decidido pelo menos a direção.”',
+        },
+      ],
+    },
+    excesso_1: {
+      ondeVoceEsta:
+        'Na maior parte das situações do mapa, você agiu por impulso: decidiu rápido, mudou de rumo, começou algo sem sustentar. Houve um momento em que você planejou — então o equilíbrio é possível. O padrão hoje, porém, é o de muita movimentação sem necessariamente avançar — seja por ansiedade de ficar parado(a), seja por ser movido(a) pela excitação de cada novidade.',
+      possiveisMotivos:
+        'É provável que, neste momento, pese muito forte o pensamento “preciso correr antes que seja tarde” — ou a busca constante por algo novo. Se for ansiedade: o motor é o medo de ficar parado(a). Se for excitação: o motor é falta de referência interna — você nunca se perguntou com calma o que quer de verdade, e por isso qualquer coisa nova parece direção, até perder o brilho. O custo nos dois casos: muita movimentação, pouco avanço real. Muita iniciativa, pouca acabativa.',
+      note: 'Sua virada mora no PLANEJA e no DECIDE: antes de mudar de rumo, “isso é direção que eu escolhi, ou é só excitação do momento?”',
+      naPratica: [
+        {
+          when: 'Quando aparece algo novo e o seu impulso é mudar a direção:',
+          text: 'em vez de mudar a cada nova oportunidade, pergunte: “isso está na minha direção, ou é distração?”',
+        },
+        {
+          when: 'Quando você se pega começando muita coisa e sustentando pouca:',
+          text: 'em vez de começar mais uma, fique no caminho atual tempo suficiente pra ele dar fruto.',
+        },
+      ],
+    },
+    oscilante_1: {
+      ondeVoceEsta:
+        'Suas respostas no mapa se dividiram: em algumas situações você estagnou, em outras agiu por impulso. Ora não decide, ora decide demais sem pensar. Isso não é equilíbrio — é instabilidade.',
+      possiveisMotivos:
+        'É provável que, neste momento, a mesma crença alimente os dois lados: a de que “eu não sei o suficiente.” Às vezes você resolve não decidindo, às vezes decidindo tudo de uma vez. A virada é os 4 filtros como hábito — construir o critério interno que parece estar faltando.',
+      note: 'O DECIDE com os filtros é o seu ponto.',
+      naPratica: [
+        {
+          when: 'Quando você precisa tomar uma decisão de carreira:',
+          text: 'em vez de oscilar entre travar e decidir rápido, passe pelos 4 filtros antes — eles te dão critério.',
+        },
+        {
+          when: 'Quando você só percebe pra qual lado foi depois:',
+          text: 'em vez de só perceber depois, anote no fim da semana: “essa semana eu estagnei ou fui impulsivo(a)?”',
+        },
+      ],
+    },
+    recuo_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você estagnou. Hoje o padrão é, na maior parte do tempo, o de esperar. Isso não diz quem você é — diz o que tem se repetido, e o que se repete pode mudar.',
+      possiveisMotivos:
+        'É bem provável que, neste momento, pese muito forte o pensamento “ainda não sei o suficiente pra decidir” — quase automático. Olhe com honestidade: na maioria das vezes, não é falta de informação. É excesso de medo. Ou é uma autoimagem que não inclui você num lugar diferente de onde está hoje. Enquanto você espera a hora certa, a sua vida profissional vai sendo decidida por omissão — e a distância entre onde você está e onde poderia estar cresce em silêncio.',
+      note: 'Comece pelo DECIDE: responda os 4 filtros hoje. A pergunta mais importante deles: “se eu soubesse que não ia falhar, o que eu escolheria?”',
+      naPratica: [
+        {
+          when: 'Quando você fica esperando o cenário ficar mais claro:',
+          text: 'em vez de esperar a hora certa, dê o primeiro passo essa semana. Qualquer um.',
+        },
+        {
+          when: 'Quando você pensa “isso lá na frente não é pra mim”:',
+          text: 'em vez de assumir, pergunte: “quem disse? Eu testei, ou estou supondo?”',
+        },
+      ],
+    },
+    excesso_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você agiu por impulso. Hoje o padrão é, na maior parte do tempo, o de muita movimentação sem avanço real. Isso não diz quem você é — diz o que tem se repetido, e o que se repete pode mudar.',
+      possiveisMotivos:
+        'É bem provável que, neste momento, pese muito forte o pensamento “preciso correr” — ou a busca constante por algo novo, quase automática. A coragem que te move é real. Mas sem direção definida, ela vira agitação. E se o motor for excitação em vez de direção, o padrão vai se repetir em tudo: muda de emprego, de projeto, de plano — e nada fica plantado fundo o suficiente pra dar fruto.',
+      note: 'Sua virada mora no PLANEJA: antes de mudar de rumo, pergunte: “estou fugindo ou avançando? Isso é direção, ou é excitação?”',
+      naPratica: [
+        {
+          when: 'Quando o seu impulso é trocar de rota:',
+          text: 'em vez de trocar, pergunte: “isso está na direção que eu escolhi pra mim?”',
+        },
+        {
+          when: 'Quando você se pega começando algo novo antes de fechar o que estava no ar:',
+          text: 'em vez de começar outra coisa, fique e sustente uma. Resultado precisa de tempo no mesmo solo.',
+        },
+      ],
+    },
+    oscilante_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você foi pros dois extremos. Não é equilíbrio — é instabilidade.',
+      possiveisMotivos:
+        'É provável que, neste momento, a mesma crença alimente os dois lados: a de que “eu não sei o suficiente.” A agitação e a paralisia são respostas diferentes pra mesma incerteza. A virada é os 4 filtros como hábito — construir um critério interno que hoje parece estar faltando.',
+      note: 'O DECIDE com os filtros é tudo.',
+      naPratica: [
+        {
+          when: 'Quando você precisa tomar qualquer decisão de carreira:',
+          text: 'em vez de oscilar, passe pelos 4 filtros antes — eles funcionam como critério interno.',
+        },
+        {
+          when: 'Quando você só percebe o padrão depois da semana passar:',
+          text: 'em vez de só perceber depois, anote no fim da semana: “essa semana eu estagnei ou fui impulsivo(a)?”',
+        },
+      ],
+    },
+  },
+  protagonismo_profissional: {
+    funcional_3: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você demonstra um padrão de assumir a responsabilidade — pela sua trajetória profissional e pelo espaço onde você atua. Busca, propõe, pede, cria e sustenta sem depender de validação externa. Diante de problemas, age em vez de esperar instrução. Esse é o seu ponto forte, e aparece na maior parte do tempo.',
+      possiveisMotivos:
+        'O que tende a te sustentar é agir a partir da crença de que você pode construir sem precisar de permissão dos outros — e sem precisar provar valor o tempo todo. O ponto de atenção: sob pressão, o automático pode ser recuar (e esperar) ou se expor demais (e forçar), ou ainda agir além do que você domina.',
+      note: 'Mantenha o protocolo afiado.',
+      naPratica: [
+        {
+          when: 'Quando perceber alguém ao seu lado esperando demais ou se forçando demais:',
+          text: 'em vez de só protagonizar o seu, inspire essa pessoa a assumir o próprio espaço — com uma pergunta ou um exemplo concreto.',
+        },
+        {
+          when: 'Quando você sentir que está confortável demais na atuação atual:',
+          text: 'em vez de seguir como está, teste: “qual é o pedido que eu estou evitando fazer? Qual problema eu vi e fingi que não vi?”',
+        },
+      ],
+    },
+    recuo_2: {
+      ondeVoceEsta:
+        'Na maioria das situações do mapa, você protagoniza — mas em uma delas você esperou: não pediu, não buscou, não agiu sobre algo que poderia ter resolvido. O padrão funcional é o seu chão; a espera aparece num ponto específico, geralmente onde a exposição ou o risco parecem maiores.',
+      possiveisMotivos:
+        'É provável que, naquela situação, o que pesou mais para você foi o medo de parecer inconveniente ou de se expor — com algo como “se eu for bom(boa), vão notar” ou “não me pediram pra fazer” na cabeça. Por trás desse sentimento, pode morar uma crença de que se você pedir e ouvir não, não vai aguentar.',
+      note: 'Seu ponto de virada está no PEDE (pra trajetória) ou no CRIA (pra atuação).',
+      naPratica: [
+        {
+          when: 'Quando você quer crescer mas espera ser notado(a) em vez de pedir:',
+          text: 'em vez de esperar ser notado(a), peça uma conversa de carreira com quem decide: “quero entender o que preciso desenvolver pra chegar em [diga onde quer chegar].”',
+        },
+        {
+          when: 'Quando você vê um problema e pensa “não me pediram pra resolver”:',
+          text: 'em vez de cruzar os braços, pergunte: “o que eu posso fazer sobre isso agora, mesmo sem ninguém ter pedido?”',
+        },
+      ],
+    },
+    excesso_2: {
+      ondeVoceEsta:
+        'Na maioria das situações do mapa, você protagoniza — mas em uma delas você se forçou: se expôs demais, buscou validação, fez demais pra provar valor, ou agiu além do que dominava. O padrão funcional é o seu chão; isso aparece num ponto específico, geralmente quando a insegurança ou a urgência apertam.',
+      possiveisMotivos:
+        'É provável que, naquela situação, o que pesou mais para você foi querer provar que merece, ou resolver algo que não era pra você resolver sozinho(a). Por trás desse sentimento, pode morar uma crença de que sem aplauso o seu trabalho não vale — ou que pedir ajuda é sinal de fraqueza. Protagonismo que depende de validação externa não se sustenta. E iniciativa sem autoconsciência costuma criar mais problema do que resolve.',
+      note: 'Seu ponto de virada está no SUSTENTA (fazer porque acredita, não pra ouvir elogio) ou no PEDE (pedir ajuda quando passa do seu limite — porque pedir ajuda também é protagonismo).',
+      naPratica: [
+        {
+          when: 'Quando você se oferece pra mais coisas do que cabem na sua agenda:',
+          text: 'em vez de se oferecer pra tudo, escolha o que está alinhado com a sua direção e diga não com clareza ao resto.',
+        },
+        {
+          when: 'Quando você se pega tentando resolver algo que não domina pra não parecer limitado(a):',
+          text: 'em vez de resolver sozinho(a), pergunte com honestidade: “eu tenho competência suficiente pra isso, ou preciso de apoio de alguém com mais conhecimento?”',
+        },
+      ],
+    },
+    recuo_1: {
+      ondeVoceEsta:
+        'Na maior parte das situações do mapa, você esperou: não pediu, não buscou, não agiu quando poderia ter agido. Houve um momento em que você protagonizou — então a capacidade existe. O padrão hoje, porém, é o de aguardar — tanto na carreira quanto diante de problemas que aparecem no dia a dia.',
+      possiveisMotivos:
+        'É provável que, neste momento, pesem muito forte os pensamentos “pra eu crescer, alguém precisa me notar” e “não me pediram pra fazer” — quase automáticos. O que parece humildade ou respeito ao limite da sua função é, muitas vezes, medo de rejeição ou de se expor. Por trás desse sentimento, pode morar uma crença de que se você se expuser e der errado, você não vai aguentar. O custo: a sua carreira está sendo construída por omissão, problemas que você viu passam sem solução, e a frustração de “não sou reconhecido(a)” cresce — sem que você tenha pedido nada ou agido sobre nada.',
+      note: 'Comece pelo PEDE (peça uma coisa essa semana) ou pelo CRIA (aja sobre um problema que você viu e fingiu que não viu).',
+      naPratica: [
+        {
+          when: 'Quando você quer crescer mas espera ser notado(a):',
+          text: 'em vez de esperar, peça uma conversa de carreira com quem decide.',
+        },
+        {
+          when: 'Quando o cenário muda e o seu impulso é cruzar os braços e esperar instrução:',
+          text: 'em vez de cruzar os braços, pergunte: “o que eu posso fazer sobre isso agora, mesmo sem ninguém ter pedido?”',
+        },
+      ],
+    },
+    excesso_1: {
+      ondeVoceEsta:
+        'Na maior parte das situações do mapa, você se forçou: se expôs demais, quis provar valor, dependeu de validação externa, ou agiu além do que dominava. Houve um momento em que você dosou — então o equilíbrio é possível. O padrão hoje, porém, é o de provar ou de agir sem medir.',
+      possiveisMotivos:
+        'É provável que, neste momento, pesem muito forte os pensamentos “preciso provar o tempo todo que mereço” ou “se eu não fizer, ninguém faz” — quase automáticos. Se for por validação: o motor é a insegurança, e a sensação de que nunca é o suficiente. Se for por imprudência: o motor é a ação sem consciência dos limites — parece coragem, mas é risco. O custo: exaustão, retrabalho, ou protagonismo que precisa de aplauso pra continuar existindo.',
+      note: 'Sua virada mora no SUSTENTA (fazer porque acredita, sem aplauso) e no PEDE (reconhecer limite e buscar apoio — porque protagonismo maduro inclui saber quando algo não é pra fazer sozinho(a)).',
+      naPratica: [
+        {
+          when: 'Quando você se oferece pra tudo e fica exausto(a):',
+          text: 'em vez de se oferecer pra tudo, entregue o que importa de verdade — e sustente sem precisar de elogio.',
+        },
+        {
+          when: 'Quando você se pega resolvendo algo que não domina:',
+          text: 'em vez de agir além do que sabe, pergunte: “eu domino isso o suficiente pra resolver sem criar risco — ou preciso de apoio?”',
+        },
+      ],
+    },
+    oscilante_1: {
+      ondeVoceEsta:
+        'Suas respostas no mapa se dividiram: em algumas situações você esperou, em outras você se forçou. Ora não se expõe, ora se expõe demais. Ora cruza os braços, ora age além do que deveria. Não é equilíbrio — é instabilidade.',
+      possiveisMotivos:
+        'É provável que, neste momento, a mesma crença alimente os dois lados: a de que se você se expuser, vai ser rejeitado(a). Às vezes você resolve não se expondo, às vezes compensando com ação em excesso. A virada é constância — protagonismo calibrado.',
+      note: 'O ASSUME é o seu ponto: “a responsabilidade é minha” como postura diária — sem esperar e sem forçar.',
+      naPratica: [
+        {
+          when: 'Quando você se pega oscilando entre esperar e se forçar:',
+          text: 'em vez de oscilar, use o ASSUME como postura diária: “a responsabilidade pelo que acontece aqui é minha.”',
+        },
+        {
+          when: 'Quando você só percebe pra qual lado foi depois da semana:',
+          text: 'em vez de só perceber depois, anote no fim da semana: “essa semana eu esperei ou me forcei?”',
+        },
+      ],
+    },
+    recuo_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você esperou: não pediu, não buscou, não agiu. Hoje o padrão é, na maior parte do tempo, o de aguardar. Isso não diz quem você é — diz o que tem se repetido, e o que se repete pode mudar.',
+      possiveisMotivos:
+        'É bem provável que, neste momento, pesem muito forte os pensamentos “se eu for bom(boa), vão notar” e “não me pediram” — quase automáticos. Olhe com honestidade: trabalho silencioso não construiu carreira de ninguém. E cruzar os braços diante de um problema que você viu não é respeito a limites — é omissão. O custo: a frustração cresce, a carreira fica estagnada, e os problemas que você poderia ter resolvido passam por você.',
+      note: 'Comece pelo PEDE: peça uma coisa essa semana. Qualquer coisa. Ou pelo CRIA: aja sobre uma coisa que você viu e fingiu que não viu.',
+      naPratica: [
+        {
+          when: 'Quando você quer crescer mas espera ser notado(a):',
+          text: 'em vez de esperar, peça feedback essa semana — pra alguém que você respeita.',
+        },
+        {
+          when: 'Quando você vê um problema e pensa “não me pediram pra resolver”:',
+          text: 'em vez de cruzar os braços, pergunte: “o que eu posso fazer sobre isso agora?”',
+        },
+      ],
+    },
+    excesso_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você se forçou: se expôs demais, quis provar valor, ou agiu além do que dominava. Hoje o padrão é, na maior parte do tempo, o de provar ou de agir sem medir. Isso não diz quem você é — diz o que tem se repetido, e o que se repete pode mudar.',
+      possiveisMotivos:
+        'É bem provável que, neste momento, pesem muito forte os pensamentos “preciso provar valor o tempo todo” ou “se eu não fizer, ninguém faz” — quase automáticos. O custo: exaustão, sensação de que nunca é suficiente, protagonismo que precisa de aplauso pra continuar. A iniciativa é real — mas sem calibragem, ela vira um problema em vez de ser a solução.',
+      note: 'Sua virada mora no SUSTENTA (fazer porque acredita, sem aplauso) e no PEDE (pedir ajuda é a forma madura da iniciativa).',
+      naPratica: [
+        {
+          when: 'Quando você se oferece pra tudo e fica exausto(a):',
+          text: 'em vez de se oferecer pra tudo, escolha o que importa e diga não com clareza ao resto.',
+        },
+        {
+          when: 'Quando você se pega pensando “preciso provar”:',
+          text: 'em vez de provar, diga pra si: “eu fiz o que acredito ser certo — e isso basta.”',
+        },
+      ],
+    },
+    oscilante_0: {
+      ondeVoceEsta:
+        'Nas três situações do mapa, você foi pros dois extremos: ora esperou, ora se forçou. Não é equilíbrio — é instabilidade.',
+      possiveisMotivos:
+        'É provável que, neste momento, a mesma crença alimente os dois lados: a de que se você se expuser, vai ser rejeitado(a) ou vai falhar. A virada: o ASSUME como postura constante, com clareza sobre onde você precisa de apoio.',
+      note: 'O ASSUME é tudo.',
+      naPratica: [
+        {
+          when: 'Quando você se pega oscilando entre esperar e se forçar:',
+          text: 'em vez de oscilar, use “a responsabilidade pelo que acontece é minha” como postura — mas com clareza de onde você precisa de apoio.',
+        },
+        {
+          when: 'Quando você só percebe pra qual lado foi depois:',
+          text: 'em vez de só perceber depois, anote no fim da semana: “essa semana eu esperei ou me forcei?”',
+        },
+      ],
+    },
+  },
 }
