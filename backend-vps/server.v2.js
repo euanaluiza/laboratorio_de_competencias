@@ -7,6 +7,7 @@ import crypto from 'crypto'
 import {
   renderAssessmentReportHtml,
   renderSingleCompetencyReportHtml,
+  renderSynthesisReportHtml,
 } from './report/reportTemplate.js'
 
 const envPath = new URL('./.env', import.meta.url).pathname
@@ -868,7 +869,9 @@ app.get('/api/internal/submissions/:id/report', requireAdmin, async (req, res) =
   if (!Number.isInteger(id) || id <= 0) {
     return res.status(400).send('id inválido.')
   }
-  const view = req.query.view === 'competencia' ? 'competencia' : 'consolidado'
+  const view = ['competencia', 'sintese'].includes(req.query.view)
+    ? req.query.view
+    : 'consolidado'
   const competency = typeof req.query.competency === 'string' ? req.query.competency : ''
   try {
     const result = await pool.query(
@@ -888,6 +891,8 @@ app.get('/api/internal/submissions/:id/report', requireAdmin, async (req, res) =
         competencyKey: competency,
         result: resultsByCompetency[competency],
       })
+    } else if (view === 'sintese') {
+      html = renderSynthesisReportHtml({ resultsByCompetency })
     } else {
       html = renderAssessmentReportHtml({ resultsByCompetency })
     }

@@ -5,6 +5,17 @@ import {
   REPORT_BRAND,
   REPORT_DISCLAIMER,
 } from './profileTexts.js'
+import {
+  SINTESE_RETRATO,
+  SINTESE_FORCA,
+  SINTESE_FRAGILIDADE,
+  SINTESE_MESMO_NIVEL,
+  SINTESE_TENDENCIA,
+  SINTESE_CRUZAMENTOS,
+  SINTESE_FRASE_POR_ONDE,
+  SINTESE_PROTOCOLO,
+  SINTESE_FUNCIONAL_PURO,
+} from './synthesisTexts.js'
 
 // Identidade visual herdada da landing (analuizacarvalho.com.br/laboratorio-de-competencias):
 // fontes Sora (títulos) + Inter (corpo); paleta creme/navy + lilás/plum como acento.
@@ -248,6 +259,133 @@ export function renderSingleCompetencyReportHtml({
     result,
     resolveProfile(competencyKey, result, profile),
   )
+  return renderShell(card)
+}
+
+// ---------------------------------------------------------------------------
+// Síntese do Relatório Final (Spec v3) — agrega as 6 competências.
+// ---------------------------------------------------------------------------
+
+const DIR_TO_CODE = { recuo: 'sub', excesso: 'ff', oscilante: 'osc', funcional: 'func' }
+
+function listCompetencyNames(items) {
+  const names = items.map((i) => i.title)
+  if (names.length <= 1) return names[0] || ''
+  if (names.length === 2) return `${names[0]} e ${names[1]}`
+  return `${names.slice(0, -1).join(', ')} e ${names[names.length - 1]}`
+}
+
+// Monta os parágrafos da síntese a partir de results_by_competency.
+export function buildSynthesis(resultsByCompetency) {
+  const items = REPORT_COMPETENCY_KEYS.map((key) => {
+    const r = resultsByCompetency?.[key] || {}
+    return {
+      key,
+      title: competencyMeta[key].title,
+      nivel: Number.isInteger(r.z3Count) ? r.z3Count : 0,
+      code: DIR_TO_CODE[r.direction] || 'func',
+    }
+  })
+
+  const total = items.reduce((sum, i) => sum + i.nivel, 0)
+  const maxN = Math.max(...items.map((i) => i.nivel))
+  const minN = Math.min(...items.map((i) => i.nivel))
+  const fortes = items.filter((i) => i.nivel === maxN)
+  const frageis = items.filter((i) => i.nivel === minN)
+  const count = (code) => items.filter((i) => i.code === code).length
+  const ctx = {
+    contagem_sub: count('sub'),
+    contagem_ff: count('ff'),
+    contagem_osc: count('osc'),
+    contagem_func: count('func'),
+    contagem_nivel0: items.filter((i) => i.nivel === 0).length,
+    contagem_nivel3: items.filter((i) => i.nivel === 3).length,
+    nivel: Object.fromEntries(items.map((i) => [i.key, i.nivel])),
+  }
+
+  let tendencia
+  if (ctx.contagem_func >= 5) tendencia = 'func'
+  else if (ctx.contagem_sub > ctx.contagem_ff) tendencia = 'sub'
+  else if (ctx.contagem_ff > ctx.contagem_sub) tendencia = 'ff'
+  else tendencia = 'mista'
+
+  const paragraphs = []
+
+  // BLOCO 1 — retrato geral
+  const retrato = SINTESE_RETRATO.find((r) => total >= r.min && total <= r.max)
+  if (retrato) paragraphs.push(retrato.text)
+
+  // Funcional puro (total 18): pula blocos 2 e 3
+  if (total === 18) {
+    paragraphs.push(SINTESE_FUNCIONAL_PURO)
+    return { paragraphs }
+  }
+
+  // BLOCO 2 — força e fragilidade
+  if (maxN === minN) {
+    paragraphs.push(SINTESE_MESMO_NIVEL)
+  } else {
+    paragraphs.push(
+      `A competência onde você demonstra mais consistência funcional é ${listCompetencyNames(fortes)} — é onde o padrão de agir proporcional ao que cada situação pede aparece com mais frequência. ${SINTESE_FORCA[fortes[0].key]}`,
+    )
+    paragraphs.push(
+      `A competência onde o desvio aparece com mais força é ${listCompetencyNames(frageis)}. ${SINTESE_FRAGILIDADE[frageis[0].key]}`,
+    )
+  }
+
+  // BLOCO 3A — tendência geral
+  paragraphs.push(SINTESE_TENDENCIA[tendencia])
+
+  // BLOCO 3B — cruzamentos especiais (máx. 3, na ordem)
+  let added = 0
+  for (const cruz of SINTESE_CRUZAMENTOS) {
+    if (added >= 3) break
+    if (cruz.test(ctx)) {
+      paragraphs.push(cruz.text(ctx))
+      added += 1
+    }
+  }
+
+  // BLOCO 4 — direção de trabalho
+  if (maxN !== minN) {
+    const proto = SINTESE_PROTOCOLO[frageis[0].key]
+    paragraphs.push(
+      `Se fosse escolher por onde começar: ${listCompetencyNames(frageis)}. ${SINTESE_FRASE_POR_ONDE[tendencia]}`,
+    )
+    paragraphs.push(
+      `O caminho é ${proto.protocolo}. Comece pelo primeiro passo — ${proto.primeiroPasso} — até ele virar automático. O resto vem depois.`,
+    )
+  }
+  paragraphs.push('O mapa mostra onde você está. Pra onde você vai a partir daqui é com você.')
+
+  return { paragraphs }
+}
+
+// Documento A4 da síntese (texto agregado das 6 competências).
+export function renderSynthesisReportHtml({ resultsByCompetency }) {
+  if (!resultsByCompetency || typeof resultsByCompetency !== 'object') {
+    throw new Error('resultsByCompetency é obrigatório.')
+  }
+  const { paragraphs } = buildSynthesis(resultsByCompetency)
+  const body = paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('')
+  const brandSegments = REPORT_BRAND.split('·')
+  const lastSegment = brandSegments.pop().trim()
+  const brandPrefix = brandSegments.join('·')
+  const card = `
+    <article class="card synthesis">
+      <div class="brand">${escapeHtml(brandPrefix)}· <b>${escapeHtml(lastSegment)}</b></div>
+      <div class="head">
+        <div>
+          <h1>Síntese do seu mapa</h1>
+          <div class="sub">Uma leitura do conjunto das 6 competências.</div>
+        </div>
+      </div>
+      <div class="body synthesis-body">${body}</div>
+      <div class="foot">
+        <p class="foot-disclaimer">${escapeHtml(REPORT_DISCLAIMER)}</p>
+        <p class="foot-copyright">© ${new Date().getFullYear()} Ana Luiza Carvalho · Laboratório de Competências</p>
+      </div>
+    </article>`
   return renderShell(card)
 }
 
@@ -499,6 +637,19 @@ function renderShell(cards) {
       font-weight: 600;
       color: var(--plum);
       letter-spacing: 0.3px;
+    }
+
+    .synthesis-body { padding-bottom: 18px; }
+    .synthesis-body p {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #3a3a42;
+      margin: 0 0 12px;
+    }
+    .synthesis-body p:last-child {
+      margin-bottom: 0;
+      font-weight: 600;
+      color: var(--plum);
     }
 
     @media (max-width: 480px) {
