@@ -228,7 +228,7 @@ function resolveProfile(competencyKey, result, providedProfile) {
   return { isPlaceholder: true }
 }
 
-// Consolidado: documento único com os 6 cards completos.
+// Consolidado: síntese (primeiro) + os 6 cards completos.
 export function renderAssessmentReportHtml({
   resultsByCompetency,
   selectedProfiles,
@@ -237,12 +237,13 @@ export function renderAssessmentReportHtml({
     throw new Error('resultsByCompetency é obrigatório.')
   }
 
+  const synthesis = renderSynthesisCard(resultsByCompetency)
   const cards = REPORT_COMPETENCY_KEYS.map((key) => {
     const result = resultsByCompetency[key]
     return renderCompetencyCard(key, result, resolveProfile(key, result, selectedProfiles?.[key]))
   }).join('')
 
-  return renderShell(cards)
+  return renderShell(synthesis + cards)
 }
 
 // Por competência: documento de um único card (disparo individual via WhatsApp).
@@ -361,17 +362,15 @@ export function buildSynthesis(resultsByCompetency) {
   return { paragraphs }
 }
 
-// Documento A4 da síntese (texto agregado das 6 competências).
-export function renderSynthesisReportHtml({ resultsByCompetency }) {
-  if (!resultsByCompetency || typeof resultsByCompetency !== 'object') {
-    throw new Error('resultsByCompetency é obrigatório.')
-  }
+// Card da síntese (texto agregado das 6 competências) — sem o shell, para
+// reutilizar tanto no documento isolado quanto no topo do consolidado.
+function renderSynthesisCard(resultsByCompetency) {
   const { paragraphs } = buildSynthesis(resultsByCompetency)
   const body = paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('')
   const brandSegments = REPORT_BRAND.split('·')
   const lastSegment = brandSegments.pop().trim()
   const brandPrefix = brandSegments.join('·')
-  const card = `
+  return `
     <article class="card synthesis">
       <div class="brand">${escapeHtml(brandPrefix)}· <b>${escapeHtml(lastSegment)}</b></div>
       <div class="head">
@@ -386,7 +385,14 @@ export function renderSynthesisReportHtml({ resultsByCompetency }) {
         <p class="foot-copyright">© ${new Date().getFullYear()} Ana Luiza Carvalho · Laboratório de Competências</p>
       </div>
     </article>`
-  return renderShell(card)
+}
+
+// Documento A4 da síntese (texto agregado das 6 competências).
+export function renderSynthesisReportHtml({ resultsByCompetency }) {
+  if (!resultsByCompetency || typeof resultsByCompetency !== 'object') {
+    throw new Error('resultsByCompetency é obrigatório.')
+  }
+  return renderShell(renderSynthesisCard(resultsByCompetency))
 }
 
 function renderShell(cards) {
