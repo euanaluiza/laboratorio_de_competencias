@@ -815,17 +815,86 @@ app.get('/api/internal/panel', (_req, res) => {
   res.set('Content-Type', 'text/html; charset=utf-8').send(ADMIN_PANEL_HTML)
 })
 
-// Lista de submissões (para escolher o aluno)
+// Token assinado (HMAC do id) por submissão — usado nos links públicos de
+// relatório enviados por WhatsApp/e-mail. Sem estado: não exige coluna no banco.
+function reportToken(id) {
+  return crypto
+    .createHmac('sha256', ADMIN_TOKEN || '')
+    .update('report:' + id)
+    .digest('hex')
+    .slice(0, 32)
+}
+
+// CSP para páginas de relatório abertas direto (estilo inline + Google Fonts;
+// o relatório não tem <script>). O helmet padrão bloquearia o estilo inline.
+function setReportCsp(res) {
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com data:",
+      "img-src 'self' data:",
+    ].join('; '),
+  )
+}
+
+// Monta o HTML do relatório de uma submissão. Retorna { html } ou { status, error }.
+async function buildReportHtml(id, rawView, rawCompetency) {
+  const view = ['competencia', 'sintese'].includes(rawView) ? rawView : 'consolidado'
+  const competency = typeof rawCompetency === 'string' ? rawCompetency : ''
+  const result = await pool.query(
+    `SELECT s.results_by_competency, p.full_name
+     FROM assessment_submissions s
+     JOIN assessment_participants p ON p.id = s.participant_id
+     WHERE s.id = $1`,
+    [id],
+  )
+  if (result.rowCount === 0) {
+    return { status: 404, error: 'Submissão não encontrada.' }
+  }
+  const resultsByCompetency = result.rows[0].results_by_competency
+  const fullName = result.rows[0].full_name
+  if (view === 'competencia') {
+    if (!COMPETENCY_KEY_SET.has(competency)) {
+      return { status: 400, error: 'Competência inválida.' }
+    }
+    return {
+      html: renderSingleCompetencyReportHtml({
+        competencyKey: competency,
+        result: resultsByCompetency[competency],
+        fullName,
+      }),
+    }
+  }
+  if (view === 'sintese') {
+    return { html: renderSynthesisReportHtml({ resultsByCompetency, fullName }) }
+  }
+  return { html: renderAssessmentReportHtml({ resultsByCompetency, fullName }) }
+}
+
+// Lista de submissões (para escolher o aluno). Cruza o WhatsApp pela inscrição
+// (landing_registrations) casando o e-mail, e anexa o token do link público.
 app.get('/api/internal/submissions', requireAdmin, async (_req, res) => {
   try {
     const result = await pool.query(
       `SELECT s.id, p.full_name, p.email, s.assessment_slug, s.assessment_version,
-              s.results_by_competency, s.completed_at, s.created_at
+              s.results_by_competency, s.completed_at, s.created_at, lr.whatsapp
        FROM assessment_submissions s
        JOIN assessment_participants p ON p.id = s.participant_id
+       LEFT JOIN LATERAL (
+         SELECT whatsapp FROM landing_registrations l
+         WHERE lower(l.email) = lower(p.email)
+         ORDER BY l.id DESC
+         LIMIT 1
+       ) lr ON true
        ORDER BY s.created_at DESC`,
     )
-    res.json({ ok: true, submissions: result.rows })
+    const submissions = result.rows.map((row) => ({
+      ...row,
+      report_token: reportToken(row.id),
+    }))
+    res.json({ ok: true, submissions })
   } catch (error) {
     res.status(500).json({ ok: false, error: error.message })
   }
@@ -869,39 +938,31 @@ app.get('/api/internal/submissions/:id/report', requireAdmin, async (req, res) =
   if (!Number.isInteger(id) || id <= 0) {
     return res.status(400).send('id inválido.')
   }
-  const view = ['competencia', 'sintese'].includes(req.query.view)
-    ? req.query.view
-    : 'consolidado'
-  const competency = typeof req.query.competency === 'string' ? req.query.competency : ''
   try {
-    const result = await pool.query(
-      `SELECT s.results_by_competency, p.full_name
-       FROM assessment_submissions s
-       JOIN assessment_participants p ON p.id = s.participant_id
-       WHERE s.id = $1`,
-      [id],
-    )
-    if (result.rowCount === 0) {
-      return res.status(404).send('Submissão não encontrada.')
-    }
-    const resultsByCompetency = result.rows[0].results_by_competency
-    const fullName = result.rows[0].full_name
-    let html
-    if (view === 'competencia') {
-      if (!COMPETENCY_KEY_SET.has(competency)) {
-        return res.status(400).send('Competência inválida.')
-      }
-      html = renderSingleCompetencyReportHtml({
-        competencyKey: competency,
-        result: resultsByCompetency[competency],
-        fullName,
-      })
-    } else if (view === 'sintese') {
-      html = renderSynthesisReportHtml({ resultsByCompetency, fullName })
-    } else {
-      html = renderAssessmentReportHtml({ resultsByCompetency, fullName })
-    }
-    return res.set('Content-Type', 'text/html; charset=utf-8').send(html)
+    const out = await buildReportHtml(id, req.query.view, req.query.competency)
+    if (out.error) return res.status(out.status).send(out.error)
+    return res.set('Content-Type', 'text/html; charset=utf-8').send(out.html)
+  } catch (error) {
+    return res.status(500).send('Erro ao gerar relatório: ' + error.message)
+  }
+})
+
+// Relatório público (link enviado por WhatsApp/e-mail). Sem token de admin:
+// validado pelo HMAC do id (reportToken). Link não-adivinhável.
+app.get('/api/public/report/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).send('id inválido.')
+  }
+  const token = typeof req.query.t === 'string' ? req.query.t : ''
+  if (!ADMIN_TOKEN || !safeEqual(token, reportToken(id))) {
+    return res.status(403).send('Link inválido.')
+  }
+  try {
+    const out = await buildReportHtml(id, req.query.view, req.query.competency)
+    if (out.error) return res.status(out.status).send(out.error)
+    setReportCsp(res)
+    return res.set('Content-Type', 'text/html; charset=utf-8').send(out.html)
   } catch (error) {
     return res.status(500).send('Erro ao gerar relatório: ' + error.message)
   }
