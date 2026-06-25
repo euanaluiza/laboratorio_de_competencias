@@ -384,8 +384,28 @@
     $('logout').onclick = () => logout()
     $('search').oninput = renderList
     $('pdfBtn').onclick = () => {
-      if (activeViewIsIframe) { const f = $('frame'); if (f && f.contentWindow) { f.contentWindow.focus(); f.contentWindow.print() } }
-      else { window.print() }
+      // O nome do arquivo ao "Salvar como PDF" vem do <title> da página de cima
+      // (este painel), não do iframe. O relatório já gera o <title> no formato
+      // "NOME - TIPO - MAPA DE APOIO - LABORATÓRIO DE COMPETÊNCIAS"; copiamos esse
+      // título do iframe para o painel antes de imprimir e restauramos depois.
+      const prevTitle = document.title
+      const restore = () => { document.title = prevTitle }
+      if (activeViewIsIframe) {
+        const f = $('frame')
+        if (f && f.contentWindow) {
+          try {
+            const reportTitle = f.contentWindow.document.title
+            if (reportTitle) document.title = reportTitle
+          } catch (e) {}
+          f.contentWindow.onafterprint = restore
+          f.contentWindow.focus()
+          f.contentWindow.print()
+        }
+      } else {
+        window.onafterprint = restore
+        window.print()
+      }
+      setTimeout(restore, 5000)
     }
     $('turmaPdf').onclick = () => window.print()
     Array.from(document.querySelectorAll('.mode-btn')).forEach((b) => { b.onclick = () => switchMode(b.dataset.mode) })
