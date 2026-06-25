@@ -172,8 +172,34 @@ function renderBody(meta, profile) {
     </div>`
 }
 
+// Nome do participante padronizado em MAIÚSCULAS (aparece na barra de marca de
+// cada card e no título/nome do arquivo PDF).
+function formatParticipantName(fullName) {
+  return String(fullName ?? '').trim().toUpperCase()
+}
+
+// Barra de marca do topo do card; à direita, o nome do participante (se houver).
+function renderBrandBar(fullName) {
+  const brandSegments = REPORT_BRAND.split('·')
+  const lastSegment = brandSegments.pop().trim()
+  const brandPrefix = brandSegments.join('·')
+  const name = formatParticipantName(fullName)
+  const nameTag = name ? `<span class="brand-name">${escapeHtml(name)}</span>` : ''
+  return `<div class="brand"><span>${escapeHtml(brandPrefix)}· <b>${escapeHtml(lastSegment)}</b></span>${nameTag}</div>`
+}
+
+// Título do documento = nome do arquivo sugerido ao salvar em PDF. Tudo em
+// MAIÚSCULAS. Ex.: "FULANO X - RELATÓRIO CONSOLIDADO - MAPA DE APOIO -
+// LABORATÓRIO DE COMPETÊNCIAS".
+function buildReportTitle(fullName, tipo) {
+  const name = formatParticipantName(fullName)
+  const segments = [String(tipo).toUpperCase(), 'MAPA DE APOIO', 'LABORATÓRIO DE COMPETÊNCIAS']
+  if (name) segments.unshift(name)
+  return segments.join(' - ')
+}
+
 // Renderiza um card completo e independente de uma competência.
-function renderCompetencyCard(competencyKey, result, profile) {
+function renderCompetencyCard(competencyKey, result, profile, fullName) {
   const meta = competencyMeta[competencyKey]
   if (!meta) {
     throw new Error(`Metadados ausentes para ${competencyKey}.`)
@@ -190,13 +216,9 @@ function renderCompetencyCard(competencyKey, result, profile) {
     throw new Error(`z1+z2+z3 deve somar 3 para ${competencyKey}.`)
   }
 
-  const brandSegments = REPORT_BRAND.split('·')
-  const lastSegment = brandSegments.pop().trim()
-  const brandPrefix = brandSegments.join('·')
-
   return `
     <article class="card">
-      <div class="brand">${escapeHtml(brandPrefix)}· <b>${escapeHtml(lastSegment)}</b></div>
+      ${renderBrandBar(fullName)}
       <div class="head">
         <div>
           <h1>${escapeHtml(meta.title)}</h1>
@@ -232,18 +254,19 @@ function resolveProfile(competencyKey, result, providedProfile) {
 export function renderAssessmentReportHtml({
   resultsByCompetency,
   selectedProfiles,
+  fullName,
 }) {
   if (!resultsByCompetency || typeof resultsByCompetency !== 'object') {
     throw new Error('resultsByCompetency é obrigatório.')
   }
 
-  const synthesis = renderSynthesisCard(resultsByCompetency)
+  const synthesis = renderSynthesisCard(resultsByCompetency, fullName)
   const cards = REPORT_COMPETENCY_KEYS.map((key) => {
     const result = resultsByCompetency[key]
-    return renderCompetencyCard(key, result, resolveProfile(key, result, selectedProfiles?.[key]))
+    return renderCompetencyCard(key, result, resolveProfile(key, result, selectedProfiles?.[key]), fullName)
   }).join('')
 
-  return renderShell(synthesis + cards)
+  return renderShell(synthesis + cards, buildReportTitle(fullName, 'Relatório consolidado'))
 }
 
 // Por competência: documento de um único card (disparo individual via WhatsApp).
@@ -251,6 +274,7 @@ export function renderSingleCompetencyReportHtml({
   competencyKey,
   result,
   profile,
+  fullName,
 }) {
   if (!REPORT_COMPETENCY_KEYS.includes(competencyKey)) {
     throw new Error(`Competência desconhecida: ${competencyKey}.`)
@@ -259,8 +283,9 @@ export function renderSingleCompetencyReportHtml({
     competencyKey,
     result,
     resolveProfile(competencyKey, result, profile),
+    fullName,
   )
-  return renderShell(card)
+  return renderShell(card, buildReportTitle(fullName, competencyMeta[competencyKey].title))
 }
 
 // ---------------------------------------------------------------------------
@@ -364,15 +389,12 @@ export function buildSynthesis(resultsByCompetency) {
 
 // Card da síntese (texto agregado das 6 competências) — sem o shell, para
 // reutilizar tanto no documento isolado quanto no topo do consolidado.
-function renderSynthesisCard(resultsByCompetency) {
+function renderSynthesisCard(resultsByCompetency, fullName) {
   const { paragraphs } = buildSynthesis(resultsByCompetency)
   const body = paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('')
-  const brandSegments = REPORT_BRAND.split('·')
-  const lastSegment = brandSegments.pop().trim()
-  const brandPrefix = brandSegments.join('·')
   return `
     <article class="card synthesis">
-      <div class="brand">${escapeHtml(brandPrefix)}· <b>${escapeHtml(lastSegment)}</b></div>
+      ${renderBrandBar(fullName)}
       <div class="head">
         <div>
           <h1>Síntese do seu mapa</h1>
@@ -388,20 +410,23 @@ function renderSynthesisCard(resultsByCompetency) {
 }
 
 // Documento A4 da síntese (texto agregado das 6 competências).
-export function renderSynthesisReportHtml({ resultsByCompetency }) {
+export function renderSynthesisReportHtml({ resultsByCompetency, fullName }) {
   if (!resultsByCompetency || typeof resultsByCompetency !== 'object') {
     throw new Error('resultsByCompetency é obrigatório.')
   }
-  return renderShell(renderSynthesisCard(resultsByCompetency))
+  return renderShell(
+    renderSynthesisCard(resultsByCompetency, fullName),
+    buildReportTitle(fullName, 'Síntese'),
+  )
 }
 
-function renderShell(cards) {
+function renderShell(cards, title = 'O seu mapa de apoio') {
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>O seu mapa de apoio</title>
+  <title>${escapeHtml(title)}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -456,9 +481,14 @@ function renderShell(cards) {
       font-size: 8.5px;
       letter-spacing: 2px;
       text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
 
     .brand b { color: #fff; font-weight: 700; }
+    .brand-name { font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
 
     .head {
       position: relative;

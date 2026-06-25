@@ -875,13 +875,17 @@ app.get('/api/internal/submissions/:id/report', requireAdmin, async (req, res) =
   const competency = typeof req.query.competency === 'string' ? req.query.competency : ''
   try {
     const result = await pool.query(
-      'SELECT results_by_competency FROM assessment_submissions WHERE id = $1',
+      `SELECT s.results_by_competency, p.full_name
+       FROM assessment_submissions s
+       JOIN assessment_participants p ON p.id = s.participant_id
+       WHERE s.id = $1`,
       [id],
     )
     if (result.rowCount === 0) {
       return res.status(404).send('Submissão não encontrada.')
     }
     const resultsByCompetency = result.rows[0].results_by_competency
+    const fullName = result.rows[0].full_name
     let html
     if (view === 'competencia') {
       if (!COMPETENCY_KEY_SET.has(competency)) {
@@ -890,11 +894,12 @@ app.get('/api/internal/submissions/:id/report', requireAdmin, async (req, res) =
       html = renderSingleCompetencyReportHtml({
         competencyKey: competency,
         result: resultsByCompetency[competency],
+        fullName,
       })
     } else if (view === 'sintese') {
-      html = renderSynthesisReportHtml({ resultsByCompetency })
+      html = renderSynthesisReportHtml({ resultsByCompetency, fullName })
     } else {
-      html = renderAssessmentReportHtml({ resultsByCompetency })
+      html = renderAssessmentReportHtml({ resultsByCompetency, fullName })
     }
     return res.set('Content-Type', 'text/html; charset=utf-8').send(html)
   } catch (error) {
