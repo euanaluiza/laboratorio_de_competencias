@@ -878,8 +878,10 @@ async function buildReportHtml(id, rawView, rawCompetency) {
 app.get('/api/internal/submissions', requireAdmin, async (_req, res) => {
   try {
     const result = await pool.query(
-      `SELECT s.id, p.full_name, p.email, s.assessment_slug, s.assessment_version,
-              s.results_by_competency, s.completed_at, s.created_at, lr.whatsapp
+      `SELECT s.id, p.id AS participant_id, p.full_name, p.email,
+              s.assessment_slug, s.assessment_version, s.results_by_competency,
+              s.completed_at, s.created_at,
+              COALESCE(NULLIF(p.whatsapp, ''), lr.whatsapp) AS whatsapp
        FROM assessment_submissions s
        JOIN assessment_participants p ON p.id = s.participant_id
        LEFT JOIN LATERAL (
@@ -897,6 +899,48 @@ app.get('/api/internal/submissions', requireAdmin, async (_req, res) => {
     res.json({ ok: true, submissions })
   } catch (error) {
     res.status(500).json({ ok: false, error: error.message })
+  }
+})
+
+// Atualiza o contato (e-mail/WhatsApp) do participante de uma submissão.
+// WhatsApp salvo aqui tem prioridade sobre o número vindo da inscrição.
+app.post('/api/internal/submissions/:id/contact', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ ok: false, error: 'id inválido.' })
+  }
+  let email = null
+  let whatsapp = null
+  try {
+    const body = req.body || {}
+    if (body.email != null && String(body.email).trim() !== '') {
+      email = normalizeEmail(body.email)
+    }
+    const waRaw = body.whatsapp != null ? String(body.whatsapp).trim() : ''
+    if (waRaw !== '') {
+      whatsapp = normalizeWhatsapp(waRaw)
+    }
+  } catch (error) {
+    return res.status(400).json({ ok: false, error: error.message })
+  }
+  try {
+    const sub = await pool.query(
+      'SELECT participant_id FROM assessment_submissions WHERE id = $1',
+      [id],
+    )
+    if (sub.rowCount === 0) {
+      return res.status(404).json({ ok: false, error: 'Submissão não encontrada.' })
+    }
+    const updated = await pool.query(
+      `UPDATE assessment_participants
+       SET email = COALESCE($2, email), whatsapp = $3
+       WHERE id = $1
+       RETURNING email, whatsapp`,
+      [sub.rows[0].participant_id, email, whatsapp],
+    )
+    return res.json({ ok: true, contact: updated.rows[0] })
+  } catch (error) {
+    return res.status(500).json({ ok: false, error: error.message })
   }
 })
 
@@ -971,6 +1015,18 @@ app.get('/api/public/report/:id', async (req, res) => {
 app.use((_req, res) => {
   res.status(404).json({ ok: false, error: 'Not found' })
 })
+
+// Migração idempotente: garante a coluna whatsapp (editável pelo painel).
+async function ensureSchema() {
+  try {
+    await pool.query('ALTER TABLE assessment_participants ADD COLUMN IF NOT EXISTS whatsapp text')
+    console.log('Schema verificado (assessment_participants.whatsapp).')
+  } catch (error) {
+    console.error('ensureSchema falhou:', error.message)
+  }
+}
+
+ensureSchema()
 
 app.listen(Number(PORT), '127.0.0.1', () => {
   console.log(`Ana Luiza Assessment API listening on 127.0.0.1:${PORT}`)

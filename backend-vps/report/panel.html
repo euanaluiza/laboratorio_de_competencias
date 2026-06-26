@@ -78,6 +78,13 @@
     .frame-wrap { flex:1; min-height:0; background:var(--cream); overflow:auto; position:relative; }
     iframe { width:100%; height:100%; border:none; }
     .view-actions { display:flex; gap:8px; align-items:center; }
+    .modal-bg { position:fixed; inset:0; background:rgba(28,43,58,.45); display:flex; align-items:center; justify-content:center; z-index:50; }
+    .modal-card { background:var(--white); border-radius:14px; padding:22px; width:min(420px,92vw); box-shadow:0 20px 48px rgba(107,45,107,.22); }
+    .modal-card h3 { margin:0 0 14px; color:var(--plum); }
+    .modal-label { display:block; font-size:12px; color:var(--plum); margin-bottom:12px; }
+    .modal-label .input { margin-top:4px; width:100%; }
+    .modal-err { color:#C0492E; font-size:12px; min-height:16px; margin:2px 0 10px; }
+    .modal-foot { display:flex; justify-content:flex-end; gap:8px; }
 
     /* Espelho mudo (resumo por aluno) */
     .summary-view { padding:22px; max-width:760px; margin:0 auto; }
@@ -183,6 +190,7 @@
           <div class="view-head-top">
             <div class="who" id="who">Selecione um aluno</div>
             <div class="view-actions">
+              <button id="editContactBtn" class="btn btn-ghost" style="display:none" title="Editar e-mail/WhatsApp">Editar contato</button>
               <button id="waBtn" class="btn btn-ghost" style="display:none" title="Enviar por WhatsApp">↗ WhatsApp</button>
               <button id="emailBtn" class="btn btn-ghost" style="display:none" title="Enviar por e-mail">✉ E-mail</button>
               <button id="pdfBtn" class="btn btn-plum" style="display:none">↓ Salvar PDF</button>
@@ -222,6 +230,23 @@
       </div>
       <h2 class="turma-title" id="turmaTitle"></h2>
       <div class="turma-grid" id="turmaGrid"></div>
+    </div>
+  </div>
+
+  <div id="contactModal" class="modal-bg" style="display:none">
+    <div class="modal-card">
+      <h3>Editar contato</h3>
+      <label class="modal-label">E-mail
+        <input id="cEmail" class="input" type="email" autocomplete="off" />
+      </label>
+      <label class="modal-label">WhatsApp
+        <input id="cWhats" class="input" type="text" placeholder="(85) 98140-4440" autocomplete="off" />
+      </label>
+      <div class="modal-err" id="cErr"></div>
+      <div class="modal-foot">
+        <button id="cCancel" class="btn btn-ghost">Cancelar</button>
+        <button id="cSave" class="btn btn-plum">Salvar</button>
+      </div>
     </div>
   </div>
 
@@ -352,6 +377,7 @@
 
     function openTab(key) {
       $('pdfBtn').style.display = 'inline-flex'
+      $('editContactBtn').style.display = CURRENT ? 'inline-flex' : 'none'
       $('emailBtn').style.display = CURRENT && CURRENT.email ? 'inline-flex' : 'none'
       $('waBtn').style.display = CURRENT && waDigits(CURRENT.whatsapp) ? 'inline-flex' : 'none'
       if (key === '__resumo__') {
@@ -466,6 +492,38 @@
         '?subject=' + encodeURIComponent(MSG.emailSubject) +
         '&body=' + encodeURIComponent(MSG.emailBody(firstName(CURRENT.full_name), link))
       window.location.href = href
+    }
+    $('editContactBtn').onclick = () => {
+      if (!CURRENT) return
+      $('cEmail').value = CURRENT.email || ''
+      $('cWhats').value = CURRENT.whatsapp || ''
+      $('cErr').textContent = ''
+      $('contactModal').style.display = 'flex'
+    }
+    $('cCancel').onclick = () => { $('contactModal').style.display = 'none' }
+    $('contactModal').onclick = (e) => { if (e.target === $('contactModal')) $('contactModal').style.display = 'none' }
+    $('cSave').onclick = async () => {
+      if (!CURRENT) return
+      $('cErr').textContent = 'Salvando…'
+      try {
+        const r = await fetch(API + '/submissions/' + CURRENT.id + '/contact', {
+          method: 'POST',
+          headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
+          body: JSON.stringify({ email: $('cEmail').value, whatsapp: $('cWhats').value }),
+        })
+        const data = await r.json()
+        if (!r.ok || !data.ok) throw new Error(data.error || ('Erro ' + r.status))
+        CURRENT.email = data.contact.email
+        CURRENT.whatsapp = data.contact.whatsapp
+        const s = SUBMISSIONS.find((x) => x.id === CURRENT.id)
+        if (s) { s.email = data.contact.email; s.whatsapp = data.contact.whatsapp }
+        $('contactModal').style.display = 'none'
+        $('who').innerHTML = esc(CURRENT.full_name) + '<small>' + esc(CURRENT.email) + ' · envio #' + CURRENT.id + '</small>'
+        $('waBtn').style.display = waDigits(CURRENT.whatsapp) ? 'inline-flex' : 'none'
+        renderList()
+      } catch (e) {
+        $('cErr').textContent = e.message
+      }
     }
     $('turmaPdf').onclick = () => window.print()
     Array.from(document.querySelectorAll('.mode-btn')).forEach((b) => { b.onclick = () => switchMode(b.dataset.mode) })
