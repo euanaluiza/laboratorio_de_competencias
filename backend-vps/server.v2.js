@@ -9,6 +9,8 @@ import {
   renderSingleCompetencyReportHtml,
   renderSynthesisReportHtml,
 } from './report/reportTemplate.js'
+import { renderRetestReportHtml } from './report/retestReportTemplate.js'
+import { validateRetestEmail, validateRetestPayload } from './retestValidation.js'
 
 const envPath = new URL('./.env', import.meta.url).pathname
 
@@ -765,6 +767,70 @@ app.post('/api/assessment-submissions', async (req, res) => {
   }
 })
 
+app.post('/api/retest-eligibility', async (req, res) => {
+  let email
+  try {
+    email = validateRetestEmail(req.body)
+  } catch (error) {
+    return res.status(400).json({ ok: false, error: error.message })
+  }
+  try {
+    const result = await pool.query(
+      `SELECT 1
+       FROM assessment_submissions s
+       JOIN assessment_participants p ON p.id = s.participant_id
+       WHERE lower(p.email) = lower($1)
+       LIMIT 1`,
+      [email],
+    )
+    return res.json({ ok: true, eligible: result.rowCount > 0 })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ ok: false, error: 'Erro interno.' })
+  }
+})
+
+app.post('/api/retest-submissions', async (req, res) => {
+  let payload
+  try {
+    payload = validateRetestPayload(req.body)
+  } catch (error) {
+    return res.status(400).json({ ok: false, error: error.message })
+  }
+  try {
+    const initial = await pool.query(
+      `SELECT s.id, s.participant_id
+       FROM assessment_submissions s
+       JOIN assessment_participants p ON p.id = s.participant_id
+       WHERE lower(p.email) = lower($1)
+       ORDER BY s.created_at DESC
+       LIMIT 1`,
+      [payload.email],
+    )
+    if (initial.rowCount === 0) {
+      return res.status(404).json({ ok: false, error: 'Diagnóstico inicial não encontrado para este e-mail.' })
+    }
+    const { id: initialSubmissionId, participant_id: participantId } = initial.rows[0]
+    const inserted = await pool.query(
+      `INSERT INTO retest_submissions (
+        initial_submission_id, participant_id, responses_by_competency, consent_accepted, consent_version
+      ) VALUES ($1, $2, $3::jsonb, $4, $5)
+      RETURNING id`,
+      [
+        initialSubmissionId,
+        participantId,
+        JSON.stringify(payload.responsesByCompetency),
+        payload.consent.accepted,
+        payload.consent.version,
+      ],
+    )
+    return res.status(201).json({ ok: true, retestId: inserted.rows[0].id })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ ok: false, error: 'Erro interno ao salvar reteste.' })
+  }
+})
+
 // ---------------------------------------------------------------------------
 // Painel interno (ADM) — protegido por token simples (Bearer ADMIN_TOKEN).
 // Tudo sob /api/internal/* (já encaminhado pelo nginx para o backend).
@@ -873,6 +939,38 @@ async function buildReportHtml(id, rawView, rawCompetency) {
   return { html: renderAssessmentReportHtml({ resultsByCompetency, fullName }) }
 }
 
+// Monta o HTML do relatório do reteste ligado à submissão inicial `id`.
+async function buildRetestReportHtml(id, rawView, rawCompetency) {
+  const view = rawView === 'competencia' ? 'competencia' : 'consolidado'
+  const competencyKey = typeof rawCompetency === 'string' ? rawCompetency : ''
+  const result = await pool.query(
+    `SELECT rs.responses_by_competency, s.results_by_competency, p.full_name
+     FROM retest_submissions rs
+     JOIN assessment_submissions s ON s.id = rs.initial_submission_id
+     JOIN assessment_participants p ON p.id = s.participant_id
+     WHERE rs.initial_submission_id = $1
+     ORDER BY rs.created_at DESC
+     LIMIT 1`,
+    [id],
+  )
+  if (result.rowCount === 0) {
+    return { status: 404, error: 'Reteste não encontrado para esta submissão.' }
+  }
+  const row = result.rows[0]
+  if (view === 'competencia' && !COMPETENCY_KEY_SET.has(competencyKey)) {
+    return { status: 400, error: 'Competência inválida.' }
+  }
+  return {
+    html: renderRetestReportHtml({
+      view,
+      competencyKey,
+      initialResults: row.results_by_competency,
+      retestResponses: row.responses_by_competency,
+      fullName: row.full_name,
+    }),
+  }
+}
+
 // Lista de submissões (para escolher o aluno). Cruza o WhatsApp pela inscrição
 // (landing_registrations) casando o e-mail, e anexa o token do link público.
 app.get('/api/internal/submissions', requireAdmin, async (_req, res) => {
@@ -881,7 +979,8 @@ app.get('/api/internal/submissions', requireAdmin, async (_req, res) => {
       `SELECT s.id, p.id AS participant_id, p.full_name, p.email,
               s.assessment_slug, s.assessment_version, s.results_by_competency,
               s.completed_at, s.created_at,
-              COALESCE(NULLIF(p.whatsapp, ''), lr.whatsapp) AS whatsapp
+              COALESCE(NULLIF(p.whatsapp, ''), lr.whatsapp) AS whatsapp,
+              rt.id AS retest_submission_id
        FROM assessment_submissions s
        JOIN assessment_participants p ON p.id = s.participant_id
        LEFT JOIN LATERAL (
@@ -890,6 +989,12 @@ app.get('/api/internal/submissions', requireAdmin, async (_req, res) => {
          ORDER BY l.id DESC
          LIMIT 1
        ) lr ON true
+       LEFT JOIN LATERAL (
+         SELECT id FROM retest_submissions r
+         WHERE r.initial_submission_id = s.id
+         ORDER BY r.id DESC
+         LIMIT 1
+       ) rt ON true
        ORDER BY s.created_at DESC`,
     )
     const submissions = result.rows.map((row) => ({
@@ -1012,6 +1117,35 @@ app.get('/api/public/report/:id', async (req, res) => {
   }
 })
 
+app.get('/api/internal/submissions/:id/retest-report', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) return res.status(400).send('id inválido.')
+  try {
+    const out = await buildRetestReportHtml(id, req.query.view, req.query.competency)
+    if (out.error) return res.status(out.status).send(out.error)
+    return res.set('Content-Type', 'text/html; charset=utf-8').send(out.html)
+  } catch (error) {
+    return res.status(500).send('Erro ao gerar relatório do reteste: ' + error.message)
+  }
+})
+
+app.get('/api/public/retest-report/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) return res.status(400).send('id inválido.')
+  const token = typeof req.query.t === 'string' ? req.query.t : ''
+  if (!ADMIN_TOKEN || !safeEqual(token, reportToken(id))) {
+    return res.status(403).send('Link inválido.')
+  }
+  try {
+    const out = await buildRetestReportHtml(id, req.query.view, req.query.competency)
+    if (out.error) return res.status(out.status).send(out.error)
+    setReportCsp(res)
+    return res.set('Content-Type', 'text/html; charset=utf-8').send(out.html)
+  } catch (error) {
+    return res.status(500).send('Erro ao gerar relatório do reteste: ' + error.message)
+  }
+})
+
 app.use((_req, res) => {
   res.status(404).json({ ok: false, error: 'Not found' })
 })
@@ -1021,6 +1155,23 @@ async function ensureSchema() {
   try {
     await pool.query('ALTER TABLE assessment_participants ADD COLUMN IF NOT EXISTS whatsapp text')
     console.log('Schema verificado (assessment_participants.whatsapp).')
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS retest_submissions (
+        id                      bigserial PRIMARY KEY,
+        initial_submission_id   bigint NOT NULL REFERENCES assessment_submissions(id) ON DELETE CASCADE,
+        participant_id          bigint NOT NULL REFERENCES assessment_participants(id) ON DELETE CASCADE,
+        responses_by_competency jsonb NOT NULL,
+        consent_accepted        boolean NOT NULL,
+        consent_version         text NOT NULL,
+        completed_at            timestamptz NOT NULL DEFAULT now(),
+        created_at              timestamptz NOT NULL DEFAULT now(),
+        CONSTRAINT retest_submissions_responses_object_check
+          CHECK (jsonb_typeof(responses_by_competency) = 'object'),
+        CONSTRAINT retest_submissions_consent_check CHECK (consent_accepted)
+      )`)
+    await pool.query('CREATE INDEX IF NOT EXISTS retest_submissions_initial_submission_id_idx ON retest_submissions (initial_submission_id)')
+    await pool.query('CREATE INDEX IF NOT EXISTS retest_submissions_participant_id_idx ON retest_submissions (participant_id)')
+    console.log('Schema verificado (retest_submissions).')
   } catch (error) {
     console.error('ensureSchema falhou:', error.message)
   }

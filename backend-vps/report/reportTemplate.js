@@ -47,7 +47,7 @@ const REPORT_COMPETENCY_KEYS = [
   'protagonismo_profissional',
 ]
 
-function escapeHtml(value) {
+export function escapeHtml(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
@@ -179,7 +179,7 @@ function formatParticipantName(fullName) {
 }
 
 // Barra de marca do topo do card; à direita, o nome do participante (se houver).
-function renderBrandBar(fullName) {
+export function renderBrandBar(fullName) {
   const brandSegments = REPORT_BRAND.split('·')
   const lastSegment = brandSegments.pop().trim()
   const brandPrefix = brandSegments.join('·')
@@ -191,7 +191,7 @@ function renderBrandBar(fullName) {
 // Título do documento = nome do arquivo sugerido ao salvar em PDF. Tudo em
 // MAIÚSCULAS. Ex.: "FULANO X - RELATÓRIO CONSOLIDADO - MAPA DE APOIO -
 // LABORATÓRIO DE COMPETÊNCIAS".
-function buildReportTitle(fullName, tipo) {
+export function buildReportTitle(fullName, tipo) {
   const name = formatParticipantName(fullName)
   const segments = [String(tipo).toUpperCase(), 'MAPA DE APOIO', 'LABORATÓRIO DE COMPETÊNCIAS']
   if (name) segments.unshift(name)
@@ -420,7 +420,7 @@ export function renderSynthesisReportHtml({ resultsByCompetency, fullName }) {
   )
 }
 
-function renderShell(cards, title = 'O seu mapa de apoio') {
+export function renderShell(cards, title = 'O seu mapa de apoio') {
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>

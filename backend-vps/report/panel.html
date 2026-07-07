@@ -266,6 +266,7 @@
     let CURRENT = null
     let activeViewIsIframe = true
     let CURRENT_VIEW_PARAM = 'consolidado'
+    let CURRENT_REPORT_BASE = 'report' // 'report' | 'retest-report'
 
     // Textos padrão que acompanham o relatório no envio (edite à vontade).
     const MSG = {
@@ -295,7 +296,7 @@
     // Link público e assinado do relatório, na view aberta no momento.
     function publicReportUrl() {
       if (!CURRENT || !CURRENT.report_token) return ''
-      return location.origin + '/api/public/report/' + CURRENT.id +
+      return location.origin + '/api/public/' + CURRENT_REPORT_BASE + '/' + CURRENT.id +
         '?t=' + encodeURIComponent(CURRENT.report_token) + '&view=' + CURRENT_VIEW_PARAM
     }
 
@@ -364,6 +365,10 @@
       $('placeholder').style.display = 'none'
       $('who').innerHTML = esc(s.full_name) + '<small>' + esc(s.email) + ' · envio #' + s.id + '</small>'
       const tabs = [['__resumo__', 'Resumo'], ['__sintese__', 'Síntese'], ['__consolidado__', 'Consolidado']].concat(COMPETENCIES)
+      if (s.retest_submission_id) {
+        tabs.push(['__reteste__', 'Reteste'])
+        COMPETENCIES.forEach(([key, label]) => tabs.push(['ret:' + key, 'Reteste · ' + label]))
+      }
       $('tabs').innerHTML = tabs.map(([key, label]) => '<button class="btn btn-ghost" data-key="' + key + '">' + esc(label) + '</button>').join('')
       Array.from($('tabs').querySelectorAll('.btn')).forEach((el) => {
         el.onclick = () => {
@@ -380,8 +385,26 @@
       $('editContactBtn').style.display = CURRENT ? 'inline-flex' : 'none'
       $('emailBtn').style.display = CURRENT && CURRENT.email ? 'inline-flex' : 'none'
       $('waBtn').style.display = CURRENT && waDigits(CURRENT.whatsapp) ? 'inline-flex' : 'none'
+      if (key === '__reteste__' || key.startsWith('ret:')) {
+        activeViewIsIframe = true
+        CURRENT_REPORT_BASE = 'retest-report'
+        $('summaryView').style.display = 'none'
+        $('frame').style.display = 'block'
+        let viewParam = 'consolidado'
+        if (key.startsWith('ret:')) {
+          viewParam = 'competencia&competency=' + encodeURIComponent(key.slice(4))
+        }
+        CURRENT_VIEW_PARAM = viewParam
+        const url = API + '/submissions/' + CURRENT.id + '/retest-report?view=' + viewParam
+        fetch(url, { headers: authHeaders() }).then((r) => {
+          if (r.status === 401) return logout('Sessão expirada.')
+          return r.text().then((html) => { $('frame').srcdoc = html })
+        }).catch((e) => { $('frame').srcdoc = '<p style="font-family:sans-serif;padding:20px;color:#C0492E">Erro: ' + esc(e.message) + '</p>' })
+        return
+      }
       if (key === '__resumo__') {
         CURRENT_VIEW_PARAM = 'consolidado'
+        CURRENT_REPORT_BASE = 'report'
         activeViewIsIframe = false
         $('frame').style.display = 'none'
         renderStudentSummary(CURRENT)
@@ -389,6 +412,7 @@
         return
       }
       activeViewIsIframe = true
+      CURRENT_REPORT_BASE = 'report'
       $('summaryView').style.display = 'none'
       $('frame').style.display = 'block'
       let viewParam
