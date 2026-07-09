@@ -20,6 +20,9 @@ test('consolidado: documento A4, com síntese, os 3 rótulos de bloco e o nome d
   assert.match(html, /Onde você está agora/)
   assert.match(html, /Leitura do movimento/)
   assert.match(html, /FULANA SILVA/) // nome em MAIÚSCULAS na barra de marca
+  assert.match(html, /Todo comportamento que você repete/) // abertura fixa da síntese
+  assert.match(html, /Padrões mudam com consciência/) // rodapé novo (v3)
+  assert.doesNotMatch(html, /3 semanas|três semanas/i) // v3 removeu referência temporal fixa
 })
 
 test('sem roda/pips nem <script> (não é score, é texto)', () => {

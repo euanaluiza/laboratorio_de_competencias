@@ -1,45 +1,7 @@
 import { competencyMeta } from './profileTexts.js'
-import { COMECOU, AGORA_CP, AGORA_APLICACAO, MOVIMENTO, SINTESE } from './retestTexts.js'
+import { COMECOU, AGORA_ESTADO, AGORA_APLICACAO, MOVIMENTO, SINTESE } from './retestTexts.js'
 
 export const DIR_TO_CODE = { recuo: 'sub', excesso: 'ff', oscilante: 'osc', funcional: 'func' }
-
-export function cpMedia(consciencia, prontidao) {
-  return (Number(consciencia) + Number(prontidao)) / 2
-}
-
-function agoraCpText(cp) {
-  const band = AGORA_CP.find((b) => cp >= b.min && cp <= b.max)
-  return band ? band.text : AGORA_CP[AGORA_CP.length - 1].text
-}
-
-// Leitura do movimento — primeira regra que casar, nesta ordem exata.
-export function movimentoTexto({ dirCode, cp, aplicacao }) {
-  if (aplicacao === 'nao_viveu') return MOVIMENTO.M6
-  const aplicou = aplicacao === 'aplicou' || aplicacao === 'aplicou_forte'
-  const desvio = dirCode === 'sub' || dirCode === 'ff' || dirCode === 'osc'
-  if (desvio) {
-    if (aplicou) return MOVIMENTO.M2
-    if (cp >= 3.5) return MOVIMENTO.M1
-    if (cp < 2.5) return MOVIMENTO.M3
-    return MOVIMENTO.FALLBACK
-  }
-  // func
-  if (cp >= 3.5) return MOVIMENTO.M4
-  if (cp < 3.0) return MOVIMENTO.M5
-  return MOVIMENTO.FALLBACK
-}
-
-export function buildBlock(competencyKey, initial, resposta) {
-  const title = competencyMeta[competencyKey]?.title || competencyKey
-  const dirCode = DIR_TO_CODE[initial?.direction] || 'func'
-  const cp = cpMedia(resposta.consciencia, resposta.prontidao)
-
-  const comecou = COMECOU[dirCode].replaceAll('[competência]', title)
-  const agora = `${agoraCpText(cp)} ${AGORA_APLICACAO[resposta.aplicacao]}`
-  const movimento = movimentoTexto({ dirCode, cp, aplicacao: resposta.aplicacao })
-
-  return { key: competencyKey, title, comecou, agora, movimento }
-}
 
 export const REPORT_COMPETENCY_KEYS = [
   'comunicacao_assertiva',
@@ -50,29 +12,85 @@ export const REPORT_COMPETENCY_KEYS = [
   'protagonismo_profissional',
 ]
 
+export function cpMedia(consciencia, prontidao) {
+  return (Number(consciencia) + Number(prontidao)) / 2
+}
+
+// Cobre todo o intervalo 1.0..5.0 sem buracos.
+export function faixaCp(cp) {
+  if (cp >= 3.5) return 'alta'
+  if (cp >= 2.5) return 'media'
+  return 'baixa'
+}
+
+export function partiuDe(dirCode) {
+  return dirCode === 'func' ? 'funcional' : 'desvio'
+}
+
+// Métricas derivadas de um par (diagnóstico inicial, resposta do reteste).
+function derive(initial, resposta) {
+  const dirCode = DIR_TO_CODE[initial?.direction] || 'func'
+  const cp = cpMedia(resposta.consciencia, resposta.prontidao)
+  const aplicacao = resposta.aplicacao
+  return {
+    dirCode,
+    partiu: partiuDe(dirCode),
+    cp,
+    faixa: faixaCp(cp),
+    aplicacao,
+    usou: aplicacao === 'aplicou' || aplicacao === 'aplicou_forte',
+  }
+}
+
+// Leitura do movimento — matriz completa (R0=NV tem prioridade; R1..R10 cruzam
+// partiu_de × faixa_cp × usou). Nenhum caso cai em fallback.
+export function movimentoTexto({ partiu, faixa, usou, aplicacao }) {
+  if (aplicacao === 'nao_viveu') return MOVIMENTO.NV
+  if (partiu === 'desvio') {
+    if (faixa === 'alta') return usou ? MOVIMENTO.R1 : MOVIMENTO.R2
+    if (faixa === 'media') return usou ? MOVIMENTO.R3 : MOVIMENTO.R4
+    return usou ? MOVIMENTO.R5 : MOVIMENTO.R6
+  }
+  // funcional
+  if (faixa === 'alta') return usou ? MOVIMENTO.R7 : MOVIMENTO.R8
+  if (faixa === 'media') return MOVIMENTO.R9
+  return MOVIMENTO.R10
+}
+
+export function buildBlock(competencyKey, initial, resposta) {
+  const title = competencyMeta[competencyKey]?.title || competencyKey
+  const m = derive(initial, resposta)
+
+  const comecou = COMECOU[m.dirCode].replaceAll('[competência]', title)
+  const estado = AGORA_ESTADO[m.partiu][m.faixa]
+  const aplicacao = AGORA_APLICACAO[m.partiu][m.aplicacao]
+  const agora = `${estado} ${aplicacao}`
+  const movimento = movimentoTexto(m)
+
+  return { key: competencyKey, title, comecou, agora, movimento }
+}
+
+// Síntese: abertura fixa + um texto variável + adendo condicional + fechamento fixo.
 export function buildSintese(order, initialResults, retestResponses) {
   let nAvanco = 0
   let nAplicacoes = 0
   let nNaoViveu = 0
 
   for (const key of order) {
-    const initial = initialResults?.[key] || {}
-    const r = retestResponses?.[key] || {}
-    const dirCode = DIR_TO_CODE[initial.direction] || 'func'
-    const cp = cpMedia(r.consciencia, r.prontidao)
-
-    if (cp >= 3.5 && dirCode !== 'func') nAvanco += 1
-    if (r.aplicacao === 'aplicou' || r.aplicacao === 'aplicou_forte') nAplicacoes += 1
-    if (r.aplicacao === 'nao_viveu') nNaoViveu += 1
+    const m = derive(initialResults?.[key] || {}, retestResponses?.[key] || {})
+    if (m.faixa === 'alta' && m.partiu === 'desvio') nAvanco += 1
+    if (m.usou) nAplicacoes += 1
+    if (m.aplicacao === 'nao_viveu') nNaoViveu += 1
   }
 
-  const paragraphs = []
+  const paragraphs = [SINTESE.ABERTURA]
   if (nAplicacoes >= 3) paragraphs.push(SINTESE.A)
   else if (nAvanco >= 3) paragraphs.push(SINTESE.B)
   else if (nAvanco >= 1) paragraphs.push(SINTESE.C)
   else paragraphs.push(SINTESE.D)
 
-  if (nNaoViveu >= 3) paragraphs.push(SINTESE.NOTA_NAO_VIVEU)
+  if (nNaoViveu >= 3) paragraphs.push(SINTESE.ADENDO_NAO_VIVEU)
+  paragraphs.push(SINTESE.FECHAMENTO)
 
   return { paragraphs }
 }

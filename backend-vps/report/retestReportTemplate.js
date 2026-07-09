@@ -1,6 +1,7 @@
 import { buildRetestReport, REPORT_COMPETENCY_KEYS } from './retestReport.js'
 import { renderShell, buildReportTitle, renderBrandBar, escapeHtml } from './reportTemplate.js'
-import { competencyMeta, REPORT_DISCLAIMER } from './profileTexts.js'
+import { competencyMeta } from './profileTexts.js'
+import { RODAPE } from './retestTexts.js'
 
 function renderSecao(rotulo, texto) {
   return `
@@ -27,7 +28,7 @@ function renderBlockCard(block, fullName) {
         ${renderSecao('Leitura do movimento', block.movimento)}
       </div>
       <div class="foot">
-        <p class="foot-disclaimer">${escapeHtml(REPORT_DISCLAIMER)}</p>
+        <p class="foot-disclaimer">${escapeHtml(RODAPE)}</p>
         <p class="foot-copyright">© ${new Date().getFullYear()} Ana Luiza Carvalho · Laboratório de Competências</p>
       </div>
     </article>`
@@ -41,12 +42,12 @@ function renderSinteseCard(sintese, fullName) {
       <div class="head">
         <div>
           <h1>Síntese do reteste</h1>
-          <div class="sub">Uma leitura do movimento das 3 semanas.</div>
+          <div class="sub">Uma leitura do seu movimento.</div>
         </div>
       </div>
       <div class="body synthesis-body">${body}</div>
       <div class="foot">
-        <p class="foot-disclaimer">${escapeHtml(REPORT_DISCLAIMER)}</p>
+        <p class="foot-disclaimer">${escapeHtml(RODAPE)}</p>
         <p class="foot-copyright">© ${new Date().getFullYear()} Ana Luiza Carvalho · Laboratório de Competências</p>
       </div>
     </article>`

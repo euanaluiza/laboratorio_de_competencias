@@ -1,45 +1,72 @@
-// Textos fixos do relatório do reteste (verbatim da spec). Coordenador-facing.
+// Textos fixos do relatório do reteste (verbatim da spec v3). Coordenador-facing.
 // O literal [competência] em COMECOU é substituído pelo título da competência.
 
+// BLOCO 1 — "Onde você começou" (por direcao_inicial).
 export const COMECOU = {
-  sub: 'No diagnóstico inicial, o seu padrão em [competência] tendia à subexpressão — o lado de recuar, engolir, não se posicionar.',
-  ff: 'No diagnóstico inicial, o seu padrão em [competência] tendia à falsa força — o lado de forçar, reagir, se impor.',
+  sub: 'No diagnóstico inicial, o seu padrão em [competência] tendia à subexpressão, ou seja, ao lado de recuar, engolir e não se posicionar.',
+  ff: 'No diagnóstico inicial, o seu padrão em [competência] tendia à falsa força, ou seja, ao lado de forçar, reagir e se impor.',
   osc: 'No diagnóstico inicial, o seu padrão em [competência] oscilava entre recuar e forçar, sem um eixo estável.',
-  func: 'No diagnóstico inicial, [competência] já era um ponto funcional seu — você tendia a agir de forma proporcional.',
+  func: 'No diagnóstico inicial, [competência] já era um ponto funcional seu. Você tendia a agir de forma proporcional ao que cada situação pedia.',
 }
 
-// 1ª frase de "Onde você está agora", por faixa de cp_media (inclusive nos limites).
-export const AGORA_CP = [
-  { min: 4.0, max: 5.0, text: 'Três semanas depois, você relata uma consciência alta desse padrão e se sente preparado(a) pra agir sobre ele.' },
-  { min: 3.0, max: 3.9, text: 'Três semanas depois, a sua consciência desse padrão cresceu e a sua prontidão pra agir está se formando.' },
-  { min: 2.0, max: 2.9, text: 'Três semanas depois, você começou a perceber esse padrão, ainda que a prontidão pra agir esteja no início.' },
-  { min: 1.0, max: 1.9, text: 'Três semanas depois, esse padrão ainda é difícil de perceber no momento em que acontece — e tudo bem, é o que leva mais tempo.' },
-]
+// BLOCO 2 — frase 1 (estado), por partiu_de + faixa_cp.
+export const AGORA_ESTADO = {
+  desvio: {
+    alta: 'Hoje, depois do laboratório, você percebe esse padrão na maioria das vezes em que ele aparece, e se sente preparado(a) para agir sobre ele.',
+    media: 'Hoje, depois do laboratório, você já percebe esse padrão em parte das situações, e a sua preparação para agir sobre ele está se formando.',
+    baixa: 'Hoje, depois do laboratório, esse padrão ainda é difícil de perceber no momento em que acontece, e a preparação para agir sobre ele ainda está no começo. Isso é esperado, porque perceber um automático antigo é justamente o que leva mais tempo.',
+  },
+  funcional: {
+    alta: 'Hoje, depois do laboratório, além de agir bem nessa competência, você também percebe com clareza o que está fazendo e por quê. Você tem, ao mesmo tempo, o comportamento e a consciência dele.',
+    media: 'Hoje, depois do laboratório, você percebe esse padrão em parte das situações. Como essa competência já era funcional em você desde o início, é comum que ela aconteça de forma parcialmente automática, sem que você precise pensar muito nela.',
+    baixa: 'Hoje, depois do laboratório, você relata perceber pouco esse padrão no momento em que ele acontece. Isso não significa que você piorou. Como essa competência já era funcional em você desde o início, é provável que você aja bem nela de forma automática, sem precisar pensar.',
+  },
+}
 
+// BLOCO 2 — frase 2 (aplicação), por partiu_de + aplicacao.
 export const AGORA_APLICACAO = {
-  aplicou_forte: 'E o mais importante: você já usou o caminho funcional mais de uma vez numa situação real. Isso é o que fixa a mudança.',
-  aplicou: 'E você já usou o caminho funcional uma vez numa situação real — o primeiro uso é o que prova pra você mesmo(a) que funciona.',
-  tentou: 'Você tentou usar o caminho e não conseguiu na hora — isso não é falha, é parte do processo. Mesmo percebendo só depois que a situação passou, você já está treinando o seu olhar. Com a repetição, esse perceber vai chegando cada vez mais cedo, até acontecer no próprio momento da situação.',
-  nao_usou: 'Você ainda não usou o caminho numa situação real. O próximo passo é esse: transformar consciência em ação.',
-  nao_viveu: 'Você não relatou situações dessa natureza nas últimas semanas — o que é normal. Quando aparecer, o caminho está pronto.',
+  desvio: {
+    aplicou_forte: 'E mais importante que isso: você já usou o caminho funcional mais de uma vez numa situação real. Repetir a ação é o que transforma o novo comportamento em hábito.',
+    aplicou: 'E você já usou o caminho funcional uma vez numa situação real. Esse primeiro uso é o que mostra, na prática, que o caminho funciona para você.',
+    tentou: 'Você tentou usar o caminho e não conseguiu na hora, mas isso não é falha, e sim parte do processo. Mesmo percebendo só depois que a situação passou, você já está treinando o seu olhar. Com a repetição, esse perceber vai chegando cada vez mais cedo, até acontecer no próprio momento da situação.',
+    nao_usou: 'Você ainda não usou o caminho numa situação real. Esse é o seu próximo passo: transformar o que você já percebe em ação concreta.',
+    nao_viveu: 'Você não passou por situações dessa natureza recentemente, o que é normal. Quando elas aparecerem, o caminho já está disponível para você.',
+  },
+  funcional: {
+    aplicou_forte: 'E você usou o caminho funcional mais de uma vez de forma consciente, ou seja, sabendo o que estava fazendo. Isso é diferente de acertar no automático, porque você passa a poder repetir o acerto quando a situação ficar difícil.',
+    aplicou: 'E você usou o caminho funcional uma vez de forma consciente. Usar de propósito o que antes você fazia naturalmente é o que garante o acerto mesmo sob pressão.',
+    tentou: 'Você tentou usar o caminho de forma consciente e não conseguiu na hora. Isso é comum em competências que já são naturais, porque o automático age antes de você pensar.',
+    nao_usou: 'Você ainda não usou o caminho de forma consciente. Como essa competência já é funcional em você, o ganho aqui não é aprender a agir, mas passar a escolher a ação de propósito, especialmente quando a pressão aumentar.',
+    nao_viveu: 'Você não passou por situações dessa natureza recentemente, o que é normal. Quando elas aparecerem, o caminho já está disponível para você.',
+  },
 }
 
+// BLOCO 3 — "Leitura do movimento". Matriz completa (sem lacunas).
+// NV = nao_viveu (prioridade). R1..R10 cruzam partiu_de × faixa_cp × usou.
 export const MOVIMENTO = {
-  M1: 'Repare no movimento: você saiu de um padrão automático e, em três semanas, passou a enxergá-lo enquanto ele acontece. Essa é a mudança que mais importa — porque ninguém muda um comportamento que não percebe estar tendo. Primeiro a pessoa passa a perceber o padrão; depois disso, com a prática, consegue mudar o comportamento. Você já deu esse primeiro passo, e a sua percepção está firme.',
-  M2: 'Você não só passou a perceber o padrão — já agiu de forma diferente numa situação real. Isso é raro em três semanas. A maioria das pessoas leva mais tempo pra passar de perceber o padrão para agir de forma diferente. Você já fez essa passagem pelo menos uma vez.',
-  M3: 'O movimento aqui ainda é inicial — e isso é honesto, não é fracasso. Essa competência provavelmente é a que mais te custa, e as que mais custam levam mais tempo. Recomendação concreta: escolha ESTA competência como o seu único foco nos próximos 21 dias. Trabalhar uma competência de cada vez traz mais resultado do que tentar melhorar as seis ao mesmo tempo.',
-  M4: 'Essa já era uma força sua no início, e o reteste confirma: você mantém consciência e prontidão altas. O trabalho aqui não é desenvolver — é sustentar sob pressão e usar essa força pra puxar as competências que ainda estão se formando.',
-  M5: 'Essa era uma força sua no diagnóstico inicial, mas no reteste a sua percepção dela aparece mais baixa. Pode ser que, por essa competência já vir naturalmente pra você, você tenha parado de prestar atenção nela. Vale voltar a observar esse comportamento de forma consciente.',
-  M6: 'Sem situações dessa natureza nas últimas semanas, não dá pra medir movimento aqui — e isso é normal. Mantenha o caminho no radar pra quando a situação aparecer.',
-  // FALLBACK: combinações que a spec não cobre (desvio 2.5<=cp<3.5 sem aplicação; func 3.0<=cp<3.5).
-  // Texto provisório — CONFIRMAR com a Ana antes do fim.
-  FALLBACK: 'O movimento aqui está em curso: você já percebe esse padrão em parte das situações e começa a se preparar pra agir sobre ele. O próximo passo é levar essa percepção para o momento em que a situação acontece e transformá-la em ação — e isso vem com a prática dos próximos 21 dias.',
+  NV: 'Como você não passou por situações dessa natureza recentemente, não é possível ler movimento aqui, e isso é normal. Nem toda semana traz todos os tipos de situação. Mantenha o caminho disponível, porque ele vai ser útil quando a situação aparecer.',
+  R1: 'Repare no percurso: você partiu de um padrão automático, hoje já percebe esse padrão na hora em que ele acontece, e além disso já agiu de forma diferente numa situação real. Você percorreu, em pouco tempo, as duas etapas que mais importam. Primeiro a pessoa passa a enxergar o padrão, e só depois consegue mudar o comportamento. Você já fez as duas.',
+  R2: 'Repare no percurso: você partiu de um padrão automático e hoje já consegue enxergá-lo enquanto ele acontece. Essa é a mudança que mais importa, porque ninguém muda um comportamento que não percebe estar tendo. O que falta agora é uma coisa só: usar o caminho numa situação real. A consciência já está firme, e é ela que sustenta a ação.',
+  R3: 'Repare no percurso: você partiu de um padrão automático, já percebe esse padrão em parte das situações, e mesmo assim já agiu de forma diferente numa situação real. Isso é significativo, porque você não esperou a percepção ficar perfeita para começar a agir. Continuar usando o caminho é o que vai aumentar a sua percepção, e não o contrário.',
+  R4: 'Repare no percurso: você partiu de um padrão automático e já começou a enxergá-lo em parte das situações. O movimento está acontecendo, mesmo que ainda não tenha chegado na ação. O próximo passo é escolher uma situação concreta e usar o caminho nela, mesmo sem se sentir totalmente preparado(a). A prontidão costuma vir depois do primeiro uso, e não antes.',
+  R5: 'Aqui há um contraste interessante. Você ainda percebe pouco esse padrão no momento em que ele acontece, mas mesmo assim já usou o caminho numa situação real. Isso sugere que a ação está vindo antes da percepção, o que também funciona. Continue usando o caminho de propósito, porque cada uso vai tornando o padrão mais visível para você.',
+  R6: 'O movimento aqui ainda está no começo, e isso é honesto, não é fracasso. Essa competência provavelmente é a que mais te custa, e as que mais custam levam mais tempo. Recomendação concreta: escolha esta competência como o seu único foco nos próximos dias. Trabalhar uma competência de cada vez traz mais resultado do que tentar melhorar as seis ao mesmo tempo.',
+  R7: 'Essa competência já era uma força sua no início, e agora ela deixou de ser apenas um acerto natural. Você percebe o que faz, sabe por que faz, e já usou o caminho de forma consciente. Essa é a diferença entre acertar por hábito e acertar por escolha. Quem acerta por escolha continua acertando quando a situação fica difícil, porque não depende de o automático funcionar.',
+  R8: 'Essa competência já era uma força sua no início, e hoje você também tem clareza sobre ela: percebe o padrão e se sente preparado(a). O que ainda não aconteceu foi usar o caminho de propósito numa situação real. Vale procurar essa oportunidade, porque é o uso consciente que garante o acerto quando a pressão aumenta e o automático deixa de dar conta.',
+  R9: 'Essa competência já era funcional em você desde o diagnóstico inicial, e é provável que ela funcione, em boa parte do tempo, de forma automática. Você acerta sem precisar pensar muito. Isso é uma vantagem real, mas tem um risco: quem age no automático costuma não perceber o momento em que sai do eixo. E é justamente sob pressão forte que esse momento chega. Trazer essa competência para a consciência, mesmo já sendo bom(boa) nela, é o que protege você nos dias difíceis.',
+  R10: 'Atenção a esta leitura, porque ela é diferente das outras. Essa competência já era funcional em você desde o diagnóstico inicial, e hoje você relata perceber pouco esse padrão. Isso não significa que você piorou, porque a sua percepção nunca foi medida antes, e não há queda a ser afirmada. O que os dados sugerem é outra coisa: você provavelmente age bem nessa competência de forma automática, sem precisar pensar nela. Competência automática é confortável, mas é cega. Quando a pressão aumenta e o automático falha, quem não percebe o próprio padrão não consegue corrigir o rumo. O trabalho aqui não é aprender a agir, porque você já sabe. É passar a observar de propósito o que você faz naturalmente.',
 }
 
+// SÍNTESE — abertura fixa + um texto variável + adendo condicional + fechamento fixo.
 export const SINTESE = {
-  A: 'Em três semanas, você já usou o método na prática em várias competências diferentes. Isso é mais rápido do que a maioria das pessoas consegue — normalmente leva mais tempo pra passar do que se aprendeu para o que se faz no dia a dia. O trabalho agora é continuar usando com frequência, pra não perder o que já conquistou.',
-  B: 'O reteste mostra um avanço claro de consciência em várias competências. Você está na fase mais importante da mudança: já percebe os padrões enquanto eles acontecem. O próximo passo é transformar esse perceber em agir de forma diferente — e isso vem com a prática dos próximos 21 dias.',
-  C: 'O reteste mostra que o movimento começou — em algumas competências você já percebe o padrão com mais clareza. Mudança não acontece nas seis ao mesmo tempo, e tudo bem. Escolha a competência que mais te custa hoje e foque só nela nos próximos 21 dias. Depois que ela avançar, você repete o mesmo processo com a próxima.',
-  D: 'O reteste sugere que o movimento ainda está no início. Isso não é fracasso — três semanas é pouco tempo, e a mudança real começa devagar, primeiro pela consciência do padrão e só depois pela mudança do comportamento. Escolha UMA competência, aplique o plano de 21 dias focando só nela, e refaça esta medição depois. Quando você concentra a atenção numa competência de cada vez, o avanço aparece.',
-  NOTA_NAO_VIVEU: 'Obs: em várias competências, você não passou por situações que ativassem aquele padrão nessas semanas. Isso reduz o que dá pra medir agora, mas não muda o que você aprendeu — o caminho continua disponível pra quando essas situações aparecerem.',
+  ABERTURA: 'Todo comportamento que você repete sem perceber governa você. Todo comportamento que você percebe passa a poder ser escolhido. É isso que este reteste mede: não o quanto você é bom ou ruim em cada competência, mas o quanto você já consegue enxergar o que faz, no momento em que faz, e decidir de propósito qual resultado quer produzir.',
+  A: 'Você já levou o método para a prática em várias competências diferentes, e isso costuma acontecer mais devagar do que aconteceu com você. A distância entre entender um conceito e usá-lo numa situação real é onde a maioria das pessoas para. Você atravessou essa distância mais de uma vez. O trabalho agora não é aprender mais, e sim continuar escolhendo de propósito, especialmente nos dias em que o automático quiser voltar. Isso não termina, porque não somos máquinas. É um cuidado que se mantém.',
+  B: 'Em várias competências, você já percebe os seus padrões enquanto eles acontecem. Esse é o ponto de virada de qualquer mudança de comportamento, porque ninguém escolhe diferente sem antes enxergar o que está fazendo. O passo que falta é o mais simples e o mais difícil ao mesmo tempo: agir. Escolha uma situação concreta e use o caminho, mesmo sem se sentir totalmente pronto(a). A prontidão costuma chegar depois do primeiro uso, e raramente antes dele.',
+  C: 'O movimento começou. Em algumas competências, você já percebe o padrão com mais clareza do que antes, e isso é o que importa neste momento. Mudança não acontece nas seis competências ao mesmo tempo, e tentar isso costuma dispersar a atenção. Escolha a competência que mais te custa hoje e concentre o seu esforço nela. Quando ela avançar, repita o mesmo processo com a próxima.',
+  D: 'O movimento ainda está no início, e isso não é fracasso. A mudança de um padrão de comportamento começa devagar, primeiro pela consciência do que se faz, e só depois pela mudança da ação. Escolha uma única competência, concentre a sua atenção apenas nela, e refaça esta medição depois. Quando o foco se estreita, o avanço aparece.',
+  ADENDO_NAO_VIVEU: 'Observação: em várias competências, você não passou por situações que ativassem aquele padrão recentemente. Isso reduz o que dá para medir agora, mas não muda o que você aprendeu. O caminho continua disponível para quando essas situações aparecerem.',
+  FECHAMENTO: 'Nada aqui descreve quem você é. Descreve o que você tem repetido. E o que se repete, quando é trazido à consciência, passa a poder ser escolhido.',
 }
+
+// Rodapé do relatório do reteste (o laboratório já terminou).
+export const RODAPE = 'Isto descreve um padrão de comportamento, não quem você é. Padrões mudam com consciência e prática constante.'
