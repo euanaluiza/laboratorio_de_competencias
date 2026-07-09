@@ -75,6 +75,9 @@
     .view-head .who { font-family:var(--head); font-weight:600; font-size:1.05rem; color:var(--plum); }
     .view-head .who small { display:block; color:var(--muted); font-weight:400; font-size:.78rem; font-family:var(--body); margin-top:2px; }
     .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .tab-groups { display:flex; gap:8px; margin-top:12px; padding-bottom:12px; border-bottom:1px dashed var(--line); }
+    .group-btn { font-family:var(--head); font-weight:700; font-size:.9rem; cursor:pointer; border:1.5px solid var(--lilac); background:#fff; color:var(--plum); padding:8px 22px; border-radius:999px; }
+    .group-btn.active { background:linear-gradient(135deg,var(--plum),var(--plum-light)); color:#fff; border-color:transparent; }
     .frame-wrap { flex:1; min-height:0; background:var(--cream); overflow:auto; position:relative; }
     iframe { width:100%; height:100%; border:none; }
     .view-actions { display:flex; gap:8px; align-items:center; }
@@ -196,6 +199,7 @@
               <button id="pdfBtn" class="btn btn-plum" style="display:none">↓ Salvar PDF</button>
             </div>
           </div>
+          <div class="tab-groups" id="tabGroups" style="display:none"></div>
           <div class="tabs" id="tabs"></div>
         </div>
         <div class="frame-wrap">
@@ -267,6 +271,7 @@
     let activeViewIsIframe = true
     let CURRENT_VIEW_PARAM = 'consolidado'
     let CURRENT_REPORT_BASE = 'report' // 'report' | 'retest-report'
+    let CURRENT_GROUP = 'inicial' // 'inicial' | 'reteste'
 
     // Textos padrão que acompanham o relatório no envio (edite à vontade).
     const MSG = {
@@ -364,12 +369,28 @@
       renderList()
       $('placeholder').style.display = 'none'
       $('who').innerHTML = esc(s.full_name) + '<small>' + esc(s.email) + ' · envio #' + s.id + '</small>'
-      const tabs = [['__resumo__', 'Resumo'], ['__sintese__', 'Síntese'], ['__consolidado__', 'Consolidado']].concat(COMPETENCIES)
-      if (s.retest_submission_id) {
-        tabs.push(['__reteste__', 'Reteste'])
-        COMPETENCIES.forEach(([key, label]) => tabs.push(['ret:' + key, 'Reteste · ' + label]))
-      }
-      $('tabs').innerHTML = tabs.map(([key, label]) => '<button class="btn btn-ghost" data-key="' + key + '">' + esc(label) + '</button>').join('')
+      CURRENT_GROUP = 'inicial'
+      // Grupo de topo: 1º Teste (sempre) + Reteste (só se existir). Com um grupo só, a barra fica oculta.
+      const groups = [['inicial', '1º Teste']]
+      if (s.retest_submission_id) groups.push(['reteste', 'Reteste'])
+      $('tabGroups').innerHTML = groups.map(([g, label]) =>
+        '<button class="group-btn" data-group="' + g + '">' + esc(label) + '</button>').join('')
+      $('tabGroups').style.display = groups.length > 1 ? 'flex' : 'none'
+      Array.from($('tabGroups').querySelectorAll('.group-btn')).forEach((el) => {
+        el.onclick = () => { CURRENT_GROUP = el.dataset.group; renderTabs() }
+      })
+      renderTabs()
+    }
+
+    // Sub-abas do grupo selecionado (1º Teste ou Reteste). Abre a primeira automaticamente.
+    function renderTabs() {
+      Array.from($('tabGroups').querySelectorAll('.group-btn')).forEach((b) =>
+        b.classList.toggle('active', b.dataset.group === CURRENT_GROUP))
+      const tabs = CURRENT_GROUP === 'reteste'
+        ? [['__reteste__', 'Consolidado']].concat(COMPETENCIES.map(([k, l]) => ['ret:' + k, l]))
+        : [['__resumo__', 'Resumo'], ['__sintese__', 'Síntese'], ['__consolidado__', 'Consolidado']].concat(COMPETENCIES)
+      $('tabs').innerHTML = tabs.map(([key, label]) =>
+        '<button class="btn btn-ghost" data-key="' + key + '">' + esc(label) + '</button>').join('')
       Array.from($('tabs').querySelectorAll('.btn')).forEach((el) => {
         el.onclick = () => {
           Array.from($('tabs').querySelectorAll('.btn')).forEach((b) => b.classList.remove('active'))
