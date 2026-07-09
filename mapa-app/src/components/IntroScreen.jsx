@@ -29,7 +29,7 @@ const INTRO_CARDS = [
   { label: '15 min', icon: 'clock' },
 ]
 
-function FeatureIcon({ name }) {
+export function FeatureIcon({ name }) {
   return (
     <svg
       className="feature-icon"
