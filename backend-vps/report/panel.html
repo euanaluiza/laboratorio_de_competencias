@@ -60,14 +60,22 @@
     .cols { display:grid; grid-template-columns:340px 1fr; height:100%; }
     .col-list { border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0; background:#fff; }
     .list-head { padding:14px; border-bottom:1px solid var(--line); }
+    .list-filters { margin-top:10px; }
     .list-head .count { color:var(--muted); font-size:.78rem; margin-top:8px; }
     .list { overflow:auto; flex:1; }
     .student { display:block; width:100%; text-align:left; border:none; background:none; cursor:pointer;
       padding:13px 16px; border-bottom:1px solid var(--line); font:inherit; }
     .student:hover { background:var(--lilac-soft); }
     .student.active { background:var(--lilac-soft); box-shadow:inset 3px 0 0 var(--plum); }
+    .student-head { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
     .student .nm { font-weight:600; color:var(--navy); }
     .student .meta { color:var(--muted); font-size:.78rem; margin-top:3px; }
+    .student-badge {
+      border:1px solid var(--line); border-radius:999px; flex:0 0 auto;
+      font-size:.68rem; font-weight:700; line-height:1; padding:5px 8px;
+    }
+    .student-badge.done { background:rgba(46,125,107,.1); border-color:rgba(46,125,107,.22); color:var(--green); }
+    .student-badge.pending { background:var(--lilac-soft); border-color:var(--lilac); color:var(--muted); }
 
     .col-view { display:flex; flex-direction:column; min-height:0; }
     .view-head { padding:14px 18px; border-bottom:1px solid var(--line); background:#fff; }
@@ -184,6 +192,13 @@
       <div class="col-list">
         <div class="list-head">
           <input id="search" class="input" type="text" placeholder="Buscar por nome ou e-mail…" />
+          <div class="list-filters">
+            <select id="retestFilter" class="input" title="Status do reteste">
+              <option value="all">Todos</option>
+              <option value="done">Com reteste</option>
+              <option value="pending">Sem reteste</option>
+            </select>
+          </div>
           <div class="count" id="count"></div>
         </div>
         <div class="list" id="list"></div>
@@ -353,12 +368,23 @@
     // ---- Relatórios ----
     function renderList() {
       const q = $('search').value.trim().toLowerCase()
-      const rows = SUBMISSIONS.filter((s) => !q || (s.full_name || '').toLowerCase().includes(q) || (s.email || '').toLowerCase().includes(q))
-      $('count').textContent = rows.length + ' de ' + SUBMISSIONS.length + ' aluno(s)'
-      $('list').innerHTML = rows.map((s) =>
-        '<button class="student' + (CURRENT && CURRENT.id === s.id ? ' active' : '') + '" data-id="' + s.id + '">' +
-        '<div class="nm">' + esc(s.full_name) + '</div><div class="meta">' + esc(s.email) + ' · ' + fmtDate(s.created_at) + '</div></button>',
-      ).join('') || '<div class="placeholder">Nenhum aluno.</div>'
+      const retestFilter = $('retestFilter').value
+      const retestDone = SUBMISSIONS.filter((s) => s.retest_submission_id).length
+      const rows = SUBMISSIONS.filter((s) => {
+        const hasRetest = Boolean(s.retest_submission_id)
+        const matchesSearch = !q || (s.full_name || '').toLowerCase().includes(q) || (s.email || '').toLowerCase().includes(q)
+        const matchesRetest = retestFilter === 'all' || (retestFilter === 'done' && hasRetest) || (retestFilter === 'pending' && !hasRetest)
+        return matchesSearch && matchesRetest
+      })
+      $('count').textContent = rows.length + ' de ' + SUBMISSIONS.length + ' aluno(s) · ' + retestDone + ' com reteste'
+      $('list').innerHTML = rows.map((s) => {
+        const retestStatus = s.retest_submission_id ? 'Reteste feito' : 'Sem reteste'
+        const retestClass = s.retest_submission_id ? 'done' : 'pending'
+        return '<button class="student' + (CURRENT && CURRENT.id === s.id ? ' active' : '') + '" data-id="' + s.id + '">' +
+          '<div class="student-head"><div class="nm">' + esc(s.full_name) + '</div>' +
+          '<span class="student-badge ' + retestClass + '">' + retestStatus + '</span></div>' +
+          '<div class="meta">' + esc(s.email) + ' · ' + fmtDate(s.created_at) + '</div></button>'
+      }).join('') || '<div class="placeholder">Nenhum aluno.</div>'
       Array.from($('list').querySelectorAll('.student')).forEach((el) => {
         el.onclick = () => selectStudent(SUBMISSIONS.find((x) => String(x.id) === el.dataset.id))
       })
@@ -496,6 +522,7 @@
     $('token').onkeydown = (e) => { if (e.key === 'Enter') $('enter').click() }
     $('logout').onclick = () => logout()
     $('search').oninput = renderList
+    $('retestFilter').onchange = renderList
     $('pdfBtn').onclick = () => {
       // O nome do arquivo ao "Salvar como PDF" vem do <title> da página de cima
       // (este painel), não do iframe. O relatório já gera o <title> no formato
