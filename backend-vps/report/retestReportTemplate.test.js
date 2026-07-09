@@ -23,6 +23,9 @@ test('consolidado: documento A4, com síntese, os 3 rótulos de bloco e o nome d
   assert.match(html, /Todo comportamento que você repete/) // abertura fixa da síntese
   assert.match(html, /Padrões mudam com consciência/) // rodapé novo (v3)
   assert.doesNotMatch(html, /3 semanas|três semanas/i) // v3 removeu referência temporal fixa
+  // v4: quadro "O caminho" fixo em cada bloco de competência (6 competências => 6 quadros)
+  assert.equal((html.match(/>O caminho</g) || []).length, 6)
+  assert.match(html, /PAUSA · ALVO · DIZ · SUSTENTA/)
 })
 
 test('sem roda/pips nem <script> (não é score, é texto)', () => {
@@ -41,4 +44,7 @@ test('competencia: renderiza um único bloco', () => {
   assert.match(html, /Leitura do movimento/)
   // só um "Onde você começou" (um bloco)
   assert.equal((html.match(/Onde você começou/g) || []).length, 1)
+  // o bloco único traz o seu "O caminho" (Maturidade Emocional)
+  assert.equal((html.match(/>O caminho</g) || []).length, 1)
+  assert.match(html, /PERCEBE · NOMEIA · SEPARA · ESCOLHE/)
 })

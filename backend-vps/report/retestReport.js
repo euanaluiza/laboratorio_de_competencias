@@ -1,5 +1,5 @@
 import { competencyMeta } from './profileTexts.js'
-import { COMECOU, AGORA_ESTADO, AGORA_APLICACAO, MOVIMENTO, SINTESE } from './retestTexts.js'
+import { COMECOU, AGORA_ESTADO, AGORA_APLICACAO, MOVIMENTO, SINTESE, CAMINHO } from './retestTexts.js'
 
 export const DIR_TO_CODE = { recuo: 'sub', excesso: 'ff', oscilante: 'osc', funcional: 'func' }
 
@@ -66,8 +66,9 @@ export function buildBlock(competencyKey, initial, resposta) {
   const aplicacao = AGORA_APLICACAO[m.partiu][m.aplicacao]
   const agora = `${estado} ${aplicacao}`
   const movimento = movimentoTexto(m)
+  const caminho = CAMINHO[competencyKey] // quadro fixo, não depende de nenhuma variável
 
-  return { key: competencyKey, title, comecou, agora, movimento }
+  return { key: competencyKey, title, comecou, agora, movimento, caminho }
 }
 
 // Síntese: abertura fixa + um texto variável + adendo condicional + fechamento fixo.

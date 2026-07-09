@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { COMECOU, AGORA_ESTADO, AGORA_APLICACAO, MOVIMENTO, SINTESE, RODAPE } from './retestTexts.js'
+import { COMECOU, AGORA_ESTADO, AGORA_APLICACAO, MOVIMENTO, SINTESE, RODAPE, CAMINHO } from './retestTexts.js'
 
 test('COMECOU tem os 4 códigos de direção e usa o placeholder [competência]', () => {
   assert.deepEqual(Object.keys(COMECOU).sort(), ['ff', 'func', 'osc', 'sub'])
@@ -31,6 +31,22 @@ test('SINTESE tem abertura, A-D, adendo e fechamento; RODAPE presente', () => {
     assert.ok(SINTESE[k] && SINTESE[k].length > 0, `SINTESE.${k}`)
   }
   assert.ok(RODAPE && RODAPE.length > 0)
+})
+
+test('CAMINHO tem as 6 competências, cada uma com protocolo e 4 passos (v4)', () => {
+  const keys = [
+    'comunicacao_assertiva', 'maturidade_emocional', 'foco_resultado_produtividade',
+    'visao_sistemica', 'direcao_futuro', 'protagonismo_profissional',
+  ]
+  assert.deepEqual(Object.keys(CAMINHO).sort(), keys.slice().sort())
+  for (const k of keys) {
+    assert.ok(CAMINHO[k].protocolo && CAMINHO[k].protocolo.includes('·'), `${k} protocolo`)
+    assert.equal(CAMINHO[k].passos.length, 4, `${k} tem 4 passos`)
+    for (const p of CAMINHO[k].passos) {
+      assert.ok(p.nome && p.nome.length > 0, `${k} passo com nome`)
+      assert.ok(p.texto && p.texto.length > 0, `${k} passo com texto`)
+    }
+  }
 })
 
 test('v3 removeu referências temporais fixas (3 semanas / 21 dias)', () => {

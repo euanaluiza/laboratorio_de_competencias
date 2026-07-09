@@ -80,6 +80,56 @@ test('buildBlock (desvio, cp alta, usou): estado+aplicação de desvio e movimen
   assert.equal(block.movimento, MOVIMENTO.R1)
 })
 
+// Tabela de testes obrigatória da spec v4 (T1..T14), via buildBlock ponta a ponta:
+// direcao_inicial + consciência + prontidão + aplicação -> regra do movimento.
+const DIR_FROM_CODE = { sub: 'recuo', ff: 'excesso', osc: 'oscilante', func: 'funcional' }
+const TABELA = [
+  ['T1', 'sub', 4, 4, 'aplicou', 'R1'],
+  ['T2', 'sub', 4, 4, 'nao_usou', 'R2'],
+  ['T3', 'ff', 3, 3, 'aplicou_forte', 'R3'],
+  ['T4', 'ff', 3, 3, 'tentou', 'R4'],
+  ['T5', 'osc', 2, 2, 'aplicou', 'R5'],
+  ['T6', 'osc', 2, 2, 'nao_usou', 'R6'],
+  ['T7', 'func', 4, 4, 'aplicou', 'R7'],
+  ['T8', 'func', 4, 4, 'nao_usou', 'R8'],
+  ['T9', 'func', 3, 3, 'aplicou', 'R9'],
+  ['T10', 'func', 3, 3, 'nao_usou', 'R9'],
+  ['T11', 'func', 2, 2, 'aplicou', 'R10'],
+  ['T12', 'func', 2, 2, 'nao_usou', 'R10'],
+  ['T13', 'func', 4, 4, 'nao_viveu', 'NV'],
+  ['T14', 'sub', 2, 2, 'nao_viveu', 'NV'],
+]
+
+test('T1..T14 da spec v4 (matriz do movimento, ponta a ponta)', () => {
+  for (const [id, dir, c, p, ap, regra] of TABELA) {
+    const block = buildBlock(
+      'comunicacao_assertiva',
+      { direction: DIR_FROM_CODE[dir] },
+      { consciencia: c, prontidao: p, aplicacao: ap },
+    )
+    assert.equal(block.movimento, MOVIMENTO[regra], `${id}: ${dir}/${c}/${p}/${ap} -> ${regra}`)
+  }
+})
+
+test('F1/F2 fronteiras de faixa: 2.5 é media, 3.5 é alta', () => {
+  assert.equal(faixaCp(2.5), 'media')
+  assert.equal(faixaCp(3.5), 'alta')
+})
+
+test('buildBlock inclui o caminho fixo da competência (v4)', () => {
+  const block = buildBlock(
+    'comunicacao_assertiva',
+    { direction: 'recuo' },
+    { consciencia: 4, prontidao: 4, aplicacao: 'aplicou' },
+  )
+  assert.equal(block.caminho.protocolo, 'PAUSA · ALVO · DIZ · SUSTENTA')
+  assert.equal(block.caminho.passos.length, 4)
+  assert.equal(block.caminho.passos[0].nome, 'PAUSA')
+  // o caminho é fixo: não muda com a regra que disparou
+  const outro = buildBlock('comunicacao_assertiva', { direction: 'funcional' }, { consciencia: 2, prontidao: 2, aplicacao: 'nao_viveu' })
+  assert.deepEqual(outro.caminho, block.caminho)
+})
+
 test('buildBlock (funcional, cp media): estado/aplicação funcional e movimento R9', () => {
   const block = buildBlock(
     'maturidade_emocional',

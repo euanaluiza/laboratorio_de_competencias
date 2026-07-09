@@ -11,6 +11,22 @@ function renderSecao(rotulo, texto) {
     </div>`
 }
 
+// "O caminho": quadro fixo por competência (protocolo + 4 passos). Reaproveita
+// os estilos .panel/.protocol/.steps já presentes no shell do relatório.
+function renderCaminho(caminho) {
+  const passos = caminho.passos
+    .map((p) => `<li><b>${escapeHtml(p.nome)}.</b> ${escapeHtml(p.texto)}</li>`)
+    .join('')
+  return `
+    <div class="sec">
+      <h2>O caminho</h2>
+      <div class="panel">
+        <div class="protocol">${escapeHtml(caminho.protocolo)}</div>
+        <ul class="steps">${passos}</ul>
+      </div>
+    </div>`
+}
+
 function renderBlockCard(block, fullName) {
   const meta = competencyMeta[block.key]
   return `
@@ -26,6 +42,7 @@ function renderBlockCard(block, fullName) {
         ${renderSecao('Onde você começou', block.comecou)}
         ${renderSecao('Onde você está agora', block.agora)}
         ${renderSecao('Leitura do movimento', block.movimento)}
+        ${renderCaminho(block.caminho)}
       </div>
       <div class="foot">
         <p class="foot-disclaimer">${escapeHtml(RODAPE)}</p>

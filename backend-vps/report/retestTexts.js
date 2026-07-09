@@ -70,3 +70,62 @@ export const SINTESE = {
 
 // Rodapé do relatório do reteste (o laboratório já terminou).
 export const RODAPE = 'Isto descreve um padrão de comportamento, não quem você é. Padrões mudam com consciência e prática constante.'
+
+// BLOCO 4 — "O caminho": quadro fixo por competência (4 passos do protocolo).
+// Aparece sempre, em todos os blocos do relatório. NÃO aparece no questionário.
+export const CAMINHO = {
+  comunicacao_assertiva: {
+    protocolo: 'PAUSA · ALVO · DIZ · SUSTENTA',
+    passos: [
+      { nome: 'PAUSA', texto: 'Percebe o que passou na sua cabeça e corta o automático.' },
+      { nome: 'ALVO', texto: 'Pergunta o que você quer que aconteça ali, afinal a sua comunicação precisa estar alinhada com o objetivo final, e não com o que você está sentindo no momento.' },
+      { nome: 'DIZ', texto: 'Fala direto e curto, para a pessoa certa: como você vê e o que você pensa ou precisa.' },
+      { nome: 'SUSTENTA', texto: 'Sustenta o que você disse. Não recua se a pessoa reagir mal, e não repete até convencer. Dizer uma vez, com calma, é suficiente.' },
+    ],
+  },
+  maturidade_emocional: {
+    protocolo: 'PERCEBE · NOMEIA · SEPARA · ESCOLHE',
+    passos: [
+      { nome: 'PERCEBE', texto: 'Reconhece que a emoção chegou. Não nega, não engole, não dispara.' },
+      { nome: 'NOMEIA', texto: 'Dá nome ao que está sentindo. É medo, raiva, vergonha? Nomear desativa o automático.' },
+      { nome: 'SEPARA', texto: 'Separa o que aconteceu do que você interpretou. Fato e interpretação não são a mesma coisa.' },
+      { nome: 'ESCOLHE', texto: 'Responde com intenção, proporcional ao fato, e não à emoção.' },
+    ],
+  },
+  foco_resultado_produtividade: {
+    protocolo: 'PARA · ELEGE · FAZ · FECHA',
+    passos: [
+      { nome: 'PARA', texto: 'Interrompe o automático de fazer mais. Sai do piloto da ocupação.' },
+      { nome: 'ELEGE', texto: 'Pergunta o que realmente move o resultado ali. Escolhe uma coisa.' },
+      { nome: 'FAZ', texto: 'Executa o que elegeu, sem desviar, sem encontrar uma nova prioridade a cada hora.' },
+      { nome: 'FECHA', texto: 'Conclui e fecha o ciclo, porque o resultado só existe quando chega ao fim.' },
+    ],
+  },
+  visao_sistemica: {
+    protocolo: 'AMPLIA · CONECTA · MEDE · AGE',
+    passos: [
+      { nome: 'AMPLIA', texto: 'Sai da própria caixa e pergunta quem mais é afetado por isso.' },
+      { nome: 'CONECTA', texto: 'Liga as peças: como o que eu faço aqui impacta ali?' },
+      { nome: 'MEDE', texto: 'Antes de agir, mede a consequência, e pergunta se aquilo é seu para resolver ou seu para trazer a quem é dono.' },
+      { nome: 'AGE', texto: 'Age considerando o todo, e não só a sua parte. Quando o problema não é seu, mostra o que você viu a quem é dono dele e devolve a decisão. Agir ou não sobre aquilo é escolha dessa pessoa, não sua.' },
+    ],
+  },
+  direcao_futuro: {
+    protocolo: 'OLHA · DECIDE · PLANEJA · MOVE',
+    passos: [
+      { nome: 'OLHA', texto: 'Levanta a cabeça do seu status atual. O lugar onde você está hoje é ponto de partida, e não o limite de onde você pode chegar.' },
+      { nome: 'DECIDE', texto: 'Escolhe uma direção. Ela não precisa ser perfeita, precisa ser uma. Se tiver dificuldade, use os quatro filtros: o que te dá energia, onde você já tem competência natural, o que você não quer mais, e o que escolheria se soubesse que não ia falhar.' },
+      { nome: 'PLANEJA', texto: 'Transforma a decisão em um próximo passo claro e concreto.' },
+      { nome: 'MOVE', texto: 'Dá o primeiro passo. Não quando estiver pronto, e sim agora. É possível ficar pronto enquanto percorre o caminho.' },
+    ],
+  },
+  protagonismo_profissional: {
+    protocolo: 'ASSUME · PEDE · CRIA · SUSTENTA',
+    passos: [
+      { nome: 'ASSUME', texto: 'Para de esperar que alguém perceba, ofereça ou resolva. A responsabilidade pela sua carreira e pelo espaço onde você atua é sua.' },
+      { nome: 'PEDE', texto: 'Pede o que precisa, porque pedir não é se humilhar. Pedir mais detalhes quando não entendeu tudo não te faz menor. E pedir ajuda quando não sabe também é protagonismo.' },
+      { nome: 'CRIA', texto: 'Cria a situação que você quer e propõe solução, dentro do que você domina. Quando passar do seu limite, busca apoio.' },
+      { nome: 'SUSTENTA', texto: 'Mantém no tempo, sem depender de aplauso para continuar. Você e os seus próprios objetivos precisam ser os seus maiores motivadores.' },
+    ],
+  },
+}
