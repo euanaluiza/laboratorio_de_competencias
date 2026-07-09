@@ -1,6 +1,10 @@
 # Config local de ferramentas/agentes
 .claude/
 
+# Runbook de deploy com detalhes da VPS (repo é público — não versionar)
+DEPLOY.local.md
+.superpowers/
+
 # macOS
 .DS_Store
 
